@@ -351,7 +351,7 @@ const Booking = () => {
                         </div>
                       ) : (
                         <div className="space-y-8">
-                          {['Core Services', 'Beard Care', 'Color', 'Perm', 'Highlights / Bleaching', 'Waxing', 'Eyebrow '].map((category) => {
+                          {['Core Services', 'Beard Care', 'Color', 'Perm', 'Highlights/Bleaching', 'Waxing', 'Eyebrow '].map((category) => {
                             const categoryServices = services.filter(s => s.category === category);
                             
                             if (categoryServices.length === 0) return null;
