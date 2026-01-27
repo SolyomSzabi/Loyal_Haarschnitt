@@ -1,7 +1,5 @@
-// Load configuration from environment or config file
 const path = require('path');
 
-// Environment variable overrides
 const config = {
   disableHotReload: process.env.DISABLE_HOT_RELOAD === 'true',
 };
@@ -12,29 +10,28 @@ module.exports = {
       '@': path.resolve(__dirname, 'src'),
     },
     configure: (webpackConfig) => {
-
+      // Ensure resolve and alias are properly configured
       webpackConfig.resolve = {
         ...webpackConfig.resolve,
         alias: {
           ...webpackConfig.resolve?.alias,
           '@': path.resolve(__dirname, 'src'),
         },
+        // Add fallback for extensions if not present
+        extensions: webpackConfig.resolve?.extensions || ['.js', '.jsx', '.json', '.ts', '.tsx'],
       };
                 
       // Disable hot reload completely if environment variable is set
       if (config.disableHotReload) {
-        // Remove hot reload related plugins
         webpackConfig.plugins = webpackConfig.plugins.filter(plugin => {
           return !(plugin.constructor.name === 'HotModuleReplacementPlugin');
         });
         
-        // Disable watch mode
         webpackConfig.watch = false;
         webpackConfig.watchOptions = {
-          ignored: /.*/, // Ignore all files
+          ignored: /.*/,
         };
       } else {
-        // Add ignored patterns to reduce watched directories
         webpackConfig.watchOptions = {
           ...webpackConfig.watchOptions,
           ignored: [
