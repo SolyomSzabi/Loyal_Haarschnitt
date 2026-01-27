@@ -6,19 +6,11 @@ const config = {
 
 module.exports = {
   webpack: {
-    alias: {
-      '@': path.resolve(__dirname, 'src'),
-    },
     configure: (webpackConfig) => {
-      // Ensure resolve and alias are properly configured
-      webpackConfig.resolve = {
-        ...webpackConfig.resolve,
-        alias: {
-          ...webpackConfig.resolve?.alias,
-          '@': path.resolve(__dirname, 'src'),
-        },
-        // Add fallback for extensions if not present
-        extensions: webpackConfig.resolve?.extensions || ['.js', '.jsx', '.json', '.ts', '.tsx'],
+      // Set alias at the beginning
+      webpackConfig.resolve.alias = {
+        ...webpackConfig.resolve.alias,
+        '@': path.resolve(__dirname, 'src'),
       };
                 
       // Disable hot reload completely if environment variable is set
