@@ -97,7 +97,7 @@ const Services = () => {
       {/* Services Grid by Category */}
       <section className="section-padding">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {['Men', 'Women', 'Children'].map((category) => {
+          {['Core Services', 'Beard Care', 'Color', 'Perm', 'Highlights / Bleaching', 'Waxing', 'Eyebrow '].map((category) => {
             const categoryServices = services.filter(s => s.category === category);
             
             if (categoryServices.length === 0) return null;
@@ -105,7 +105,7 @@ const Services = () => {
             return (
               <div key={category} className="mb-16 last:mb-0">
                 <h2 className="text-3xl font-bold font-heading text-zinc-900 mb-8 text-center">
-                  {category}'s Services
+                  {category}
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                   {categoryServices.map((service) => (
@@ -133,7 +133,7 @@ const Services = () => {
                               <span className="text-sm text-zinc-600">{service.duration} min</span>
                             </div>
                             <div className="flex items-center space-x-1">
-                              <span className="text-lg font-bold text-yellow-600">From {service.base_price} RON</span>
+                              <span className="text-lg font-bold text-yellow-600">From {service.base_price} EUR</span>
                             </div>
                           </div>
                         </div>

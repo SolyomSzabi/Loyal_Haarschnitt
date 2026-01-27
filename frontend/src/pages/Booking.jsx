@@ -351,7 +351,7 @@ const Booking = () => {
                         </div>
                       ) : (
                         <div className="space-y-8">
-                          {['Men', 'Women', 'Children'].map((category) => {
+                          {['Core Services', 'Beard Care', 'Color', 'Perm', 'Highlights / Bleaching', 'Waxing', 'Eyebrow '].map((category) => {
                             const categoryServices = services.filter(s => s.category === category);
                             
                             if (categoryServices.length === 0) return null;
@@ -360,7 +360,7 @@ const Booking = () => {
                               <div key={category}>
                                 <h4 className="text-md font-semibold text-zinc-700 mb-3 flex items-center">
                                   <span className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm">
-                                    {category}'s Services
+                                    {category}
                                   </span>
                                 </h4>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -384,7 +384,7 @@ const Booking = () => {
                                             {service.duration} min
                                           </Badge>
                                           <div className="text-green-600 font-semibold text-sm">
-                                            {service.price} RON
+                                            {service.price} EUR
                                           </div>
                                         </div>
                                       </div>
@@ -423,7 +423,7 @@ const Booking = () => {
                           <span className="text-zinc-700"><strong>Service:</strong> {selectedServiceDetails.service_name}</span>
                           <div className="flex items-center space-x-2">
                             <Badge variant="secondary">{selectedServiceDetails.duration} min</Badge>
-                            <span className="font-semibold text-green-600">{selectedServiceDetails.price} RON</span>
+                            <span className="font-semibold text-green-600">{selectedServiceDetails.price} EUR</span>
                           </div>
                         </div>
                         {bookingData.barberName && (
@@ -531,7 +531,7 @@ const Booking = () => {
                       <p><strong>Date:</strong> {bookingData.appointmentDate && format(bookingData.appointmentDate, 'EEEE, MMMM d, yyyy')}</p>
                       <p><strong>Time:</strong> {bookingData.appointmentTime}</p>
                       <p><strong>Duration:</strong> {selectedServiceDetails?.duration} minutes</p>
-                      <p><strong>Price:</strong> {selectedServiceDetails?.price} RON</p>
+                      <p><strong>Price:</strong> {selectedServiceDetails?.price} EUR</p>
                     </div>
                   </div>
 
