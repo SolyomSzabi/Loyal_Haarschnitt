@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
-import { Badge } from '@/components/ui/badge';
-import gallery1 from "@/assets/gallery1.jpg";
-import gallery2 from "@/assets/gallery2.jpg";
-import gallery3 from "@/assets/gallery3.jpg";
-import gallery4 from "@/assets/gallery4.jpg";
+import { Button } from '../components/ui/button';
+import { Dialog, DialogContent, DialogTrigger } from '../components/ui/dialog';
+import { Badge } from '../components/ui/badge';
+import gallery1 from "../assets/gallery1.jpg";
+import gallery2 from "../assets/gallery2.jpg";
+import gallery3 from "../assets/gallery3.jpg";
+import gallery4 from "../assets/gallery4.jpg";
 
 
 const Gallery = () => {

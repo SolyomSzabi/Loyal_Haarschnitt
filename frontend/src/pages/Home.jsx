@@ -1,15 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { Button } from '../components/ui/button';
+import { Card, CardContent } from '../components/ui/card';
+import { Badge } from '../components/ui/badge';
 import { Star, Clock, MapPin, Scissors, Award, Users } from 'lucide-react';
-import heroImg from "@/assets/hero2.jpg";
-import gallery1 from "@/assets/gallery1.jpg";
-import gallery2 from "@/assets/gallery2.jpg";
-import gallery3 from "@/assets/gallery3.jpg";
-import gallery4 from "@/assets/gallery4.jpg";
+import heroImg from "../assets/hero2.jpg";
+import gallery1 from "../assets/gallery1.jpg";
+import gallery2 from "../assets/gallery2.jpg";
+import gallery3 from "../assets/gallery3.jpg";
+import gallery4 from "../assets/gallery4.jpg";
 
 const Home = () => {
   const { t } = useTranslation();
