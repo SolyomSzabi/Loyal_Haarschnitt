@@ -1,10 +1,10 @@
-# fly.toml app configuration file generated for oxys-barbershop-api on 2025-11-14T16:55:49+02:00
+# fly.toml app configuration file generated for loyal-haarschnitt-api on 2026-01-27T15:38:03+02:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'oxys-barbershop-api'
-primary_region = 'ams'
+app = 'loyal-haarschnitt-api'
+primary_region = 'fra'
 kill_signal = 'SIGINT'
 kill_timeout = '5s'
 

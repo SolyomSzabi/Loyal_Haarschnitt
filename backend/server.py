@@ -18,15 +18,15 @@ import aiosmtplib
 from email.message import EmailMessage
 
 # Romanian timezone
-ROMANIAN_TZ = pytz.timezone('Europe/Bucharest')
+GERMAN_TZ = pytz.timezone('Europe/Bucharest')
 
-def get_romanian_now():
-    """Get current datetime in Romanian timezone"""
-    return datetime.now(ROMANIAN_TZ)
+def get_german_now():
+    """Get current datetime in German timezone"""
+    return datetime.now(GERMAN_TZ)
 
-def get_romanian_today():
-    """Get today's date in Romanian timezone"""
-    return get_romanian_now().date()
+def get_german_today():
+    """Get today's date in German timezone"""
+    return get_german_now().date()
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
@@ -495,12 +495,12 @@ async def check_barber_availability(barber_id: str, date: str, start_time: str, 
     
     # Check if the slot is in the past (Romanian timezone)
     appointment_datetime = datetime.fromisoformat(f"{date}T{start_time}:00")
-    romanian_now = get_romanian_now()
+    german_now = get_german_now()()
     
     # If appointment is today, check if time has passed
-    if date == get_romanian_today().isoformat():
-        appointment_datetime_ro = ROMANIAN_TZ.localize(appointment_datetime)
-        if appointment_datetime_ro <= romanian_now:
+    if date == get_german_today().isoformat():
+        appointment_datetime_ro = GERMAN_TZ.localize(appointment_datetime)
+        if appointment_datetime_ro <= german_now:
             return {"available": False, "reason": "Time slot is in the past"}
     
     # Calculate end time
@@ -560,12 +560,12 @@ async def get_available_slots(barber_id: str, date: str, service_id: str):
     # Nyitvatartási idők meghatározása
     if weekday in [0, 1, 2, 3, 4]:  
         # Hétfő – Péntek: 9:00 – 19:00
-        business_start = time(9, 0)
+        business_start = time(10, 0)
         business_end = time(19, 0)
     elif weekday == 5:
         # Szombat: 9:00 – 13:00
-        business_start = time(9, 0)
-        business_end = time(13, 0)
+        business_start = time(10, 0)
+        business_end = time(16, 0)
     else:
         # Vasárnap: zárva → nincs időpont
         return {
@@ -657,7 +657,7 @@ async def get_barber_today_appointments(barber_id: str, current_barber: dict = D
     # For all staff view, allow any authenticated barber to see all appointments
     # No restriction on barber_id check for this endpoint
     
-    today = get_romanian_today().isoformat()
+    today = get_german_today().isoformat()
     query_filter = {
         "barber_id": barber_id,
         "appointment_date": today
@@ -675,7 +675,7 @@ async def get_barber_today_appointments(barber_id: str, current_barber: dict = D
 
 @api_router.get("/appointments/today", response_model=List[Appointment])
 async def get_today_appointments():
-    today = get_romanian_today().isoformat()
+    today = get_german_today().isoformat()
     appointments = await db.appointments.find({"appointment_date": today}, {"_id": 0}).sort("appointment_time", 1).to_list(1000)
     
     # Parse dates and times from MongoDB
