@@ -55,9 +55,9 @@ const AllAppointments = () => {
 
 
     // Create 15-minute time slots from 9 AM to 7 PM
-  const businessHours = Array.from({ length: 10 }, (_, i) => 10 + i); // Still keep hours for display
+  const businessHours = Array.from({ length: 10 }, (_, i) => 9 + i); // Still keep hours for display
   const timeSlots = [];
-  for (let hour = 10; hour < 19; hour++) {
+  for (let hour = 9; hour < 19; hour++) {
     for (let minute = 0; minute < 60; minute += 15) {
       timeSlots.push({ hour, minute });
     }
@@ -169,9 +169,9 @@ const formatSelectedDate = () => {
     const hours = currentTime.getHours();
     const minutes = currentTime.getMinutes();
     
-    if (hours < 10 || hours >= 19) return null; // Outside business hours
+    if (hours < 9 || hours >= 19) return null; // Outside business hours
     
-    const totalMinutes = (hours - 10) * 60 + minutes;
+    const totalMinutes = (hours - 9) * 60 + minutes;
     const totalBusinessMinutes = 10 * 60; // 10 hours
     const percentage = (totalMinutes / totalBusinessMinutes) * 100;
     
@@ -187,7 +187,7 @@ const formatSelectedDate = () => {
 
   const getAppointmentPosition = (appointmentTime, duration) => {
     const [hours, minutes] = appointmentTime.split(':').map(Number);
-    const startMinutes = (hours - 10) * 60 + minutes;
+    const startMinutes = (hours - 9) * 60 + minutes;
     const top = (startMinutes / (10 * 60)) * 100; // Percentage from top
     const height = (duration / (10 * 60)) * 100; // Height as percentage
     
