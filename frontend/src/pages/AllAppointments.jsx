@@ -57,7 +57,7 @@ const AllAppointments = () => {
     // Create 15-minute time slots from 9 AM to 7 PM
   const businessHours = Array.from({ length: 10 }, (_, i) => 9 + i); // Still keep hours for display
   const timeSlots = [];
-  for (let hour = 9; hour < 19; hour++) {
+  for (let hour = 10; hour < 19; hour++) {
     for (let minute = 0; minute < 60; minute += 15) {
       timeSlots.push({ hour, minute });
     }
