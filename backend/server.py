@@ -495,7 +495,7 @@ async def check_barber_availability(barber_id: str, date: str, start_time: str, 
     
     # Check if the slot is in the past (Romanian timezone)
     appointment_datetime = datetime.fromisoformat(f"{date}T{start_time}:00")
-    german_now = get_german_now()()
+    german_now = get_german_now()
     
     # If appointment is today, check if time has passed
     if date == get_german_today().isoformat():
