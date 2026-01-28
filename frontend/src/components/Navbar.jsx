@@ -37,9 +37,9 @@ const Navbar = () => {
                {/* </div> */}
             <div className="flex flex-col">
               <h1 className="text-2xl font-bold font-heading text-zinc-900 leading-tight">
-                Oxy'ss
+                Loyal
               </h1>
-              <p className="text-xs text-zinc-600 -mt-0.5 leading-tight">Style</p>
+              <p className="text-xs text-zinc-600 -mt-0.5 leading-tight">Haarschnitt</p>
             </div>
           </Link>
 
@@ -86,9 +86,9 @@ const Navbar = () => {
                     </div>
                     <div className="flex flex-col">
                       <h1 className="text-xl font-bold font-heading text-zinc-900 leading-tight">
-                        Oxy'ss
+                        Loyal
                       </h1>
-                      <p className="text-xs text-zinc-600 -mt-0.5 leading-tight">Barbershop</p>
+                      <p className="text-xs text-zinc-600 -mt-0.5 leading-tight">Haarschnitt</p>
                     </div>
                   </div>
                   

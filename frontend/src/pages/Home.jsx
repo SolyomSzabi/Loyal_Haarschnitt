@@ -16,21 +16,21 @@ const Home = () => {
   const services = [
     {
       name: "Men's Haircut",
-      price: '63 RON',
+      price: '33 EUR',
       duration: '30 min',
-      description: 'Washing • Cutting • Styling'
+      description: 'Individual men’s haircut tailored to face shape, hair texture, and personal style. Includes clean styling. Focused service – precise, professional, no add-ons.'
     },
     {
-      name: "Men's BRONZE",
-      price: '85 RON',
-      duration: '45 min',
-      description: 'Haircut • Beard Trim'
+      name: "Men’s Haircut Pro",
+      price: '43 EUR',
+      duration: '60 min',
+      description: 'In-depth consultation. Hair wash, scalp massage, conditioner. Individual haircut and styling. Drink included. More time, more calm, more experience.'
     },
     {
-      name: "Men's OXY’SS GOLD",
-      price: '170 RON',
-      duration: '90 min',
-      description: 'Hair wash with head massage • Haircut • Beard • Styling • Eyebrows • Ears • Nose'
+      name: "Beard Trim / Classic Shave (Wet Shave)",
+      price: '25 EUR',
+      duration: '30 min',
+      description: 'Professional beard shaping and precise contours. Traditional wet shave (for Classic Shave). Aftershave and finishing care.'
     }
   ];
 
@@ -71,7 +71,7 @@ const Home = () => {
           
           <h1 className="text-5xl md:text-7xl font-bold font-heading mb-6 leading-tight">
             Welcome to
-            <span className="block text-gradient">Oxy'ss Style</span>
+            <span className="block text-gradient">Loyal Haarschnitt</span>
           </h1>
           
           <p className="text-xl md:text-2xl text-gray-200 mb-8 max-w-2xl mx-auto leading-relaxed">
@@ -108,7 +108,7 @@ const Home = () => {
             </div>
             <div className="flex items-center space-x-2">
               <Clock className="h-5 w-5 text-yellow-400" />
-              <span>Open 9AM - 7PM</span>
+              <span>Open 10AM - 7PM</span>
             </div>
             <div className="flex items-center space-x-2">
               <Star className="h-5 w-5 text-yellow-400 fill-current" />
@@ -257,7 +257,7 @@ const Home = () => {
             Ready for a Fresh Look?
           </h2>
           <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-            Book your appointment today and experience the Oxy'ss difference. 
+            Book your appointment today and experience the Loyal Haarschnitt difference. 
             Walk in ordinary, walk out extraordinary.
           </p>
           <Link to="/booking">

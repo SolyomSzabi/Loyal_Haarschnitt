@@ -99,7 +99,7 @@ const Gallery = () => {
           </h1>
           <p className="text-xl text-zinc-600 max-w-3xl mx-auto mb-8">
             Explore our portfolio showcasing the artistry and craftsmanship that defines 
-            Oxy'ss Hair Studio. Every cut tells a story of precision and style.
+            Loyal Haarschnitt. Every cut tells a story of precision and style.
           </p>
           
           {/* Category Filter */}
@@ -195,7 +195,7 @@ const Gallery = () => {
             Ready to Look Your Best?
           </h2>
           <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-            Join our satisfied customers and experience the Oxy'ss difference. 
+            Join our satisfied customers and experience the Loyal Haarschnitt difference. 
             Book your appointment and let us create your next signature look.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

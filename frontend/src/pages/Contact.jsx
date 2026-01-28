@@ -14,20 +14,20 @@ const Contact = () => {
     {
       icon: <Phone className="h-6 w-6 text-yellow-600" />,
       title: 'Call Us',
-      details: ['+40 74 116 1016'],
+      details: ['+49 1573 5342854'],
       action: 'Call Now'
     },
     {
       icon: <Mail className="h-6 w-6 text-yellow-600" />,
       title: 'Email Us',
-      details: ['oxyssstyle@gmail.com'],
+      details: ['sarokma99@gmail.com'],
       action: 'Send Email'
     }
   ];
 
   const businessHours = [
-    { day: 'Monday - Friday', hours: '9:00 AM - 7:00 PM' },
-    { day: 'Saturday', hours: '9:00 AM - 1:00 PM' },
+    { day: 'Monday - Friday', hours: '10:00 AM - 7:00 PM' },
+    { day: 'Saturday', hours: '10:00 AM - 6:00 PM' },
     // { day: 'Sunday', hours: '10:00 AM - 4:00 PM' }
   ];
 

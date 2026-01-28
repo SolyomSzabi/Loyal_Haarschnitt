@@ -251,7 +251,7 @@ const Booking = () => {
               Book Your Appointment
             </h1>
             <p className="text-xl text-zinc-600 max-w-2xl mx-auto">
-              Schedule your visit to Oxy'ss Style in just a few simple steps.
+              Schedule your visit to Loyal Haarschnitt in just a few simple steps.
             </p>
           </div>
 
@@ -617,7 +617,7 @@ const Booking = () => {
                     Appointment Booked Successfully!
                   </h2>
                   <p className="text-zinc-600 mb-6">
-                    Thank you for choosing Oxy'ss Barbershop. We've received your booking request 
+                    Thank you for choosing Loyal Haarschnitt. We've received your booking request 
                     and will contact you shortly to confirm your appointment.
                   </p>
                   

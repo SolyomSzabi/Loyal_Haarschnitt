@@ -14,12 +14,12 @@ const Footer = () => {
                 <Scissors className="h-8 w-8 text-white" />
               </div>
               <div>
-                <h2 className="text-3xl font-bold font-heading">Oxy'ss</h2>
-                <p className="text-yellow-400 font-medium">Premium Hair Studio</p>
+                <h2 className="text-3xl font-bold font-heading">Loyal</h2>
+                <p className="text-yellow-400 font-medium">Haarschnitt</p>
               </div>
             </div>
             <p className="text-zinc-300 mb-6 max-w-md">
-              Experience the finest in hairstyling services at Oxy'ss. Our skilled hairdressers 
+              Experience the finest in hairstyling services at Loyal Haarschnitt. Our skilled hairdressers 
               combine traditional techniques with modern style to give you the perfect cut.
             </p>
             <div className="flex space-x-4">
@@ -28,7 +28,6 @@ const Footer = () => {
               </div>
               <div
                 className="w-10 h-10 bg-zinc-800 rounded-full flex items-center justify-center hover:bg-yellow-600 transition-colors cursor-pointer"
-                onClick={() => window.location.href = "https://www.instagram.com/__oxyss?igsh=MTRmaWtnbjJ6Ym13NA=="}
               >
                 <span className="text-sm font-bold">ig</span>
               </div>
@@ -97,17 +96,17 @@ const Footer = () => {
               </li>
               <li className="flex items-center space-x-3">
                 <Phone className="h-4 w-4 text-yellow-400" />
-                <span className="text-zinc-300 text-sm">+40 74 116 1016</span>
+                <span className="text-zinc-300 text-sm">+49 1573 5342854</span>
               </li>
               <li className="flex items-center space-x-3">
                 <Mail className="h-4 w-4 text-yellow-400" />
-                <span className="text-zinc-300 text-sm">oxyssstyle@gmail.com</span>
+                <span className="text-zinc-300 text-sm">sarokma99@gmail.com</span>
               </li>
               <li className="flex items-start space-x-3">
                 <Clock className="h-4 w-4 text-yellow-400 mt-1" />
                 <div className="text-zinc-300 text-sm">
-                  <p>Mon-Fri: 9AM - 7PM</p>
-                  <p>Sat: 9AM - 1PM</p>
+                  <p>Mon-Fri: 10AM - 7PM</p>
+                  <p>Sat: 10AM - 6PM</p>
                 </div>
               </li>
             </ul>
@@ -117,7 +116,7 @@ const Footer = () => {
         {/* Bottom Section */}
         <div className="border-t border-zinc-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-zinc-400 text-sm">
-            © 2025 Oxy'ss Barbershop. All rights reserved.
+            © 2026 Loyal Haarschnitt. All rights reserved.
           </p>
           <div className="mt-4 md:mt-0">
             <Link to="/barber-dashboard" className="text-zinc-400 hover:text-yellow-400 text-sm transition-colors">
