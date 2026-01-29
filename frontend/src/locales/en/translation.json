@@ -1,206 +1,238 @@
 {
   "nav": {
-    "home": "Home",
-    "services": "Services",
-    "gallery": "Gallery",
-    "about": "About",
-    "contact": "Contact",
-    "bookAppointment": "Book Appointment"
+    "home": "Startseite",
+    "services": "Dienstleistungen",
+    "gallery": "Galerie",
+    "about": "Über uns",
+    "contact": "Kontakt",
+    "bookAppointment": "Termin buchen"
   },
   "home": {
     "hero": {
       "title": "Master Hair Studio",
-      "subtitle": "Where traditional craftsmanship meets modern style",
-      "bookNow": "Book Now",
-      "viewServices": "View Services",
-      "location": "Str. Ratinului, nr.959, Crasna, Sălaj, Romania",
-      "hours": "Open 10AM - 7PM",
-      "rating": "5/5 Rating"
+      "subtitle": "Wo traditionelle Handwerkskunst auf modernen Stil trifft",
+      "bookNow": "Jetzt buchen",
+      "viewServices": "Dienstleistungen ansehen",
+      "location": "Str. Ratinului, nr.959, Crasna, Sălaj, Rumänien",
+      "hours": "Geöffnet 10-19 Uhr",
+      "rating": "5/5 Bewertung"
     },
     "services": {
-      "title": "Our Services",
-      "subtitle": "From classic cuts to modern styles, we offer comprehensive grooming services tailored to your needs.",
-      "viewAll": "View All Services",
+      "title": "Unsere Dienstleistungen",
+      "subtitle": "Von klassischen Schnitten bis zu modernen Styles – wir bieten umfassende Pflegeleistungen, individuell auf Sie abgestimmt.",
+      "viewAll": "Alle Dienstleistungen ansehen",
       "items": {
         "mensHaircut": {
-          "name": "Men's Haircut",
+          "name": "Herrenhaarschnitt",
           "price": "33 EUR",
-          "duration": "30 min",
-          "description": "Individual men's haircut tailored to face shape, hair texture, and personal style. Includes clean styling. Focused service – precise, professional, no add-ons."
+          "duration": "30 Min",
+          "description": "Individueller Herrenhaarschnitt, abgestimmt auf Gesichtsform, Haarstruktur und persönlichen Stil. Inklusive sauberes Styling. Fokussierter Service – präzise, professionell, ohne Zusatzleistungen."
         },
         "mensHaircutPro": {
-          "name": "Men's Haircut Pro",
+          "name": "Herrenhaarschnitt Pro",
           "price": "43 EUR",
-          "duration": "60 min",
-          "description": "In-depth consultation. Hair wash, scalp massage, conditioner. Individual haircut and styling. Drink included. More time, more calm, more experience."
+          "duration": "60 Min",
+          "description": "Ausführliche Beratung. Haarwäsche, Kopfmassage, Conditioner. Individueller Haarschnitt und Styling. Getränk inklusive. Mehr Zeit, mehr Ruhe, mehr Erlebnis."
         },
         "beardTrim": {
-          "name": "Beard Trim / Classic Shave (Wet Shave)",
+          "name": "Bartpflege / Klassische Rasur (Nassrasur)",
           "price": "25 EUR",
-          "duration": "30 min",
-          "description": "Professional beard shaping and precise contours. Traditional wet shave (for Classic Shave). Aftershave and finishing care."
+          "duration": "30 Min",
+          "description": "Professionelles Bart-Styling und präzise Konturen. Traditionelle Nassrasur (bei klassischer Rasur). Aftershave und abschließende Pflege."
         }
       }
     },
     "whyChoose": {
-      "title": "Why Choose Us?",
-      "subtitle": "Experience the difference that quality, expertise, and attention to detail make.",
+      "title": "Warum uns wählen?",
+      "subtitle": "Erleben Sie den Unterschied, den Qualität, Fachwissen und Liebe zum Detail ausmachen.",
       "experience": {
-        "title": "Expert Barbers",
-        "desc": "Our skilled team brings years of experience"
+        "title": "Erfahrene Barbiere",
+        "desc": "Unser qualifiziertes Team bringt jahrelange Erfahrung mit"
       },
       "quality": {
-        "title": "Premium Products",
-        "desc": "We use only the finest grooming products"
+        "title": "Premium-Produkte",
+        "desc": "Wir verwenden ausschließlich hochwertige Pflegeprodukte"
       },
       "atmosphere": {
-        "title": "Modern Atmosphere",
-        "desc": "Relax in our contemporary, welcoming space"
+        "title": "Moderne Atmosphäre",
+        "desc": "Entspannen Sie sich in unserem zeitgemäßen, einladenden Ambiente"
       }
     },
     "gallery": {
-      "title": "Our Work Speaks",
-      "subtitle": "See the transformation and craftsmanship that sets us apart.",
-      "viewFull": "View Full Gallery"
+      "title": "Unsere Arbeit spricht für sich",
+      "subtitle": "Sehen Sie die Verwandlung und Handwerkskunst, die uns auszeichnet.",
+      "viewFull": "Vollständige Galerie ansehen"
     },
     "cta": {
-      "title": "Ready for a Fresh Look?",
-      "subtitle": "Book your appointment today and experience the Loyal Haarschnitt difference. Walk in ordinary, walk out extraordinary.",
-      "button": "Book Your Appointment Now"
+      "title": "Bereit für einen frischen Look?",
+      "subtitle": "Buchen Sie noch heute Ihren Termin und erleben Sie den Loyal Haarschnitt-Unterschied. Kommen Sie gewöhnlich, gehen Sie außergewöhnlich.",
+      "button": "Jetzt Termin buchen"
     }
   },
   "services": {
-    "title": "Our Services",
-    "subtitle": "Professional grooming services tailored to your style",
+    "title": "Unsere Dienstleistungen",
+    "subtitle": "Professionelle Pflegeleistungen, abgestimmt auf Ihren Stil",
     "categories": {
-      "men": "Men",
-      "women": "Women",
-      "kids": "Kids"
+      "men": "Herren",
+      "women": "Damen",
+      "kids": "Kinder"
     },
-    "duration": "Duration",
-    "startingFrom": "Starting from",
-    "bookNow": "Book Now"
+    "duration": "Dauer",
+    "startingFrom": "Ab",
+    "bookNow": "Jetzt buchen"
   },
   "about": {
-    "title": "About Loyal Haarschnitt",
-    "subtitle": "Your destination for premium grooming",
+    "title": "Über Loyal Haarschnitt",
+    "subtitle": "Ihre Adresse für erstklassige Pflege",
     "story": {
-      "title": "Our Story",
-      "text": "Founded with a passion for classic barbering and modern style, Loyal Haarschnitt has become a cornerstone of the community. We blend traditional techniques with contemporary trends to deliver exceptional grooming experiences."
+      "title": "Unsere Geschichte",
+      "text": "Gegründet aus der Leidenschaft für klassisches Barbierhandwerk und modernen Stil ist Loyal Haarschnitt zu einem festen Bestandteil der Community geworden. Wir verbinden traditionelle Techniken mit aktuellen Trends, um außergewöhnliche Pflegeerlebnisse zu bieten."
     },
     "team": {
-      "title": "Meet Our Team",
-      "subtitle": "Expert barbers dedicated to your style"
+      "title": "Lernen Sie unser Team kennen",
+      "subtitle": "Erfahrene Barbiere mit Hingabe zu Ihrem Stil"
     },
     "values": {
-      "title": "Our Values",
+      "title": "Unsere Werte",
       "quality": {
-        "title": "Quality First",
-        "desc": "We never compromise on the quality of our services"
+        "title": "Qualität an erster Stelle",
+        "desc": "Wir machen keine Kompromisse bei der Qualität unserer Dienstleistungen"
       },
       "customer": {
-        "title": "Customer Focus",
-        "desc": "Your satisfaction is our top priority"
+        "title": "Kundenorientierung",
+        "desc": "Ihre Zufriedenheit hat für uns oberste Priorität"
       },
       "innovation": {
         "title": "Innovation",
-        "desc": "We stay updated with the latest trends and techniques"
+        "desc": "Wir bleiben stets auf dem neuesten Stand der Trends und Techniken"
       }
     }
   },
   "gallery": {
-    "title": "Gallery",
-    "subtitle": "Explore our work and see the transformations"
+    "title": "Unsere Galerie",
+    "subtitle": "Entdecken Sie unser Portfolio, das die Kunstfertigkeit und das Handwerk zeigt, die Loyal Haarschnitt definieren. Jeder Schnitt erzählt eine Geschichte von Präzision und Stil.",
+    "categories": {
+      "all": "Alle Arbeiten",
+      "haircuts": "Haarschnitte",
+      "beard": "Bartpflege",
+      "styling": "Styling",
+      "shop": "Unser Salon"
+    },
+    "images": {
+      "professional": {
+        "title": "Professionelles Barbering",
+        "description": "Expertenschnitt mit Präzision"
+      },
+      "classic": {
+        "title": "Klassischer Schnitt in Arbeit",
+        "description": "Traditionelle Barbiertechniken"
+      },
+      "styled": {
+        "title": "Gestylt & Gepflegt",
+        "description": "Komplettes Pflegeergebnis"
+      },
+      "modern": {
+        "title": "Moderner Fade",
+        "description": "Zeitgenössisches Styling"
+      }
+    },
+    "noResults": "Keine Bilder in dieser Kategorie gefunden.",
+    "cta": {
+      "title": "Bereit für Ihr bestes Aussehen?",
+      "subtitle": "Schließen Sie sich unseren zufriedenen Kunden an und erleben Sie den Loyal Haarschnitt-Unterschied. Buchen Sie Ihren Termin und lassen Sie uns Ihren nächsten charakteristischen Look kreieren.",
+      "bookButton": "Termin buchen",
+      "servicesButton": "Dienstleistungen ansehen"
+    }
   },
   "contact": {
-    "title": "Contact Us",
-    "subtitle": "Get in touch with us for appointments, questions, or just to say hello. We're here to help you look and feel your best.",
+    "title": "Kontaktieren Sie uns",
+    "subtitle": "Nehmen Sie Kontakt mit uns auf für Termine, Fragen oder einfach nur zum Hallo sagen. Wir sind hier, um Ihnen zu helfen, gut auszusehen und sich gut zu fühlen.",
     "getInTouch": {
-      "title": "Get in Touch",
-      "subtitle": "We'd love to hear from you. Whether you're looking to book an appointment, have questions about our services, or want to provide feedback, don't hesitate to reach out."
+      "title": "Nehmen Sie Kontakt auf",
+      "subtitle": "Wir würden gerne von Ihnen hören. Ob Sie einen Termin buchen möchten, Fragen zu unseren Dienstleistungen haben oder Feedback geben möchten – zögern Sie nicht, uns zu kontaktieren."
     },
     "info": {
-      "title": "Contact Information",
-      "address": "Visit Us",
-      "phone": "Call Us",
-      "email": "Email Us",
-      "hours": "Business Hours"
+      "title": "Kontaktinformationen",
+      "address": "Besuchen Sie uns",
+      "phone": "Rufen Sie uns an",
+      "email": "Schreiben Sie uns",
+      "hours": "Öffnungszeiten"
     },
     "form": {
-      "title": "Send us a message",
-      "name": "Your Name",
-      "email": "Your Email",
-      "message": "Your Message",
-      "send": "Send Message",
-      "sending": "Sending...",
-      "success": "Message sent successfully!",
-      "error": "Failed to send message"
+      "title": "Senden Sie uns eine Nachricht",
+      "name": "Ihr Name",
+      "email": "Ihre E-Mail-Adresse",
+      "message": "Ihre Nachricht",
+      "send": "Nachricht senden",
+      "sending": "Wird gesendet...",
+      "success": "Nachricht erfolgreich gesendet!",
+      "error": "Nachricht konnte nicht gesendet werden"
     },
     "schedule": {
-      "weekdays": "Monday - Friday",
-      "saturday": "Saturday",
-      "sunday": "Sunday"
+      "weekdays": "Montag - Freitag",
+      "saturday": "Samstag",
+      "sunday": "Sonntag"
     },
-    "openDaysNote": "We're open 6 days a week for your convenience",
-    "findUs": "Find Us"
+    "openDaysNote": "Wir sind 6 Tage die Woche für Sie geöffnet",
+    "findUs": "Finden Sie uns"
   },
   "booking": {
-    "title": "Book Your Appointment",
-    "subtitle": "Choose your preferred barber, service, date and time",
+    "title": "Termin buchen",
+    "subtitle": "Wählen Sie Ihren bevorzugten Barbier, Service, Datum und Uhrzeit",
     "steps": {
-      "barber": "Select Barber",
-      "service": "Select Service",
-      "datetime": "Date & Time",
-      "details": "Your Details"
+      "barber": "Barbier auswählen",
+      "service": "Service auswählen",
+      "datetime": "Datum & Uhrzeit",
+      "details": "Ihre Angaben"
     },
-    "selectBarber": "Select Your Barber",
-    "selectService": "Select a Service",
-    "selectDate": "Select Date",
-    "selectTime": "Select Time",
-    "availableSlots": "Available Time Slots",
-    "noSlots": "No available slots for this date",
-    "yourDetails": "Your Details",
-    "fullName": "Full Name",
-    "email": "Email Address",
-    "phone": "Phone Number",
-    "bookingButton": "Book Appointment",
-    "booking": "Booking...",
-    "success": "Appointment booked successfully!",
-    "error": "Failed to book appointment",
+    "selectBarber": "Wählen Sie Ihren Barbier",
+    "selectService": "Wählen Sie einen Service",
+    "selectDate": "Datum auswählen",
+    "selectTime": "Uhrzeit auswählen",
+    "availableSlots": "Verfügbare Zeitfenster",
+    "noSlots": "Keine verfügbaren Termine für dieses Datum",
+    "yourDetails": "Ihre Angaben",
+    "fullName": "Vollständiger Name",
+    "email": "E-Mail-Adresse",
+    "phone": "Telefonnummer",
+    "bookingButton": "Termin buchen",
+    "booking": "Buchung läuft...",
+    "success": "Termin erfolgreich gebucht!",
+    "error": "Terminbuchung fehlgeschlagen",
     "summary": {
-      "title": "Booking Summary",
-      "barber": "Barber",
+      "title": "Buchungsübersicht",
+      "barber": "Barbier",
       "service": "Service",
-      "date": "Date",
-      "time": "Time",
-      "duration": "Duration",
-      "price": "Price"
+      "date": "Datum",
+      "time": "Uhrzeit",
+      "duration": "Dauer",
+      "price": "Preis"
     }
   },
   "footer": {
-    "description": "Experience the finest in hairstyling services at Loyal Haarschnitt. Our skilled hairdressers combine traditional techniques with modern style to give you the perfect cut.",
-    "quickLinks": "Quick Links",
-    "contactInfo": "Contact Info",
+    "description": "Erleben Sie erstklassige Friseurdienstleistungen bei Loyal Haarschnitt. Unsere erfahrenen Friseure kombinieren traditionelle Techniken mit modernem Stil, um Ihnen den perfekten Schnitt zu geben.",
+    "quickLinks": "Schnelllinks",
+    "contactInfo": "Kontaktinformationen",
     "hours": {
-      "weekdays": "Mon-Fri: 10AM - 7PM",
-      "saturday": "Sat: 10AM - 6PM"
+      "weekdays": "Mo-Fr: 10-19 Uhr",
+      "saturday": "Sa: 10-18 Uhr"
     },
-    "copyright": "© 2026 Loyal Haarschnitt. All rights reserved.",
-    "staffLogin": "Staff Login"
+    "copyright": "© 2026 Loyal Haarschnitt. Alle Rechte vorbehalten.",
+    "staffLogin": "Mitarbeiter-Login"
   },
   "common": {
-    "loading": "Loading...",
-    "error": "Error",
-    "cancel": "Cancel",
-    "confirm": "Confirm",
-    "close": "Close",
-    "save": "Save",
-    "edit": "Edit",
-    "delete": "Delete",
-    "back": "Back",
-    "next": "Next",
-    "previous": "Previous",
-    "min": "min",
+    "loading": "Wird geladen...",
+    "error": "Fehler",
+    "cancel": "Abbrechen",
+    "confirm": "Bestätigen",
+    "close": "Schließen",
+    "save": "Speichern",
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "back": "Zurück",
+    "next": "Weiter",
+    "previous": "Zurück",
+    "min": "Min",
     "currency": "EUR"
   }
 }
