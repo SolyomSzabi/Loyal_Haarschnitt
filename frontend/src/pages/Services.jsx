@@ -55,6 +55,8 @@ const Services = () => {
     }
   };
 
+  const categories = [...new Set(services.map(s => s.category))].filter(Boolean);
+
   if (loading) {
     return (
       <div className="min-h-screen bg-zinc-50 flex items-center justify-center pt-16">
@@ -105,11 +107,11 @@ const Services = () => {
       {/* Services Grid by Category */}
       <section className="section-padding">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {['Core Services', 'Color Services', 'Perm', 'Highlights and Bleaching', 'Waxing', 'Eyebrows'].map((category) => {
+          {categories.map((category) => {
             const categoryServices = services.filter(s => s.category === category);
-            
+        
             if (categoryServices.length === 0) return null;
-            
+             
             return (
               <div key={category} className="mb-16 last:mb-0">
                 <h2 className="text-3xl font-bold font-heading text-zinc-900 mb-8 text-center">
