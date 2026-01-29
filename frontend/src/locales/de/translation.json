@@ -109,8 +109,40 @@
     }
   },
   "gallery": {
-    "title": "Galerie",
-    "subtitle": "Entdecken Sie unsere Arbeit und sehen Sie die Verwandlungen"
+    "title": "Unsere Galerie",
+    "subtitle": "Entdecken Sie unser Portfolio, das die Kunstfertigkeit und das Handwerk zeigt, die Loyal Haarschnitt definieren. Jeder Schnitt erzählt eine Geschichte von Präzision und Stil.",
+    "categories": {
+      "all": "Alle Arbeiten",
+      "haircuts": "Haarschnitte",
+      "beard": "Bartpflege",
+      "styling": "Styling",
+      "shop": "Unser Salon"
+    },
+    "images": {
+      "professional": {
+        "title": "Professionelles Barbering",
+        "description": "Expertenschnitt mit Präzision"
+      },
+      "classic": {
+        "title": "Klassischer Schnitt in Arbeit",
+        "description": "Traditionelle Barbiertechniken"
+      },
+      "styled": {
+        "title": "Gestylt & Gepflegt",
+        "description": "Komplettes Pflegeergebnis"
+      },
+      "modern": {
+        "title": "Moderner Fade",
+        "description": "Zeitgenössisches Styling"
+      }
+    },
+    "noResults": "Keine Bilder in dieser Kategorie gefunden.",
+    "cta": {
+      "title": "Bereit für Ihr bestes Aussehen?",
+      "subtitle": "Schließen Sie sich unseren zufriedenen Kunden an und erleben Sie den Loyal Haarschnitt-Unterschied. Buchen Sie Ihren Termin und lassen Sie uns Ihren nächsten charakteristischen Look kreieren.",
+      "bookButton": "Termin buchen",
+      "servicesButton": "Dienstleistungen ansehen"
+    }
   },
   "contact": {
     "title": "Kontaktieren Sie uns",
