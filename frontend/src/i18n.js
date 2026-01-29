@@ -3,8 +3,7 @@ import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 
 import enTranslation from './locales/en/translation.json';
-import roTranslation from './locales/ro/translation.json';
-import huTranslation from './locales/hu/translation.json';
+import deTranslation from './locales/de/translation.json';
 
 i18n
   .use(LanguageDetector)
@@ -14,11 +13,8 @@ i18n
       en: {
         translation: enTranslation
       },
-      ro: {
-        translation: roTranslation
-      },
-      hu: {
-        translation: huTranslation
+      de: {
+        translation: deTranslation
       }
     },
     lng: 'en',
