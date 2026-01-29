@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Input } from '../components/ui/input';
@@ -17,6 +18,7 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
 const Booking = () => {
+  const { t, i18n } = useTranslation();
   const location = useLocation();
   const selectedService = location.state?.selectedService || null;
 
@@ -31,6 +33,13 @@ const Booking = () => {
   const [submitting, setSubmitting] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const [expandedServiceId, setExpandedServiceId] = useState(null);
+  
+  // Helper function to get localized field
+  const getLocalizedField = (item, fieldName) => {
+    const currentLang = i18n.language;
+    const localizedFieldName = currentLang === 'de' ? `${fieldName}_de` : fieldName;
+    return item[localizedFieldName] || item[fieldName] || '';
+  };
   
   const [bookingData, setBookingData] = useState({
     serviceId: selectedService?.id || '',
@@ -110,7 +119,7 @@ const Booking = () => {
     setBookingData(prev => ({
       ...prev,
       serviceId: newServiceId,
-      serviceName: barberService?.service_name || '',
+      serviceName: getLocalizedField(barberService, 'service_name'),
       barberServiceId: barberServiceId,
       appointmentTime: '' // Reset time when service changes
     }));
@@ -221,7 +230,7 @@ const Booking = () => {
       }
     } catch (error) {
       console.error('Error booking appointment:', error);
-      toast.error('Failed to book appointment. Please try again.');
+      toast.error(t('booking.error'));
     } finally {
       setSubmitting(false);
     }
@@ -234,7 +243,7 @@ const Booking = () => {
       <div className="min-h-screen bg-zinc-50 flex items-center justify-center pt-16">
         <div className="text-center">
           <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-yellow-600" />
-          <p className="text-zinc-600">Loading booking system...</p>
+          <p className="text-zinc-600">{t('common.loading')}</p>
         </div>
       </div>
     );
@@ -248,10 +257,10 @@ const Booking = () => {
           {/* Header */}
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-5xl font-bold font-heading text-zinc-900 mb-6">
-              Book Your Appointment
+              {t('booking.title')}
             </h1>
             <p className="text-xl text-zinc-600 max-w-2xl mx-auto">
-              Schedule your visit to Loyal Haarschnitt in just a few simple steps.
+              {t('booking.subtitle')}
             </p>
           </div>
 
@@ -287,10 +296,10 @@ const Booking = () => {
           <Card className="shadow-lg">
             <CardHeader>
               <CardTitle className="text-2xl font-bold text-zinc-900">
-                {currentStep === 1 && 'Select Service & Hair Stylist'}
-                {currentStep === 2 && 'Choose Date & Time'}
-                {currentStep === 3 && 'Contact Information'}
-                {currentStep === 4 && 'Booking Confirmed!'}
+                {currentStep === 1 && t('booking.steps.selectService')}
+                {currentStep === 2 && t('booking.steps.datetime')}
+                {currentStep === 3 && t('booking.steps.contactInfo')}
+                {currentStep === 4 && t('booking.steps.confirmed')}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -301,7 +310,7 @@ const Booking = () => {
                   {/* Barber Selection */}
                   <div>
                     <h3 className="text-lg font-semibold text-zinc-900 mb-4">
-                      Choose Your Hair Stylist
+                      {t('booking.selectBarber')}
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {barbers.map((barber) => (
@@ -335,16 +344,16 @@ const Booking = () => {
                   {bookingData.barberId && (
                     <div>
                       <h3 className="text-lg font-semibold text-zinc-900 mb-4">
-                        Choose Your Service with {bookingData.barberName}
+                        {t('booking.chooseService')} {bookingData.barberName}
                       </h3>
                       {services.length === 0 ? (
                         <div className="text-center py-8 text-zinc-500">
                           <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
-                          <p>Loading services...</p>
+                          <p>{t('booking.loadingServices')}</p>
                         </div>
                       ) : (
                         <div className="space-y-8">
-                          {['Core Services', 'Color Services', 'Perm', 'Highlights and Bleaching', 'Waxing', 'Eyebrows'].map((category) => {
+                          {['Core Services', 'Beard Care', 'Color', 'Perm', 'Highlights - Bleaching', 'Waxing', 'Eyebrow '].map((category) => {
                             const categoryServices = services.filter(s => s.category === category);
                             
                             if (categoryServices.length === 0) return null;
@@ -369,25 +378,27 @@ const Booking = () => {
                                       data-testid={`service-option-${service.id}`}
                                     >
                                       <div className="flex items-start justify-between mb-2">
-                                        <h4 className="font-semibold text-zinc-900 flex-1">{service.service_name}</h4>
-                                          {service.service_description && service.service_description.trim() !== '' && (
-                                            <button
-                                              onClick={(e) => {
-                                                e.stopPropagation();
-                                                toggleServiceDescription(service.id);
-                                              }}
-                                              className="ml-2 p-1 hover:bg-zinc-100 rounded-full transition-colors"
-                                              aria-label="Toggle description"
-                                            >
-                                              <Info className="h-4 w-4 text-zinc-500" />
-                                            </button>
-                                          )}
+                                        <h4 className="font-semibold text-zinc-900 flex-1">
+                                          {getLocalizedField(service, 'service_name')}
+                                        </h4>
+                                        {getLocalizedField(service, 'service_description').trim() !== '' && (
+                                          <button
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              toggleServiceDescription(service.id);
+                                            }}
+                                            className="ml-2 p-1 hover:bg-zinc-100 rounded-full transition-colors"
+                                            aria-label="Toggle description"
+                                          >
+                                            <Info className="h-4 w-4 text-zinc-500" />
+                                          </button>
+                                        )}
                                       </div>
                                       
                                       {/* Collapsible Description */}
-                                      {expandedServiceId === service.id && service.service_description && (
+                                      {expandedServiceId === service.id && getLocalizedField(service, 'service_description') && (
                                         <p className="text-sm text-zinc-600 mb-3 pb-3 border-b border-zinc-200">
-                                          {service.service_description}
+                                          {getLocalizedField(service, 'service_description')}
                                         </p>
                                       )}
                                       
@@ -416,10 +427,10 @@ const Booking = () => {
                   {/* Selection Summary */}
                   {bookingData.barberId && bookingData.serviceId && (
                     <div className="bg-green-50 p-4 rounded-lg">
-                      <h4 className="font-semibold text-green-800 mb-2">Selection Summary</h4>
+                      <h4 className="font-semibold text-green-800 mb-2">{t('booking.selectionSummary')}</h4>
                       <div className="text-sm text-green-700">
-                        <p><strong>Service:</strong> {bookingData.serviceName}</p>
-                        <p><strong>Hair Stylist:</strong> {bookingData.barberName}</p>
+                        <p><strong>{t('booking.service')}:</strong> {bookingData.serviceName}</p>
+                        <p><strong>{t('booking.hairStylist')}:</strong> {bookingData.barberName}</p>
                       </div>
                     </div>
                   )}
@@ -431,10 +442,10 @@ const Booking = () => {
                 <div className="space-y-6" data-testid="datetime-selection-step">
                   {selectedServiceDetails && (
                     <div className="bg-yellow-50 p-4 rounded-lg mb-6">
-                      <h3 className="font-semibold text-zinc-900 mb-3">Your Selection:</h3>
+                      <h3 className="font-semibold text-zinc-900 mb-3">{t('booking.appointmentSummary')}:</h3>
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
-                          <span className="text-zinc-700"><strong>Service:</strong> {selectedServiceDetails.service_name}</span>
+                          <span className="text-zinc-700"><strong>{t('booking.service')}:</strong> {getLocalizedField(selectedServiceDetails, 'service_name')}</span>
                           <div className="flex items-center space-x-2">
                             <Badge variant="secondary">{selectedServiceDetails.duration} min</Badge>
                             <span className="font-semibold text-green-600">{selectedServiceDetails.price} EUR</span>
@@ -442,7 +453,7 @@ const Booking = () => {
                         </div>
                         {bookingData.barberName && (
                           <div className="flex items-center">
-                            <span className="text-zinc-700"><strong>Hair Stylist:</strong> {bookingData.barberName}</span>
+                            <span className="text-zinc-700"><strong>{t('booking.hairStylist')}:</strong> {bookingData.barberName}</span>
                           </div>
                         )}
                       </div>
@@ -453,7 +464,7 @@ const Booking = () => {
                     {/* Calendar */}
                     <div>
                       <Label className="text-lg font-semibold text-zinc-900 mb-4 block">
-                        Select Date
+                        {t('booking.selectDate')}
                       </Label>
                       <div className="calendar-container">
                         <Calendar
@@ -479,22 +490,22 @@ const Booking = () => {
                     {/* Available Time Slots */}
                     <div>
                       <Label className="text-lg font-semibold text-zinc-900 mb-4 block">
-                        Available Time Slots
+                        {t('booking.availableSlots')}
                       </Label>
                       {!bookingData.appointmentDate ? (
                         <div className="text-center py-8 text-zinc-500">
                           <CalendarIcon className="h-12 w-12 mx-auto mb-4 text-zinc-300" />
-                          <p>Please select a date first</p>
+                          <p>{t('booking.pleaseSelectDate')}</p>
                         </div>
                       ) : loadingSlots ? (
                         <div className="text-center py-8">
                           <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-yellow-600" />
-                          <p className="text-zinc-600">Loading available slots...</p>
+                          <p className="text-zinc-600">{t('booking.loadingSlots')}</p>
                         </div>
                       ) : availableSlots.length === 0 ? (
                         <div className="text-center py-8 text-zinc-500">
                           <Clock className="h-12 w-12 mx-auto mb-4 text-zinc-300" />
-                          <p>No available slots for selected date</p>
+                          <p>{t('booking.noAvailableSlots')}</p>
                         </div>
                       ) : (
                         <div className="grid grid-cols-2 gap-2 max-h-80 overflow-y-auto">
@@ -515,7 +526,7 @@ const Booking = () => {
                             >
                               {slot.time}
                               {!slot.available && (
-                                <span className="block text-xs mt-1">Unavailable</span>
+                                <span className="block text-xs mt-1">{t('booking.unavailable')}</span>
                               )}
                             </Button>
                           ))}
@@ -527,7 +538,7 @@ const Booking = () => {
                   {bookingData.appointmentDate && bookingData.appointmentTime && (
                     <div className="bg-green-50 p-4 rounded-lg mt-6">
                       <p className="text-green-800">
-                        <strong>Selected:</strong> {format(bookingData.appointmentDate, 'EEEE, MMMM d, yyyy')} at {bookingData.appointmentTime}
+                        <strong>{t('booking.selected')}:</strong> {format(bookingData.appointmentDate, 'EEEE, MMMM d, yyyy')} at {bookingData.appointmentTime}
                       </p>
                     </div>
                   )}
@@ -538,21 +549,21 @@ const Booking = () => {
               {currentStep === 3 && (
                 <form onSubmit={handleSubmit} className="space-y-6" data-testid="contact-info-step">
                   <div className="bg-yellow-50 p-4 rounded-lg mb-6">
-                    <h3 className="font-semibold text-zinc-900 mb-2">Appointment Summary:</h3>
+                    <h3 className="font-semibold text-zinc-900 mb-2">{t('booking.appointmentSummary')}:</h3>
                     <div className="space-y-1 text-sm text-zinc-700">
-                      <p><strong>Service:</strong> {bookingData.serviceName}</p>
-                      <p><strong>Hair Stylist:</strong> {bookingData.barberName}</p>
-                      <p><strong>Date:</strong> {bookingData.appointmentDate && format(bookingData.appointmentDate, 'EEEE, MMMM d, yyyy')}</p>
-                      <p><strong>Time:</strong> {bookingData.appointmentTime}</p>
-                      <p><strong>Duration:</strong> {selectedServiceDetails?.duration} minutes</p>
-                      <p><strong>Price:</strong> {selectedServiceDetails?.price} EUR</p>
+                      <p><strong>{t('booking.service')}:</strong> {bookingData.serviceName}</p>
+                      <p><strong>{t('booking.hairStylist')}:</strong> {bookingData.barberName}</p>
+                      <p><strong>{t('booking.date')}:</strong> {bookingData.appointmentDate && format(bookingData.appointmentDate, 'EEEE, MMMM d, yyyy')}</p>
+                      <p><strong>{t('booking.time')}:</strong> {bookingData.appointmentTime}</p>
+                      <p><strong>{t('booking.duration')}:</strong> {selectedServiceDetails?.duration} {t('booking.minutes')}</p>
+                      <p><strong>{t('booking.price')}:</strong> {selectedServiceDetails?.price} EUR</p>
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <Label htmlFor="customerName" className="text-zinc-700 font-medium">
-                        Full Name *
+                        {t('booking.fullName')} *
                       </Label>
                       <Input
                         id="customerName"
@@ -562,14 +573,14 @@ const Booking = () => {
                         value={bookingData.customerName}
                         onChange={handleInputChange}
                         className="mt-2 form-input"
-                        placeholder="Enter your full name"
+                        placeholder={t('booking.fullName')}
                         data-testid="customer-name-input"
                       />
                     </div>
 
                     <div>
                       <Label htmlFor="customerPhone" className="text-zinc-700 font-medium">
-                        Phone Number *
+                        {t('booking.phone')} *
                       </Label>
                       <Input
                         id="customerPhone"
@@ -579,7 +590,7 @@ const Booking = () => {
                         value={bookingData.customerPhone}
                         onChange={handleInputChange}
                         className="mt-2 form-input"
-                        placeholder="(555) 123-4567"
+                        placeholder={t('booking.phone')}
                         data-testid="customer-phone-input"
                       />
                     </div>
@@ -587,7 +598,7 @@ const Booking = () => {
 
                   <div>
                     <Label htmlFor="customerEmail" className="text-zinc-700 font-medium">
-                      Email Address *
+                      {t('booking.email')} *
                     </Label>
                     <Input
                       id="customerEmail"
@@ -597,15 +608,14 @@ const Booking = () => {
                       value={bookingData.customerEmail}
                       onChange={handleInputChange}
                       className="mt-2 form-input"
-                      placeholder="your.email@example.com"
+                      placeholder={t('booking.email')}
                       data-testid="customer-email-input"
                     />
                   </div>
 
                   <div className="bg-zinc-50 p-4 rounded-lg">
                     <p className="text-sm text-zinc-600">
-                      <strong>Note:</strong> We'll send a confirmation email and may call to confirm your appointment. 
-                      Please arrive 5 minutes early for your scheduled time.
+                      <strong>{t('booking.note')}:</strong> {t('booking.noteText')}
                     </p>
                   </div>
                 </form>
@@ -616,22 +626,21 @@ const Booking = () => {
                 <div className="text-center py-8" data-testid="booking-success">
                   <CheckCircle className="h-16 w-16 text-green-600 mx-auto mb-6" />
                   <h2 className="text-2xl font-bold text-zinc-900 mb-4">
-                    Appointment Booked Successfully!
+                    {t('booking.success.title')}
                   </h2>
                   <p className="text-zinc-600 mb-6">
-                    Thank you for choosing Loyal Haarschnitt. We've received your booking request 
-                    and will contact you shortly to confirm your appointment.
+                    {t('booking.success.message')}
                   </p>
                   
                   <div className="bg-zinc-50 p-6 rounded-lg text-left max-w-md mx-auto mb-6">
-                    <h3 className="font-semibold text-zinc-900 mb-3">Appointment Details:</h3>
+                    <h3 className="font-semibold text-zinc-900 mb-3">{t('booking.success.details')}:</h3>
                     <div className="space-y-2 text-sm">
-                      <p><strong>Service:</strong> {bookingData.serviceName}</p>
-                      <p><strong>Hair Stylist:</strong> {bookingData.barberName}</p>
-                      <p><strong>Date:</strong> {bookingData.appointmentDate && format(bookingData.appointmentDate, 'EEEE, MMMM d, yyyy')}</p>
-                      <p><strong>Time:</strong> {bookingData.appointmentTime}</p>
-                      <p><strong>Customer:</strong> {bookingData.customerName}</p>
-                      <p><strong>Contact:</strong> {bookingData.customerEmail}</p>
+                      <p><strong>{t('booking.service')}:</strong> {bookingData.serviceName}</p>
+                      <p><strong>{t('booking.hairStylist')}:</strong> {bookingData.barberName}</p>
+                      <p><strong>{t('booking.date')}:</strong> {bookingData.appointmentDate && format(bookingData.appointmentDate, 'EEEE, MMMM d, yyyy')}</p>
+                      <p><strong>{t('booking.time')}:</strong> {bookingData.appointmentTime}</p>
+                      <p><strong>{t('booking.success.customer')}:</strong> {bookingData.customerName}</p>
+                      <p><strong>{t('booking.success.contact')}:</strong> {bookingData.customerEmail}</p>
                     </div>
                   </div>
 
@@ -658,7 +667,7 @@ const Booking = () => {
                     className="bg-yellow-600 hover:bg-yellow-700 text-white"
                     data-testid="book-another-btn"
                   >
-                    Book Another Appointment
+                    {t('booking.success.bookAnother')}
                   </Button>
                 </div>
               )}
@@ -672,7 +681,7 @@ const Booking = () => {
                     disabled={currentStep === 1}
                     data-testid="prev-step-btn"
                   >
-                    Previous
+                    {t('booking.previous')}
                   </Button>
                   
                   {currentStep < 3 ? (
@@ -688,7 +697,7 @@ const Booking = () => {
                       className="bg-yellow-600 hover:bg-yellow-700 text-white"
                       data-testid="next-step-btn"
                     >
-                      Next Step
+                      {t('booking.nextStep')}
                     </Button>
                   ) : (
                     <Button
@@ -706,10 +715,10 @@ const Booking = () => {
                       {submitting ? (
                         <>
                           <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                          Booking...
+                          {t('booking.booking')}
                         </>
                       ) : (
-                        'Book Appointment'
+                        t('booking.bookingButton')
                       )}
                     </Button>
                   )}
