@@ -71,7 +71,34 @@
   },
   "services": {
     "title": "Unsere Dienstleistungen",
-    "subtitle": "Professionelle Pflegeleistungen, abgestimmt auf Ihren Stil",
+    "subtitle": "Entdecken Sie unser umfassendes Angebot an erstklassigen Pflegeleistungen, jede mit Präzision und Sorgfalt gestaltet, um Ihnen den perfekten Look zu geben.",
+    "bookAppointment": "Termin buchen",
+    "from": "Ab",
+    "bookThisService": "Diese Leistung buchen",
+    "error": "Dienstleistungen konnten nicht geladen werden",
+    "tryAgain": "Erneut versuchen",
+    "whatMakesSpecial": {
+      "title": "Was macht unsere Dienstleistungen besonders?",
+      "precision": {
+        "title": "Präzisionsschnitte",
+        "description": "Jeder Schnitt wird mit akribischer Detailgenauigkeit und jahrelanger Erfahrung ausgeführt."
+      },
+      "products": {
+        "title": "Premium-Produkte",
+        "description": "Wir verwenden nur die besten Pflegeprodukte und professionelle Werkzeuge."
+      },
+      "consultation": {
+        "title": "Persönliche Beratung",
+        "description": "Jede Dienstleistung beginnt mit einer Beratung, um Ihren Stil und Ihre Präferenzen zu verstehen."
+      }
+    },
+    "pricing": {
+      "title": "Personalisierte Preisgestaltung",
+      "subtitle": "Unsere erfahrenen Friseure bieten Dienstleistungen zu verschiedenen Preisstufen an, basierend auf ihrer Expertise und Spezialisierung. Wählen Sie während der Buchung Ihren bevorzugten Friseur, um die genauen Preise zu sehen.",
+      "noteTitle": "*Preishinweis",
+      "noteDescription": "Die angezeigten Preise sind Startpreise. Jeder Friseur hat seine eigene Preisgestaltung basierend auf Erfahrung und Spezialisierungen. Die endgültigen Preise werden bestätigt, wenn Sie während des Buchungsprozesses Ihren bevorzugten Friseur auswählen.",
+      "bookButton": "Buchen Sie Ihre Dienstleistung heute"
+    },
     "categories": {
       "men": "Herren",
       "women": "Damen",
@@ -178,7 +205,7 @@
   },
   "booking": {
     "title": "Termin buchen",
-    "subtitle": "Besuchen Sie Loyal Haarschnitt in nur wenigen einfachen Schritten",
+    "subtitle": "Besuchen Sie Oxyss Style in nur wenigen einfachen Schritten",
     "steps": {
       "selectService": "Service & Friseur auswählen",
       "datetime": "Datum & Uhrzeit wählen",
@@ -219,7 +246,7 @@
     "nextStep": "Nächster Schritt",
     "success": {
       "title": "Termin erfolgreich gebucht!",
-      "message": "Vielen Dank, dass Sie sich für Loyal Haarschnitt entschieden haben. Wir haben Ihre Buchungsanfrage erhalten und werden Sie in Kürze kontaktieren, um Ihren Termin zu bestätigen.",
+      "message": "Vielen Dank, dass Sie sich für Oxyss Barbershop entschieden haben. Wir haben Ihre Buchungsanfrage erhalten und werden Sie in Kürze kontaktieren, um Ihren Termin zu bestätigen.",
       "details": "Termindetails",
       "customer": "Kunde",
       "contact": "Kontakt",

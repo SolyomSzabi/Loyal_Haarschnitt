@@ -71,7 +71,34 @@
   },
   "services": {
     "title": "Our Services",
-    "subtitle": "Professional grooming services tailored to your style",
+    "subtitle": "Discover our comprehensive range of premium grooming services, each crafted with precision and care to give you the perfect look.",
+    "bookAppointment": "Book Appointment",
+    "from": "From",
+    "bookThisService": "Book This Service",
+    "error": "Failed to load services",
+    "tryAgain": "Try Again",
+    "whatMakesSpecial": {
+      "title": "What Makes Our Services Special?",
+      "precision": {
+        "title": "Precision Cuts",
+        "description": "Every cut is executed with meticulous attention to detail and years of expertise."
+      },
+      "products": {
+        "title": "Premium Products",
+        "description": "We use only the finest grooming products and professional-grade tools."
+      },
+      "consultation": {
+        "title": "Personal Consultation",
+        "description": "Each service begins with a consultation to understand your style and preferences."
+      }
+    },
+    "pricing": {
+      "title": "Personalized Pricing",
+      "subtitle": "Our experienced hairdressers offer services at different pricing levels based on their expertise and specializations. Choose your preferred hairdresser during booking to see exact pricing.",
+      "noteTitle": "*Pricing Note",
+      "noteDescription": "Prices shown are starting rates. Each hairdresser has their own pricing based on experience and specializations. Final pricing will be confirmed when you select your preferred hairdresser during the booking process.",
+      "bookButton": "Book Your Service Today"
+    },
     "categories": {
       "men": "Men",
       "women": "Women",
@@ -178,7 +205,7 @@
   },
   "booking": {
     "title": "Book Your Appointment",
-    "subtitle": "Schedule your visit to Loyal Haarschnitt in just a few simple steps",
+    "subtitle": "Schedule your visit to Oxyss Style in just a few simple steps",
     "steps": {
       "selectService": "Select Service & Hair Stylist",
       "datetime": "Choose Date & Time",
@@ -219,7 +246,7 @@
     "nextStep": "Next Step",
     "success": {
       "title": "Appointment Booked Successfully!",
-      "message": "Thank you for choosing Loyal Haarschnitt. We've received your booking request and will contact you shortly to confirm your appointment.",
+      "message": "Thank you for choosing Oxyss Barbershop. We've received your booking request and will contact you shortly to confirm your appointment.",
       "details": "Appointment Details",
       "customer": "Customer",
       "contact": "Contact",
