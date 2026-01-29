@@ -1,0 +1,160 @@
+{
+  "nav": {
+    "home": "Startseite",
+    "services": "Dienstleistungen",
+    "gallery": "Galerie",
+    "about": "Über uns",
+    "contact": "Kontakt",
+    "bookAppointment": "Termin buchen"
+  },
+  "home": {
+    "hero": {
+      "title": "Master Hair Studio",
+      "subtitle": "Wo traditionelle Handwerkskunst auf modernen Stil trifft",
+      "bookNow": "Jetzt buchen",
+      "viewServices": "Dienstleistungen ansehen"
+    },
+    "services": {
+      "title": "Unsere Dienstleistungen",
+      "subtitle": "Von klassischen Schnitten bis zu modernen Styles – wir bieten umfassende Pflegeleistungen, individuell auf Sie abgestimmt.",
+      "viewAll": "Alle Dienstleistungen ansehen"
+    },
+    "whyChoose": {
+      "title": "Warum Oxy's wählen?",
+      "experience": {
+        "title": "Erfahrene Barbiere",
+        "desc": "Unser qualifiziertes Team bringt jahrelange Erfahrung mit"
+      },
+      "quality": {
+        "title": "Premium-Produkte",
+        "desc": "Wir verwenden ausschließlich hochwertige Pflegeprodukte"
+      },
+      "atmosphere": {
+        "title": "Moderne Atmosphäre",
+        "desc": "Entspannen Sie sich in unserem zeitgemäßen, einladenden Ambiente"
+      }
+    },
+    "cta": {
+      "title": "Bereit für einen frischen Look?",
+      "subtitle": "Buchen Sie noch heute Ihren Termin und erleben Sie den Oxy's-Unterschied",
+      "button": "Termin buchen"
+    }
+  },
+  "services": {
+    "title": "Unsere Dienstleistungen",
+    "subtitle": "Professionelle Pflegeleistungen, abgestimmt auf Ihren Stil",
+    "categories": {
+      "men": "Herren",
+      "women": "Damen",
+      "kids": "Kinder"
+    },
+    "duration": "Dauer",
+    "startingFrom": "Ab",
+    "bookNow": "Jetzt buchen"
+  },
+  "about": {
+    "title": "Über Oxy's Barbershop",
+    "subtitle": "Ihre Adresse für erstklassige Pflege",
+    "story": {
+      "title": "Unsere Geschichte",
+      "text": "Gegründet aus der Leidenschaft für klassisches Barbierhandwerk und modernen Stil ist Oxy's Barbershop zu einem festen Bestandteil der Community geworden. Wir verbinden traditionelle Techniken mit aktuellen Trends, um außergewöhnliche Pflegeerlebnisse zu bieten."
+    },
+    "team": {
+      "title": "Lernen Sie unser Team kennen",
+      "subtitle": "Erfahrene Barbiere mit Hingabe zu Ihrem Stil"
+    },
+    "values": {
+      "title": "Unsere Werte",
+      "quality": {
+        "title": "Qualität an erster Stelle",
+        "desc": "Wir machen keine Kompromisse bei der Qualität unserer Dienstleistungen"
+      },
+      "customer": {
+        "title": "Kundenorientierung",
+        "desc": "Ihre Zufriedenheit hat für uns oberste Priorität"
+      },
+      "innovation": {
+        "title": "Innovation",
+        "desc": "Wir bleiben stets auf dem neuesten Stand der Trends und Techniken"
+      }
+    }
+  },
+  "gallery": {
+    "title": "Galerie",
+    "subtitle": "Entdecken Sie unsere Arbeit und sehen Sie die Verwandlungen"
+  },
+  "contact": {
+    "title": "Kontaktieren Sie uns",
+    "subtitle": "Nehmen Sie Kontakt mit uns auf",
+    "info": {
+      "title": "Kontaktinformationen",
+      "address": "Adresse",
+      "phone": "Telefon",
+      "email": "E-Mail",
+      "hours": "Öffnungszeiten"
+    },
+    "form": {
+      "title": "Senden Sie uns eine Nachricht",
+      "name": "Ihr Name",
+      "email": "Ihre E-Mail-Adresse",
+      "message": "Ihre Nachricht",
+      "send": "Nachricht senden",
+      "sending": "Wird gesendet...",
+      "success": "Nachricht erfolgreich gesendet!",
+      "error": "Nachricht konnte nicht gesendet werden"
+    },
+    "schedule": {
+      "weekdays": "Mo – Fr: 9:00 – 20:00",
+      "saturday": "Sa: 8:00 – 18:00",
+      "sunday": "So: 10:00 – 16:00"
+    }
+  },
+  "booking": {
+    "title": "Termin buchen",
+    "subtitle": "Wählen Sie Ihren bevorzugten Barbier, Service, Datum und Uhrzeit",
+    "steps": {
+      "barber": "Barbier auswählen",
+      "service": "Service auswählen",
+      "datetime": "Datum & Uhrzeit",
+      "details": "Ihre Angaben"
+    },
+    "selectBarber": "Wählen Sie Ihren Barbier",
+    "selectService": "Wählen Sie einen Service",
+    "selectDate": "Datum auswählen",
+    "selectTime": "Uhrzeit auswählen",
+    "availableSlots": "Verfügbare Zeitfenster",
+    "noSlots": "Keine verfügbaren Termine für dieses Datum",
+    "yourDetails": "Ihre Angaben",
+    "fullName": "Vollständiger Name",
+    "email": "E-Mail-Adresse",
+    "phone": "Telefonnummer",
+    "bookingButton": "Termin buchen",
+    "booking": "Buchung läuft...",
+    "success": "Termin erfolgreich gebucht!",
+    "error": "Terminbuchung fehlgeschlagen",
+    "summary": {
+      "title": "Buchungsübersicht",
+      "barber": "Barbier",
+      "service": "Service",
+      "date": "Datum",
+      "time": "Uhrzeit",
+      "duration": "Dauer",
+      "price": "Preis"
+    }
+  },
+  "common": {
+    "loading": "Wird geladen...",
+    "error": "Fehler",
+    "cancel": "Abbrechen",
+    "confirm": "Bestätigen",
+    "close": "Schließen",
+    "save": "Speichern",
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "back": "Zurück",
+    "next": "Weiter",
+    "previous": "Zurück",
+    "min": "Min",
+    "currency": "RON"
+  }
+}
