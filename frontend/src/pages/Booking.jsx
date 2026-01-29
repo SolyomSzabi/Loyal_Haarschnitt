@@ -370,16 +370,18 @@ const Booking = () => {
                                     >
                                       <div className="flex items-start justify-between mb-2">
                                         <h4 className="font-semibold text-zinc-900 flex-1">{service.service_name}</h4>
-                                        <button
-                                          onClick={(e) => {
-                                            e.stopPropagation();
-                                            toggleServiceDescription(service.id);
-                                          }}
-                                          className="ml-2 p-1 hover:bg-zinc-100 rounded-full transition-colors"
-                                          aria-label="Toggle description"
-                                        >
-                                          <Info className="h-4 w-4 text-zinc-500" />
-                                        </button>
+                                          {service.service_description && service.service_description.trim() !== '' && (
+                                            <button
+                                              onClick={(e) => {
+                                                e.stopPropagation();
+                                                toggleServiceDescription(service.id);
+                                              }}
+                                              className="ml-2 p-1 hover:bg-zinc-100 rounded-full transition-colors"
+                                              aria-label="Toggle description"
+                                            >
+                                              <Info className="h-4 w-4 text-zinc-500" />
+                                            </button>
+                                          )}
                                       </div>
                                       
                                       {/* Collapsible Description */}
