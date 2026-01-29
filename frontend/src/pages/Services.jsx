@@ -37,11 +37,12 @@ const Services = () => {
       
       // Remove duplicate services by name, keeping the first occurrence
       const uniqueServices = [];
-      const seenNames = new Set();
-      
+      const seenCombos = new Set();
+
       for (const service of response.data) {
-        if (!seenNames.has(service.name)) {
-          seenNames.add(service.name);
+        const combo = `${service.name}-${service.category}`;
+        if (!seenCombos.has(combo)) {
+          seenCombos.add(combo);
           uniqueServices.push(service);
         }
       }
