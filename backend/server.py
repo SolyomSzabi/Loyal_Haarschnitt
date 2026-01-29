@@ -155,6 +155,7 @@ class Barber(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     name: str
     description: str
+    description_de: str
     experience_years: int
     specialties: List[str]
     image_url: Optional[str] = None
@@ -163,6 +164,7 @@ class Barber(BaseModel):
 class BarberCreate(BaseModel):
     name: str
     description: str
+    description_de: str
     experience_years: int
     specialties: List[str]
     image_url: Optional[str] = None
