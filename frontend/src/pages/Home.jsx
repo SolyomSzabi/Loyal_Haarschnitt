@@ -13,24 +13,26 @@ import gallery4 from "../assets/gallery4.jpg";
 
 const Home = () => {
   const { t } = useTranslation();
+  
+  // Services are now defined using translation keys
   const services = [
     {
-      name: "Men's Haircut",
-      price: '33 EUR',
-      duration: '30 min',
-      description: 'Individual men’s haircut tailored to face shape, hair texture, and personal style. Includes clean styling. Focused service – precise, professional, no add-ons.'
+      nameKey: 'home.services.items.mensHaircut.name',
+      priceKey: 'home.services.items.mensHaircut.price',
+      durationKey: 'home.services.items.mensHaircut.duration',
+      descriptionKey: 'home.services.items.mensHaircut.description'
     },
     {
-      name: "Men’s Haircut Pro",
-      price: '43 EUR',
-      duration: '60 min',
-      description: 'In-depth consultation. Hair wash, scalp massage, conditioner. Individual haircut and styling. Drink included. More time, more calm, more experience.'
+      nameKey: 'home.services.items.mensHaircutPro.name',
+      priceKey: 'home.services.items.mensHaircutPro.price',
+      durationKey: 'home.services.items.mensHaircutPro.duration',
+      descriptionKey: 'home.services.items.mensHaircutPro.description'
     },
     {
-      name: "Beard Trim / Classic Shave (Wet Shave)",
-      price: '25 EUR',
-      duration: '30 min',
-      description: 'Professional beard shaping and precise contours. Traditional wet shave (for Classic Shave). Aftershave and finishing care.'
+      nameKey: 'home.services.items.beardTrim.name',
+      priceKey: 'home.services.items.beardTrim.price',
+      durationKey: 'home.services.items.beardTrim.duration',
+      descriptionKey: 'home.services.items.beardTrim.description'
     }
   ];
 
@@ -104,15 +106,15 @@ const Home = () => {
           <div className="flex flex-wrap justify-center items-center gap-6 mt-12 text-gray-300">
             <div className="flex items-center space-x-2">
               <MapPin className="h-5 w-5 text-yellow-400" />
-              <span>Str. Ratinului, nr.959, Crasna, Sălaj, Romania</span>
+              <span>{t('home.hero.location')}</span>
             </div>
             <div className="flex items-center space-x-2">
               <Clock className="h-5 w-5 text-yellow-400" />
-              <span>Open 10AM - 7PM</span>
+              <span>{t('home.hero.hours')}</span>
             </div>
             <div className="flex items-center space-x-2">
               <Star className="h-5 w-5 text-yellow-400 fill-current" />
-              <span>5/5 Rating</span>
+              <span>{t('home.hero.rating')}</span>
             </div>
           </div>
         </div>
@@ -136,16 +138,16 @@ const Home = () => {
                 <CardContent className="p-6">
                   <div className="flex justify-between items-start mb-4">
                     <h3 className="text-xl font-semibold text-zinc-900">
-                      {service.name}
+                      {t(service.nameKey)}
                     </h3>
                     <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
-                      {service.duration}
+                      {t(service.durationKey)}
                     </Badge>
                   </div>
-                  <p className="text-zinc-600 mb-4">{service.description}</p>
+                  <p className="text-zinc-600 mb-4">{t(service.descriptionKey)}</p>
                   <div className="flex justify-between items-center">
                     <span className="text-2xl font-bold text-yellow-600">
-                      {service.price}
+                      {t(service.priceKey)}
                     </span>
                     <Link to="/booking">
                       <Button 
@@ -176,15 +178,16 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Why Choose Us 
+      {/* Why Choose Us */}
+      {/* Uncomment this section if you want to enable it
       <section className="section-padding bg-zinc-50" data-testid="why-choose-us-section">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold font-heading text-zinc-900 mb-4">
-              Why Choose Oxy'ss?
+              {t('home.whyChoose.title')}
             </h2>
             <p className="text-xl text-zinc-600 max-w-2xl mx-auto">
-              Experience the difference that quality, expertise, and attention to detail make.
+              {t('home.whyChoose.subtitle')}
             </p>
           </div>
 
@@ -195,26 +198,27 @@ const Home = () => {
                   {feature.icon}
                 </div>
                 <h3 className="text-xl font-semibold text-zinc-900 mb-3">
-                  {feature.title}
+                  {t(feature.titleKey)}
                 </h3>
                 <p className="text-zinc-600">
-                  {feature.description}
+                  {t(feature.descKey)}
                 </p>
               </div>
             ))}
           </div>
         </div>
-      </section>*/}
+      </section>
+      */}
 
       {/* Gallery Preview */}
       <section className="section-padding bg-white" data-testid="gallery-preview-section">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold font-heading text-zinc-900 mb-4">
-              Our Work Speaks
+              {t('home.gallery.title')}
             </h2>
             <p className="text-xl text-zinc-600 max-w-2xl mx-auto">
-              See the transformation and craftsmanship that sets us apart.
+              {t('home.gallery.subtitle')}
             </p>
           </div>
 
@@ -243,7 +247,7 @@ const Home = () => {
                 className="border-zinc-900 text-zinc-900 hover:bg-zinc-900 hover:text-white px-8"
                 data-testid="view-gallery-btn"
               >
-                View Full Gallery
+                {t('home.gallery.viewFull')}
               </Button>
             </Link>
           </div>
@@ -254,11 +258,10 @@ const Home = () => {
       <section className="section-padding bg-zinc-900 text-white" data-testid="cta-section">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl md:text-5xl font-bold font-heading mb-6">
-            Ready for a Fresh Look?
+            {t('home.cta.title')}
           </h2>
           <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-            Book your appointment today and experience the Loyal Haarschnitt difference. 
-            Walk in ordinary, walk out extraordinary.
+            {t('home.cta.subtitle')}
           </p>
           <Link to="/booking">
             <Button 
@@ -266,7 +269,7 @@ const Home = () => {
               className="bg-yellow-600 hover:bg-yellow-700 text-white font-semibold px-8 py-3 text-lg"
               data-testid="cta-book-appointment-btn"
             >
-              Book Your Appointment Now
+              {t('home.cta.button')}
             </Button>
           </Link>
         </div>

@@ -12,15 +12,39 @@
       "title": "Master Hair Studio",
       "subtitle": "Where traditional craftsmanship meets modern style",
       "bookNow": "Book Now",
-      "viewServices": "View Services"
+      "viewServices": "View Services",
+      "location": "Str. Ratinului, nr.959, Crasna, Sălaj, Romania",
+      "hours": "Open 10AM - 7PM",
+      "rating": "5/5 Rating"
     },
     "services": {
       "title": "Our Services",
-      "subtitle" :"From classic cuts to modern styles, we offer comprehensive grooming services tailored to your needs.",
-      "viewAll": "View All Services"
+      "subtitle": "From classic cuts to modern styles, we offer comprehensive grooming services tailored to your needs.",
+      "viewAll": "View All Services",
+      "items": {
+        "mensHaircut": {
+          "name": "Men's Haircut",
+          "price": "33 EUR",
+          "duration": "30 min",
+          "description": "Individual men's haircut tailored to face shape, hair texture, and personal style. Includes clean styling. Focused service – precise, professional, no add-ons."
+        },
+        "mensHaircutPro": {
+          "name": "Men's Haircut Pro",
+          "price": "43 EUR",
+          "duration": "60 min",
+          "description": "In-depth consultation. Hair wash, scalp massage, conditioner. Individual haircut and styling. Drink included. More time, more calm, more experience."
+        },
+        "beardTrim": {
+          "name": "Beard Trim / Classic Shave (Wet Shave)",
+          "price": "25 EUR",
+          "duration": "30 min",
+          "description": "Professional beard shaping and precise contours. Traditional wet shave (for Classic Shave). Aftershave and finishing care."
+        }
+      }
     },
     "whyChoose": {
-      "title": "Why Choose Oxy's?",
+      "title": "Why Choose Us?",
+      "subtitle": "Experience the difference that quality, expertise, and attention to detail make.",
       "experience": {
         "title": "Expert Barbers",
         "desc": "Our skilled team brings years of experience"
@@ -34,10 +58,15 @@
         "desc": "Relax in our contemporary, welcoming space"
       }
     },
+    "gallery": {
+      "title": "Our Work Speaks",
+      "subtitle": "See the transformation and craftsmanship that sets us apart.",
+      "viewFull": "View Full Gallery"
+    },
     "cta": {
       "title": "Ready for a Fresh Look?",
-      "subtitle": "Book your appointment today and experience the Oxy's difference",
-      "button": "Book Appointment"
+      "subtitle": "Book your appointment today and experience the Loyal Haarschnitt difference. Walk in ordinary, walk out extraordinary.",
+      "button": "Book Your Appointment Now"
     }
   },
   "services": {
@@ -53,11 +82,11 @@
     "bookNow": "Book Now"
   },
   "about": {
-    "title": "About Oxy's Barbershop",
+    "title": "About Loyal Haarschnitt",
     "subtitle": "Your destination for premium grooming",
     "story": {
       "title": "Our Story",
-      "text": "Founded with a passion for classic barbering and modern style, Oxy's Barbershop has become a cornerstone of the community. We blend traditional techniques with contemporary trends to deliver exceptional grooming experiences."
+      "text": "Founded with a passion for classic barbering and modern style, Loyal Haarschnitt has become a cornerstone of the community. We blend traditional techniques with contemporary trends to deliver exceptional grooming experiences."
     },
     "team": {
       "title": "Meet Our Team",
@@ -104,9 +133,9 @@
       "error": "Failed to send message"
     },
     "schedule": {
-      "weekdays": "Mon - Fri: 9:00 AM - 8:00 PM",
-      "saturday": "Sat: 8:00 AM - 6:00 PM",
-      "sunday": "Sun: 10:00 AM - 4:00 PM"
+      "weekdays": "Mon - Fri: 10:00 AM - 7:00 PM",
+      "saturday": "Sat: 10:00 AM - 5:00 PM",
+      "sunday": "Sun: Closed"
     }
   },
   "booking": {
@@ -155,6 +184,6 @@
     "next": "Next",
     "previous": "Previous",
     "min": "min",
-    "currency": "RON"
+    "currency": "EUR"
   }
 }

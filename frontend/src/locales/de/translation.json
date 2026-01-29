@@ -12,15 +12,39 @@
       "title": "Master Hair Studio",
       "subtitle": "Wo traditionelle Handwerkskunst auf modernen Stil trifft",
       "bookNow": "Jetzt buchen",
-      "viewServices": "Dienstleistungen ansehen"
+      "viewServices": "Dienstleistungen ansehen",
+      "location": "Str. Ratinului, nr.959, Crasna, Sălaj, Rumänien",
+      "hours": "Geöffnet 10-19 Uhr",
+      "rating": "5/5 Bewertung"
     },
     "services": {
       "title": "Unsere Dienstleistungen",
       "subtitle": "Von klassischen Schnitten bis zu modernen Styles – wir bieten umfassende Pflegeleistungen, individuell auf Sie abgestimmt.",
-      "viewAll": "Alle Dienstleistungen ansehen"
+      "viewAll": "Alle Dienstleistungen ansehen",
+      "items": {
+        "mensHaircut": {
+          "name": "Herrenhaarschnitt",
+          "price": "33 EUR",
+          "duration": "30 Min",
+          "description": "Individueller Herrenhaarschnitt, abgestimmt auf Gesichtsform, Haarstruktur und persönlichen Stil. Inklusive sauberes Styling. Fokussierter Service – präzise, professionell, ohne Zusatzleistungen."
+        },
+        "mensHaircutPro": {
+          "name": "Herrenhaarschnitt Pro",
+          "price": "43 EUR",
+          "duration": "60 Min",
+          "description": "Ausführliche Beratung. Haarwäsche, Kopfmassage, Conditioner. Individueller Haarschnitt und Styling. Getränk inklusive. Mehr Zeit, mehr Ruhe, mehr Erlebnis."
+        },
+        "beardTrim": {
+          "name": "Bartpflege / Klassische Rasur (Nassrasur)",
+          "price": "25 EUR",
+          "duration": "30 Min",
+          "description": "Professionelles Bart-Styling und präzise Konturen. Traditionelle Nassrasur (bei klassischer Rasur). Aftershave und abschließende Pflege."
+        }
+      }
     },
     "whyChoose": {
-      "title": "Warum Oxy's wählen?",
+      "title": "Warum uns wählen?",
+      "subtitle": "Erleben Sie den Unterschied, den Qualität, Fachwissen und Liebe zum Detail ausmachen.",
       "experience": {
         "title": "Erfahrene Barbiere",
         "desc": "Unser qualifiziertes Team bringt jahrelange Erfahrung mit"
@@ -34,10 +58,15 @@
         "desc": "Entspannen Sie sich in unserem zeitgemäßen, einladenden Ambiente"
       }
     },
+    "gallery": {
+      "title": "Unsere Arbeit spricht für sich",
+      "subtitle": "Sehen Sie die Verwandlung und Handwerkskunst, die uns auszeichnet.",
+      "viewFull": "Vollständige Galerie ansehen"
+    },
     "cta": {
       "title": "Bereit für einen frischen Look?",
-      "subtitle": "Buchen Sie noch heute Ihren Termin und erleben Sie den Oxy's-Unterschied",
-      "button": "Termin buchen"
+      "subtitle": "Buchen Sie noch heute Ihren Termin und erleben Sie den Loyal Haarschnitt-Unterschied. Kommen Sie gewöhnlich, gehen Sie außergewöhnlich.",
+      "button": "Jetzt Termin buchen"
     }
   },
   "services": {
@@ -53,11 +82,11 @@
     "bookNow": "Jetzt buchen"
   },
   "about": {
-    "title": "Über Oxy's Barbershop",
+    "title": "Über Loyal Haarschnitt",
     "subtitle": "Ihre Adresse für erstklassige Pflege",
     "story": {
       "title": "Unsere Geschichte",
-      "text": "Gegründet aus der Leidenschaft für klassisches Barbierhandwerk und modernen Stil ist Oxy's Barbershop zu einem festen Bestandteil der Community geworden. Wir verbinden traditionelle Techniken mit aktuellen Trends, um außergewöhnliche Pflegeerlebnisse zu bieten."
+      "text": "Gegründet aus der Leidenschaft für klassisches Barbierhandwerk und modernen Stil ist Loyal Haarschnitt zu einem festen Bestandteil der Community geworden. Wir verbinden traditionelle Techniken mit aktuellen Trends, um außergewöhnliche Pflegeerlebnisse zu bieten."
     },
     "team": {
       "title": "Lernen Sie unser Team kennen",
@@ -104,9 +133,9 @@
       "error": "Nachricht konnte nicht gesendet werden"
     },
     "schedule": {
-      "weekdays": "Mo – Fr: 9:00 – 20:00",
-      "saturday": "Sa: 8:00 – 18:00",
-      "sunday": "So: 10:00 – 16:00"
+      "weekdays": "Mo – Fr: 10:00 – 19:00 Uhr",
+      "saturday": "Sa: 10:00 – 17:00 Uhr",
+      "sunday": "So: Geschlossen"
     }
   },
   "booking": {
@@ -155,6 +184,6 @@
     "next": "Weiter",
     "previous": "Zurück",
     "min": "Min",
-    "currency": "RON"
+    "currency": "EUR"
   }
 }
