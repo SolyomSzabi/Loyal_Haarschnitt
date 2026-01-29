@@ -332,7 +332,7 @@ const Booking = () => {
                             />
                             <div className="flex-1">
                               <h4 className="font-semibold text-zinc-900 mb-1">{barber.name}</h4>
-                              <p className="text-sm text-zinc-600 mb-2">{barber.description}</p>
+                              <p className="text-sm text-zinc-600 mb-2">{getLocalizedField(barber, 'description')}</p>
                             </div>
                           </div>
                         </div>
