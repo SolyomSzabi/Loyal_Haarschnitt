@@ -177,6 +177,17 @@
       "price": "Preis"
     }
   },
+  "footer": {
+    "description": "Erleben Sie erstklassige Friseurdienstleistungen bei Loyal Haarschnitt. Unsere erfahrenen Friseure kombinieren traditionelle Techniken mit modernem Stil, um Ihnen den perfekten Schnitt zu geben.",
+    "quickLinks": "Schnelllinks",
+    "contactInfo": "Kontaktinformationen",
+    "hours": {
+      "weekdays": "Mo-Fr: 10-19 Uhr",
+      "saturday": "Sa: 10-18 Uhr"
+    },
+    "copyright": "© 2026 Loyal Haarschnitt. Alle Rechte vorbehalten.",
+    "staffLogin": "Mitarbeiter-Login"
+  },
   "common": {
     "loading": "Wird geladen...",
     "error": "Fehler",

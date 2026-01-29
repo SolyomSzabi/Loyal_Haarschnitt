@@ -1,8 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Scissors, MapPin, Clock, Phone, Mail } from 'lucide-react';
 
 const Footer = () => {
+  const { t } = useTranslation();
+
   return (
     <footer className="bg-zinc-900 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -19,8 +22,7 @@ const Footer = () => {
               </div>
             </div>
             <p className="text-zinc-300 mb-6 max-w-md">
-              Experience the finest in hairstyling services at Loyal Haarschnitt. Our skilled hairdressers 
-              combine traditional techniques with modern style to give you the perfect cut.
+              {t('footer.description')}
             </p>
             <div className="flex space-x-4">
               <div className="w-10 h-10 bg-zinc-800 rounded-full flex items-center justify-center hover:bg-yellow-600 transition-colors cursor-pointer">
@@ -39,14 +41,14 @@ const Footer = () => {
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
+            <h3 className="text-lg font-semibold mb-4">{t('footer.quickLinks')}</h3>
             <ul className="space-y-2">
               <li>
                 <Link 
                   to="/" 
                   className="text-zinc-300 hover:text-yellow-400 transition-colors"
                 >
-                  Home
+                  {t('nav.home')}
                 </Link>
               </li>
               <li>
@@ -54,7 +56,7 @@ const Footer = () => {
                   to="/services" 
                   className="text-zinc-300 hover:text-yellow-400 transition-colors"
                 >
-                  Services
+                  {t('nav.services')}
                 </Link>
               </li>
               <li>
@@ -62,23 +64,15 @@ const Footer = () => {
                   to="/gallery" 
                   className="text-zinc-300 hover:text-yellow-400 transition-colors"
                 >
-                  Gallery
+                  {t('nav.gallery')}
                 </Link>
               </li>
-              {/* <li>
-                <Link 
-                  to="/about" 
-                  className="text-zinc-300 hover:text-yellow-400 transition-colors"
-                >
-                  About
-                </Link>
-              </li> */}
               <li>
                 <Link 
                   to="/contact" 
                   className="text-zinc-300 hover:text-yellow-400 transition-colors"
                 >
-                  Contact
+                  {t('nav.contact')}
                 </Link>
               </li>
             </ul>
@@ -86,7 +80,7 @@ const Footer = () => {
 
           {/* Contact Info */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Contact Info</h3>
+            <h3 className="text-lg font-semibold mb-4">{t('footer.contactInfo')}</h3>
             <ul className="space-y-3">
               <li className="flex items-center space-x-3">
                 <MapPin className="h-4 w-4 text-yellow-400" />
@@ -105,8 +99,8 @@ const Footer = () => {
               <li className="flex items-start space-x-3">
                 <Clock className="h-4 w-4 text-yellow-400 mt-1" />
                 <div className="text-zinc-300 text-sm">
-                  <p>Mon-Fri: 10AM - 7PM</p>
-                  <p>Sat: 10AM - 6PM</p>
+                  <p>{t('footer.hours.weekdays')}</p>
+                  <p>{t('footer.hours.saturday')}</p>
                 </div>
               </li>
             </ul>
@@ -116,11 +110,11 @@ const Footer = () => {
         {/* Bottom Section */}
         <div className="border-t border-zinc-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-zinc-400 text-sm">
-            © 2026 Loyal Haarschnitt. All rights reserved.
+            {t('footer.copyright')}
           </p>
           <div className="mt-4 md:mt-0">
             <Link to="/barber-dashboard" className="text-zinc-400 hover:text-yellow-400 text-sm transition-colors">
-              Staff Login
+              {t('footer.staffLogin')}
             </Link>
           </div>
         </div>

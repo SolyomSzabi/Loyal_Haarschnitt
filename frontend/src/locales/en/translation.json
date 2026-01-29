@@ -177,6 +177,17 @@
       "price": "Price"
     }
   },
+  "footer": {
+    "description": "Experience the finest in hairstyling services at Loyal Haarschnitt. Our skilled hairdressers combine traditional techniques with modern style to give you the perfect cut.",
+    "quickLinks": "Quick Links",
+    "contactInfo": "Contact Info",
+    "hours": {
+      "weekdays": "Mon-Fri: 10AM - 7PM",
+      "saturday": "Sat: 10AM - 6PM"
+    },
+    "copyright": "© 2026 Loyal Haarschnitt. All rights reserved.",
+    "staffLogin": "Staff Login"
+  },
   "common": {
     "loading": "Loading...",
     "error": "Error",
