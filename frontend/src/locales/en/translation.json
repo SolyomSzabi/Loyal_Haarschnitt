@@ -178,7 +178,7 @@
   },
   "booking": {
     "title": "Book Your Appointment",
-    "subtitle": "Schedule your visit to Oxyss Style in just a few simple steps",
+    "subtitle": "Schedule your visit to Loyal Haarschnitt in just a few simple steps",
     "steps": {
       "selectService": "Select Service & Hair Stylist",
       "datetime": "Choose Date & Time",
@@ -219,7 +219,7 @@
     "nextStep": "Next Step",
     "success": {
       "title": "Appointment Booked Successfully!",
-      "message": "Thank you for choosing Oxyss Barbershop. We've received your booking request and will contact you shortly to confirm your appointment.",
+      "message": "Thank you for choosing Loyal Haarschnitt. We've received your booking request and will contact you shortly to confirm your appointment.",
       "details": "Appointment Details",
       "customer": "Customer",
       "contact": "Contact",

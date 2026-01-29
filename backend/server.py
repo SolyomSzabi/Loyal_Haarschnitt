@@ -173,14 +173,18 @@ class Service(BaseModel):
     
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     name: str
+    name_de: str
     description: str
+    description_de: str
     duration: int  # in minutes
     base_price: float  # base price, can be overridden per barber
     category: str = "Men"  # Men, Women, Kids
 
 class ServiceCreate(BaseModel):
     name: str
+    name_de: str
     description: str
+    description_de: str
     duration: int
     base_price: float
     category: str = "Men"
@@ -209,7 +213,9 @@ class BarberServiceWithDetails(BaseModel):
     price: float
     is_available: bool
     service_name: str
+    service_name_de: str
     service_description: str
+    service_description_de: str
     duration: int
     category: str = "Men"
 
@@ -409,7 +415,9 @@ async def get_barber_services(barber_id: str):
             "price": 1,
             "is_available": 1,
             "service_name": "$service_info.name",
+            "service_name_de": "$service_info.name_de",
             "service_description": "$service_info.description",
+            "service_description_de": "$service_info.description_de",
             "duration": "$service_info.duration",
             "category": "$service_info.category"
         }}
