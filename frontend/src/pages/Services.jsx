@@ -106,8 +106,12 @@ const Services = () => {
       <section className="section-padding">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {['Core Services', 'Color Services', 'Perm', 'Highlights and Bleaching', 'Waxing', 'Eyebrows'].map((category) => {
-            const categoryServices = services.filter(s => s.category === category);
-            
+            useEffect(() => {
+              if (services.length > 0) {
+                console.log('All categories:', [...new Set(services.map(s => s.category))]);
+              }
+            }, [services]);  
+                      
             if (categoryServices.length === 0) return null;
             
             return (
