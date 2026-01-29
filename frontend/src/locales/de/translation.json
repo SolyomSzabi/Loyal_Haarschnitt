@@ -114,12 +114,16 @@
   },
   "contact": {
     "title": "Kontaktieren Sie uns",
-    "subtitle": "Nehmen Sie Kontakt mit uns auf",
+    "subtitle": "Nehmen Sie Kontakt mit uns auf für Termine, Fragen oder einfach nur zum Hallo sagen. Wir sind hier, um Ihnen zu helfen, gut auszusehen und sich gut zu fühlen.",
+    "getInTouch": {
+      "title": "Nehmen Sie Kontakt auf",
+      "subtitle": "Wir würden gerne von Ihnen hören. Ob Sie einen Termin buchen möchten, Fragen zu unseren Dienstleistungen haben oder Feedback geben möchten – zögern Sie nicht, uns zu kontaktieren."
+    },
     "info": {
       "title": "Kontaktinformationen",
-      "address": "Adresse",
-      "phone": "Telefon",
-      "email": "E-Mail",
+      "address": "Besuchen Sie uns",
+      "phone": "Rufen Sie uns an",
+      "email": "Schreiben Sie uns",
       "hours": "Öffnungszeiten"
     },
     "form": {
@@ -133,10 +137,12 @@
       "error": "Nachricht konnte nicht gesendet werden"
     },
     "schedule": {
-      "weekdays": "Mo – Fr: 10:00 – 19:00 Uhr",
-      "saturday": "Sa: 10:00 – 17:00 Uhr",
-      "sunday": "So: Geschlossen"
-    }
+      "weekdays": "Montag - Freitag",
+      "saturday": "Samstag",
+      "sunday": "Sonntag"
+    },
+    "openDaysNote": "Wir sind 6 Tage die Woche für Sie geöffnet",
+    "findUs": "Finden Sie uns"
   },
   "booking": {
     "title": "Termin buchen",

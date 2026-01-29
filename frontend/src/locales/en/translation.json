@@ -114,13 +114,17 @@
   },
   "contact": {
     "title": "Contact Us",
-    "subtitle": "Get in touch with us",
+    "subtitle": "Get in touch with us for appointments, questions, or just to say hello. We're here to help you look and feel your best.",
+    "getInTouch": {
+      "title": "Get in Touch",
+      "subtitle": "We'd love to hear from you. Whether you're looking to book an appointment, have questions about our services, or want to provide feedback, don't hesitate to reach out."
+    },
     "info": {
       "title": "Contact Information",
-      "address": "Address",
-      "phone": "Phone",
-      "email": "Email",
-      "hours": "Opening Hours"
+      "address": "Visit Us",
+      "phone": "Call Us",
+      "email": "Email Us",
+      "hours": "Business Hours"
     },
     "form": {
       "title": "Send us a message",
@@ -133,10 +137,12 @@
       "error": "Failed to send message"
     },
     "schedule": {
-      "weekdays": "Mon - Fri: 10:00 AM - 7:00 PM",
-      "saturday": "Sat: 10:00 AM - 5:00 PM",
-      "sunday": "Sun: Closed"
-    }
+      "weekdays": "Monday - Friday",
+      "saturday": "Saturday",
+      "sunday": "Sunday"
+    },
+    "openDaysNote": "We're open 6 days a week for your convenience",
+    "findUs": "Find Us"
   },
   "booking": {
     "title": "Book Your Appointment",
