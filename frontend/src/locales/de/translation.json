@@ -272,7 +272,11 @@
       "saturday": "Sa: 10-18 Uhr"
     },
     "copyright": "© 2026 Loyal Haarschnitt. Alle Rechte vorbehalten.",
-    "staffLogin": "Mitarbeiter-Login"
+    "staffLogin": "Mitarbeiter-Login",
+    "developer": {
+      "madeBy": "Website erstellt von",
+      "websiteDesign": "Individuelles Website Design & Entwicklung"
+    }
   },
   "common": {
     "loading": "Wird geladen...",
