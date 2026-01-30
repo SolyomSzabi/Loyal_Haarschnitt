@@ -122,7 +122,7 @@ const Navbar = () => {
                       onClick={() => setIsOpen(false)}
                       className="text-sm text-zinc-500 hover:text-yellow-600 transition-colors flex items-center justify-center"
                     >
-                      {t('footer.bottom.staffLogin')}
+                      {t('footer.staffLogin')}
                     </Link>
                   </div>
                 </div>
