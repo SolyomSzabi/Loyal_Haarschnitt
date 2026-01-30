@@ -134,7 +134,7 @@ const Footer = () => {
                 className="flex items-center gap-2 hover:text-yellow-400 transition-colors"
               >
                 <Phone className="h-3 w-3" />
-                <span>+40 742 345 678</span>
+                <span>+40 757 630 225</span>
               </a>
               <span className="hidden md:inline">•</span>
               <span className="text-zinc-600">{t('footer.developer.websiteDesign')}</span>
