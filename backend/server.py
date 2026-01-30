@@ -609,7 +609,7 @@ async def get_available_slots(barber_id: str, date: str, service_id: str):
         })
         
         # Move to next 15-minute slot
-        current_time += timedelta(minutes=15)
+        current_time += timedelta(minutes=30)
     
     return {
         "date": date,
@@ -777,83 +777,61 @@ async def create_appointment(appointment_data: AppointmentCreate, background_tas
     background_tasks.add_task(
         send_email,
         to=appointment_obj.customer_email,
-        subject="Confirmare / Visszaigazolás / Confirmation – Oxyss Style",
+        subject="Terminbestätigung / Appointment Confirmation – Loyal Haarschnitt",
         body=f"""
-🇷🇴 Confirmare Programare – Oxyss Style
+    🇩🇪 Terminbestätigung – Loyal Haarschnitt
 
-Dragă {appointment_obj.customer_name},
+    Liebe/r {appointment_obj.customer_name},
 
-Îți mulțumim că ai efectuat o programare la Oxyss Style!
+    vielen Dank für Ihre Terminbuchung bei Loyal Haarschnitt!
 
-Detaliile programării tale:
+    Hier sind die Details Ihres Termins:
 
-• Serviciu: {appointment_obj.service_name}
-• Stilist: {appointment_obj.barber_name}
-• Dată: {appointment_obj.appointment_date}
-• Ora: {appointment_obj.appointment_time.strftime("%H:%M")}
-• Durată estimată: {appointment_obj.duration} minute
-• Preț: {appointment_obj.price} RON
+    • Service: {appointment_obj.service_name}
+    • Stylist: {appointment_obj.barber_name}
+    • Datum: {appointment_obj.appointment_date}
+    • Uhrzeit: {appointment_obj.appointment_time.strftime("%H:%M")}
+    • Voraussichtliche Dauer: {appointment_obj.duration} Minuten
+    • Preis: {appointment_obj.price} EUR
 
-Dacă dorești să modifici sau să anulezi programarea, ne poți contacta la:
-Telefon: +40 74 116 1016
+    Falls Sie Ihren Termin ändern oder stornieren möchten, kontaktieren Sie uns bitte:
+    Telefon: +49 1573 5342854
+    E-Mail: sarokma99@gmail.com
 
-Te așteptăm cu drag în salonul nostru!
+    Wir freuen uns auf Ihren Besuch bei Loyal Haarschnitt!
 
-Cu respect,
-{appointment_obj.barber_name} și echipa Oxyss Style
+    Mit freundlichen Grüßen,
+    {appointment_obj.barber_name} und das Loyal Haarschnitt Team
 
-------------------------------------------------------------
+    ------------------------------------------------------------
 
-🇭🇺 Foglalás visszaigazolása – Oxyss Style
+    🇬🇧 Appointment Confirmation – Loyal Haarschnitt
 
-Kedves {appointment_obj.customer_name},
+    Dear {appointment_obj.customer_name},
 
-Köszönjük, hogy időpontot foglalt az Oxyss Style szalonba!
+    Thank you for booking an appointment at Loyal Haarschnitt!
 
-Az alábbiakban megtalálod a foglalásod részleteit:
+    Here are the details of your appointment:
 
-• Szolgáltatás: {appointment_obj.service_name}
-• Fodrász: {appointment_obj.barber_name}
-• Dátum: {appointment_obj.appointment_date}
-• Időpont: {appointment_obj.appointment_time.strftime("%H:%M")}
-• Várható időtartam: {appointment_obj.duration} perc
-• Ár: {appointment_obj.price} RON
+    • Service: {appointment_obj.service_name}
+    • Stylist: {appointment_obj.barber_name}
+    • Date: {appointment_obj.appointment_date}
+    • Time: {appointment_obj.appointment_time.strftime("%H:%M")}
+    • Estimated duration: {appointment_obj.duration} minutes
+    • Price: {appointment_obj.price} EUR
 
-Amennyiben módosítanád vagy lemondanád az időpontot, kérjük vedd fel velünk a kapcsolatot:
-Telefon: +40 74 116 1016
+    If you need to modify or cancel your appointment, please contact us:
+    Phone: +49 1573 5342854
+    Email: sarokma99@gmail.com
 
-Várunk szeretettel az Oxyss Style szalonban!
+    We look forward to welcoming you at Loyal Haarschnitt!
 
-Üdvözlettel,
-{appointment_obj.barber_name} és az Oxyss Style csapat
-
-------------------------------------------------------------
-
-🇬🇧 Appointment Confirmation – Oxyss Style
-
-Dear {appointment_obj.customer_name},
-
-Thank you for booking an appointment at Oxyss Style!
-
-Here are the details of your appointment:
-
-• Service: {appointment_obj.service_name}
-• Hair Stylist: {appointment_obj.barber_name}
-• Date: {appointment_obj.appointment_date}
-• Time: {appointment_obj.appointment_time.strftime("%H:%M")}
-• Estimated duration: {appointment_obj.duration} minutes
-• Price: {appointment_obj.price} RON
-
-If you need to modify or cancel your appointment, feel free to contact us:
-Phone: +40 74 116 1016
-
-We look forward to welcoming you at Oxyss Style!
-
-Best regards,
-{appointment_obj.barber_name} and the Oxyss Style Team
-"""
+    Best regards,
+    {appointment_obj.barber_name} and the Loyal Haarschnitt Team
+    """
     )
     # -----------------------------
+
 
     return appointment_obj
 
