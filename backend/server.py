@@ -574,7 +574,7 @@ async def get_available_slots(barber_id: str, date: str, service_id: str):
         business_end = time(19, 0)
     elif weekday == 5:
         # Szombat: 9:00 – 13:00
-        business_start = time(10, 0)
+        business_start = time(9, 0)
         business_end = time(16, 0)
     else:
         # Vasárnap: zárva → nincs időpont
