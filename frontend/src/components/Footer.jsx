@@ -26,7 +26,7 @@ const Footer = () => {
             </p>
             <div className="flex space-x-4">
               {/* Facebook */}
-              
+              <a
                 href="https://www.facebook.com/share/1Gm6NKVrBf/?mibextid=wwXIfr"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -38,7 +38,7 @@ const Footer = () => {
               </a>
 
               {/* Instagram */}
-              
+              <a
                 href="https://www.instagram.com/loyal.haarschnitt?igsh=MW9oYWVpY25xdnR4eg=="
                 target="_blank"
                 rel="noopener noreferrer"
@@ -50,7 +50,7 @@ const Footer = () => {
               </a>
 
               {/* TikTok */}
-              
+              <a
                 href="https://www.tiktok.com/@loyalhaarschnitt?_r=1&_t=ZG-95kwfGDT5Bw"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -141,7 +141,7 @@ const Footer = () => {
                 <span className="text-yellow-400 font-semibold">Sólyom Szabolcs</span>
               </div>
               <span className="hidden md:inline">•</span>
-              
+              <a
                 href="tel:+40742345678"
                 className="flex items-center gap-2 hover:text-yellow-400 transition-colors"
               >
