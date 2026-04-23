@@ -126,7 +126,7 @@ const Footer = () => {
               {t('footer.copyright')}
             </p>
             <div className="flex items-center gap-4">
-              <Link to="/barber-dashboard" className="text-zinc-400 hover:text-yellow-400 text-sm transition-colors">
+              <Link to="/barber-login" className="text-zinc-400 hover:text-yellow-400 text-sm transition-colors">
                 {t('footer.staffLogin')}
               </Link>
             </div>
