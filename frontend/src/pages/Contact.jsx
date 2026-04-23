@@ -30,7 +30,7 @@ const Contact = () => {
 
   const businessHours = [
     { dayKey: 'contact.schedule.weekdays', hours: '10:00 AM - 7:00 PM' },
-    { dayKey: 'contact.schedule.saturday', hours: '10:00 AM - 6:00 PM' },
+    { dayKey: 'contact.schedule.saturday', hours: '9:00 AM - 4:00 PM' },
   ];
 
   return (
