@@ -24,20 +24,20 @@
       "items": {
         "mensHaircut": {
           "name": "Men's Haircut",
-          "price": "33 EUR",
+          "price": "19 EUR",
           "duration": "30 min",
           "description": "Individual men's haircut tailored to face shape, hair texture, and personal style. Includes clean styling. Focused service – precise, professional, no add-ons."
         },
         "mensHaircutPro": {
-          "name": "Men's Haircut Pro",
-          "price": "43 EUR",
-          "duration": "60 min",
-          "description": "In-depth consultation. Hair wash, scalp massage, conditioner. Individual haircut and styling. Drink included. More time, more calm, more experience."
+          "name": "Gentleman Package",
+          "price": "39 EUR",
+          "duration": "45 min",
+          "description": "Haircut + Wash + Beard + Eyebrows + Waxing. Complete grooming experience in one appointment."
         },
         "beardTrim": {
-          "name": "Beard Trim / Classic Shave (Wet Shave)",
-          "price": "25 EUR",
-          "duration": "30 min",
+          "name": "Beard Trim / Classic Shave",
+          "price": "15 EUR",
+          "duration": "20 min",
           "description": "Professional beard shaping and precise contours. Traditional wet shave (for Classic Shave). Aftershave and finishing care."
         }
       }

@@ -23,22 +23,22 @@
       "viewAll": "Alle Dienstleistungen ansehen",
       "items": {
         "mensHaircut": {
-          "name": "Herrenhaarschnitt",
-          "price": "33 EUR",
+          "name": "Men's Haircut",
+          "price": "19 EUR",
           "duration": "30 Min",
           "description": "Individueller Herrenhaarschnitt, abgestimmt auf Gesichtsform, Haarstruktur und persönlichen Stil. Inklusive sauberes Styling. Fokussierter Service – präzise, professionell, ohne Zusatzleistungen."
         },
         "mensHaircutPro": {
-          "name": "Herrenhaarschnitt Pro",
-          "price": "43 EUR",
-          "duration": "60 Min",
-          "description": "Ausführliche Beratung. Haarwäsche, Kopfmassage, Conditioner. Individueller Haarschnitt und Styling. Getränk inklusive. Mehr Zeit, mehr Ruhe, mehr Erlebnis."
+          "name": "Gentleman Paket",
+          "price": "39 EUR",
+          "duration": "45 Min",
+          "description": "Haarschnitt + Waschen + Bart + Augenbrauen + Waxing. Das komplette Pflegeerlebnis in einem Termin."
         },
         "beardTrim": {
-          "name": "Bartpflege / Klassische Rasur (Nassrasur)",
-          "price": "25 EUR",
-          "duration": "30 Min",
-          "description": "Professionelles Bart-Styling und präzise Konturen. Traditionelle Nassrasur (bei klassischer Rasur). Aftershave und abschließende Pflege."
+          "name": "Beard Trim / Classic Shave",
+          "price": "15 EUR",
+          "duration": "20 Min",
+          "description": "Professionelle Bartform und präzise Konturen. Traditionelle Nassrasur (bei Classic Shave). Aftershave und Pflegeabschluss."
         }
       }
     },
