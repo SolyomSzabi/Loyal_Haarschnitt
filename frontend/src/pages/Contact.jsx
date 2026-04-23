@@ -128,7 +128,7 @@ const Contact = () => {
 
           <div className="relative w-full h-[450px] rounded-xl overflow-hidden shadow-lg">
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2627.3!2d11.8519!3d48.4569!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x479e0b5b5b5b5b5b%3A0x0!2sMoosburger%20Str.%2012A%2C%2085406%20Zolling!5e0!3m2!1sde!2sde!4v1700000000000!5m2!1sde!2sde"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2646.2610343501633!2d11.775377700000002!3d48.4515209!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x479e41be23c3de65%3A0xc1c5d1f8ec58ee41!2sLoyal%20Haarschnitt!5e0!3m2!1shu!2sro!4v1776968319488!5m2!1shu!2sro"
               className="absolute top-0 left-0 w-full h-full"
               style={{ border: 0 }}
               allowFullScreen=""
