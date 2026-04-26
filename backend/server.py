@@ -795,8 +795,8 @@ async def create_appointment(appointment_data: AppointmentCreate, background_tas
     • Preis: {appointment_obj.price} EUR
 
     Falls Sie Ihren Termin ändern oder stornieren möchten, kontaktieren Sie uns bitte:
-    Telefon: +49 1573 5342854
-    E-Mail: sarokma99@gmail.com
+    Telefon: +49 15569 167244
+    E-Mail: info@loyalhaarschnitt.de
 
     Wir freuen uns auf Ihren Besuch bei Loyal Haarschnitt!
 
@@ -821,8 +821,8 @@ async def create_appointment(appointment_data: AppointmentCreate, background_tas
     • Price: {appointment_obj.price} EUR
 
     If you need to modify or cancel your appointment, please contact us:
-    Phone: +49 1573 5342854
-    Email: sarokma99@gmail.com
+    Phone: +49 15569 167244
+    Email: info@loyalhaarschnitt.de
 
     We look forward to welcoming you at Loyal Haarschnitt!
 
