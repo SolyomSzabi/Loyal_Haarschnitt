@@ -12,19 +12,22 @@ const Contact = () => {
       icon: <MapPin className="h-6 w-6 text-yellow-600" />,
       titleKey: 'contact.info.address',
       details: ['Str. Ratinului, nr.959', 'Crasna, Sălaj, Romania'],
-      action: 'Get Directions'
+      action: 'Get Directions',
+      href: 'https://maps.app.goo.gl/WBzEgHZjskunGrJa7'
     },
     {
       icon: <Phone className="h-6 w-6 text-yellow-600" />,
       titleKey: 'contact.info.phone',
       details: ['+49 1573 5342854'],
-      action: 'Call Now'
+      action: 'Call Now',
+      href: 'tel:+4915735342854'
     },
     {
       icon: <Mail className="h-6 w-6 text-yellow-600" />,
       titleKey: 'contact.info.email',
       details: ['info@loyalhaarschnitt.de'],
-      action: 'Send Email'
+      action: 'Send Email',
+      href: 'mailto:info@loyalhaarschnitt.de'
     }
   ];
 
@@ -64,7 +67,14 @@ const Contact = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 {contactInfo.map((info, index) => (
-                  <Card key={index} className="p-6 border-0 shadow-lg hover:shadow-xl transition-shadow" data-testid={`contact-info-${index}`}>
+                  <a
+                    key={index}
+                    href={info.href}
+                    target={info.href.startsWith('http') ? '_blank' : undefined}
+                    rel={info.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                    className="block"
+                  >
+                  <Card className="p-6 border-0 shadow-lg hover:shadow-xl transition-shadow hover:ring-2 hover:ring-yellow-400 cursor-pointer" data-testid={`contact-info-${index}`}>
                     <CardContent className="p-0">
                       <div className="flex items-start space-x-4">
                         <div className="bg-yellow-100 rounded-full p-3 flex-shrink-0">
@@ -83,6 +93,7 @@ const Contact = () => {
                       </div>
                     </CardContent>
                   </Card>
+                  </a>
                 ))}
               </div>
 

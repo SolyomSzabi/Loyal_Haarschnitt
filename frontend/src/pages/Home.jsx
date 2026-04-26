@@ -106,7 +106,14 @@ const Home = () => {
           <div className="flex flex-wrap justify-center items-center gap-6 mt-12 text-gray-300">
             <div className="flex items-center space-x-2">
               <MapPin className="h-5 w-5 text-yellow-400" />
-              <span>{t('home.hero.location')}</span>
+              <a
+                href="https://maps.app.goo.gl/WBzEgHZjskunGrJa7"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-yellow-400 transition-colors underline-offset-2 hover:underline"
+              >
+                {t('home.hero.location')}
+              </a>
             </div>
             <div className="flex items-center space-x-2">
               <Clock className="h-5 w-5 text-yellow-400" />

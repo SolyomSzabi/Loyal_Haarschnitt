@@ -96,9 +96,14 @@ const Footer = () => {
             <ul className="space-y-3">
               <li className="flex items-center space-x-3">
                 <MapPin className="h-4 w-4 text-yellow-400" />
-                <span className="text-zinc-300 text-sm">
+                <a
+                  href="https://maps.app.goo.gl/WBzEgHZjskunGrJa7"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-zinc-300 text-sm hover:text-yellow-400 transition-colors underline-offset-2 hover:underline"
+                >
                   Moosburger Str. 12A, 85406 Zolling, Germany
-                </span>
+                </a>
               </li>
               <li className="flex items-center space-x-3">
                 <Phone className="h-4 w-4 text-yellow-400" />

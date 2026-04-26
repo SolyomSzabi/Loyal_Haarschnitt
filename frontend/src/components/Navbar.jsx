@@ -118,7 +118,7 @@ const Navbar = () => {
                   {/* Staff Login at Bottom */}
                   <div className="border-t border-zinc-200 pt-4 mt-auto">
                     <Link 
-                      to="/barber-dashboard" 
+                      to="/barber-login" 
                       onClick={() => setIsOpen(false)}
                       className="text-sm text-zinc-500 hover:text-yellow-600 transition-colors flex items-center justify-center"
                     >
