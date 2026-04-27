@@ -18,7 +18,7 @@ import aiosmtplib
 from email.message import EmailMessage
 
 # Romanian timezone
-GERMAN_TZ = pytz.timezone('Europe/Bucharest')
+GERMAN_TZ = pytz.timezone('Europe/Berlin')
 
 def get_german_now():
     """Get current datetime in German timezone"""
@@ -270,8 +270,10 @@ class Appointment(BaseModel):
     customer_name: str
     customer_email: EmailStr
     customer_phone: str
-    service_id: str
-    service_name: str
+    service_id: str  # primary service id (first service, for backward compatibility)
+    service_name: str  # primary service name (for backward compatibility)
+    service_ids: Optional[List[str]] = None  # all selected service ids
+    service_names: Optional[List[str]] = None  # all selected service names
     barber_id: str
     barber_name: str
     appointment_date: date
@@ -285,8 +287,10 @@ class AppointmentCreate(BaseModel):
     customer_name: str
     customer_email: EmailStr
     customer_phone: str
-    service_id: str
-    service_name: str
+    service_id: str  # primary service id (first service, for backward compatibility)
+    service_name: str  # primary service name (for backward compatibility)
+    service_ids: Optional[List[str]] = None  # all selected service ids
+    service_names: Optional[List[str]] = None  # all selected service names
     barber_id: str
     barber_name: str
     appointment_date: date
@@ -552,15 +556,25 @@ async def check_barber_availability(barber_id: str, date: str, start_time: str, 
     return {"available": True, "reason": "Time slot available"}
 
 @api_router.get("/barbers/{barber_id}/available-slots")
-async def get_available_slots(barber_id: str, date: str, service_id: str):
-    """Get all available time slots for a barber on a specific date for a specific service"""
+async def get_available_slots(barber_id: str, date: str, service_id: str, service_ids: Optional[str] = None):
+    """Get all available time slots for a barber on a specific date for one or multiple services"""
     
-    # Get service duration
-    service = await db.services.find_one({"id": service_id}, {"_id": 0})
-    if not service:
-        raise HTTPException(status_code=404, detail="Service not found")
+    # Support multiple service_ids as comma-separated query param
+    if service_ids:
+        ids_list = [sid.strip() for sid in service_ids.split(",") if sid.strip()]
+    else:
+        ids_list = [service_id]
     
-    duration = service["duration"]
+    # Sum durations for all selected services
+    duration = 0
+    for sid in ids_list:
+        service = await db.services.find_one({"id": sid}, {"_id": 0})
+        if not service:
+            raise HTTPException(status_code=404, detail=f"Service not found: {sid}")
+        duration += service["duration"]
+    
+    if duration == 0:
+        raise HTTPException(status_code=404, detail="No valid services found")
     
     # Convert date string
     date_obj = datetime.fromisoformat(date).date()
@@ -730,19 +744,30 @@ async def send_email(to: str, subject: str, body: str):
 
 @api_router.post("/appointments", response_model=Appointment)
 async def create_appointment(appointment_data: AppointmentCreate, background_tasks: BackgroundTasks):
-    # Get service duration for availability check
+    # Determine which service ids to use (multi-service support)
+    all_service_ids = appointment_data.service_ids if appointment_data.service_ids else [appointment_data.service_id]
+    
+    # Get total duration and price across all selected services
+    total_duration = 0
+    total_price = 0.0
+    for sid in all_service_ids:
+        service = await db.services.find_one({"id": sid}, {"_id": 0})
+        if not service:
+            raise HTTPException(status_code=404, detail=f"Service not found: {sid}")
+        barber_svc = await db.barber_services.find_one(
+            {"barber_id": appointment_data.barber_id, "service_id": sid},
+            {"_id": 0}
+        )
+        total_price += barber_svc["price"] if barber_svc else service["base_price"]
+        total_duration += service["duration"]
+    
+    price = total_price
+    duration = appointment_data.duration if appointment_data.duration else total_duration
+    
+    # For backward compatibility, get the primary service
     service = await db.services.find_one({"id": appointment_data.service_id}, {"_id": 0})
     if not service:
         raise HTTPException(status_code=404, detail="Service not found")
-    
-    # Get barber-specific price or fall back to base price
-    barber_service = await db.barber_services.find_one(
-        {"barber_id": appointment_data.barber_id, "service_id": appointment_data.service_id},
-        {"_id": 0}
-    )
-    
-    price = barber_service["price"] if barber_service else service["base_price"]
-    duration = appointment_data.duration if appointment_data.duration else service["duration"]
     
     # Check availability
     availability = await check_barber_availability(
@@ -764,6 +789,9 @@ async def create_appointment(appointment_data: AppointmentCreate, background_tas
     # Add duration and price
     appointment_dict["duration"] = duration
     appointment_dict["price"] = price
+    # Populate multi-service fields
+    appointment_dict["service_ids"] = all_service_ids
+    appointment_dict["service_names"] = appointment_data.service_names if appointment_data.service_names else [appointment_data.service_name]
     appointment_obj = Appointment(**appointment_dict)
     
     # Prepare for MongoDB storage
@@ -796,7 +824,6 @@ async def create_appointment(appointment_data: AppointmentCreate, background_tas
 
     Falls Sie Ihren Termin ändern oder stornieren möchten, kontaktieren Sie uns bitte:
     Telefon: +49 15569 167244
-    E-Mail: info@loyalhaarschnitt.de
 
     Wir freuen uns auf Ihren Besuch bei Loyal Haarschnitt!
 
@@ -822,7 +849,6 @@ async def create_appointment(appointment_data: AppointmentCreate, background_tas
 
     If you need to modify or cancel your appointment, please contact us:
     Phone: +49 15569 167244
-    Email: info@loyalhaarschnitt.de
 
     We look forward to welcoming you at Loyal Haarschnitt!
 
