@@ -18,7 +18,7 @@ import aiosmtplib
 from email.message import EmailMessage
 
 # Romanian timezone
-GERMAN_TZ = pytz.timezone('Europe/Berlin')
+GERMAN_TZ = pytz.timezone('Europe/Bucharest')
 
 def get_german_now():
     """Get current datetime in German timezone"""
@@ -270,10 +270,8 @@ class Appointment(BaseModel):
     customer_name: str
     customer_email: EmailStr
     customer_phone: str
-    service_id: str  # primary service id (first service, for backward compatibility)
-    service_name: str  # primary service name (for backward compatibility)
-    service_ids: Optional[List[str]] = None  # all selected service ids
-    service_names: Optional[List[str]] = None  # all selected service names
+    service_id: str
+    service_name: str
     barber_id: str
     barber_name: str
     appointment_date: date
@@ -287,15 +285,17 @@ class AppointmentCreate(BaseModel):
     customer_name: str
     customer_email: EmailStr
     customer_phone: str
-    service_id: str  # primary service id (first service, for backward compatibility)
-    service_name: str  # primary service name (for backward compatibility)
-    service_ids: Optional[List[str]] = None  # all selected service ids
-    service_names: Optional[List[str]] = None  # all selected service names
+    service_id: str
+    service_name: str
     barber_id: str
     barber_name: str
     appointment_date: date
     appointment_time: time
     duration: Optional[int] = None
+    # Multi-service summary fields (only set on the first appointment of a group)
+    all_service_names: Optional[List[str]] = None
+    all_service_durations: Optional[List[int]] = None
+    all_service_prices: Optional[List[float]] = None
 
 class ContactMessage(BaseModel):
     model_config = ConfigDict(extra="ignore")
@@ -556,25 +556,15 @@ async def check_barber_availability(barber_id: str, date: str, start_time: str, 
     return {"available": True, "reason": "Time slot available"}
 
 @api_router.get("/barbers/{barber_id}/available-slots")
-async def get_available_slots(barber_id: str, date: str, service_id: str, service_ids: Optional[str] = None):
-    """Get all available time slots for a barber on a specific date for one or multiple services"""
+async def get_available_slots(barber_id: str, date: str, service_id: str):
+    """Get all available time slots for a barber on a specific date for a specific service"""
     
-    # Support multiple service_ids as comma-separated query param
-    if service_ids:
-        ids_list = [sid.strip() for sid in service_ids.split(",") if sid.strip()]
-    else:
-        ids_list = [service_id]
+    # Get service duration
+    service = await db.services.find_one({"id": service_id}, {"_id": 0})
+    if not service:
+        raise HTTPException(status_code=404, detail="Service not found")
     
-    # Sum durations for all selected services
-    duration = 0
-    for sid in ids_list:
-        service = await db.services.find_one({"id": sid}, {"_id": 0})
-        if not service:
-            raise HTTPException(status_code=404, detail=f"Service not found: {sid}")
-        duration += service["duration"]
-    
-    if duration == 0:
-        raise HTTPException(status_code=404, detail="No valid services found")
+    duration = service["duration"]
     
     # Convert date string
     date_obj = datetime.fromisoformat(date).date()
@@ -744,30 +734,19 @@ async def send_email(to: str, subject: str, body: str):
 
 @api_router.post("/appointments", response_model=Appointment)
 async def create_appointment(appointment_data: AppointmentCreate, background_tasks: BackgroundTasks):
-    # Determine which service ids to use (multi-service support)
-    all_service_ids = appointment_data.service_ids if appointment_data.service_ids else [appointment_data.service_id]
-    
-    # Get total duration and price across all selected services
-    total_duration = 0
-    total_price = 0.0
-    for sid in all_service_ids:
-        service = await db.services.find_one({"id": sid}, {"_id": 0})
-        if not service:
-            raise HTTPException(status_code=404, detail=f"Service not found: {sid}")
-        barber_svc = await db.barber_services.find_one(
-            {"barber_id": appointment_data.barber_id, "service_id": sid},
-            {"_id": 0}
-        )
-        total_price += barber_svc["price"] if barber_svc else service["base_price"]
-        total_duration += service["duration"]
-    
-    price = total_price
-    duration = appointment_data.duration if appointment_data.duration else total_duration
-    
-    # For backward compatibility, get the primary service
+    # Get service duration for availability check
     service = await db.services.find_one({"id": appointment_data.service_id}, {"_id": 0})
     if not service:
         raise HTTPException(status_code=404, detail="Service not found")
+    
+    # Get barber-specific price or fall back to base price
+    barber_service = await db.barber_services.find_one(
+        {"barber_id": appointment_data.barber_id, "service_id": appointment_data.service_id},
+        {"_id": 0}
+    )
+    
+    price = barber_service["price"] if barber_service else service["base_price"]
+    duration = appointment_data.duration if appointment_data.duration else service["duration"]
     
     # Check availability
     availability = await check_barber_availability(
@@ -789,9 +768,6 @@ async def create_appointment(appointment_data: AppointmentCreate, background_tas
     # Add duration and price
     appointment_dict["duration"] = duration
     appointment_dict["price"] = price
-    # Populate multi-service fields
-    appointment_dict["service_ids"] = all_service_ids
-    appointment_dict["service_names"] = appointment_data.service_names if appointment_data.service_names else [appointment_data.service_name]
     appointment_obj = Appointment(**appointment_dict)
     
     # Prepare for MongoDB storage
@@ -802,60 +778,82 @@ async def create_appointment(appointment_data: AppointmentCreate, background_tas
 
 
     # AUTOMATIKUS EMAIL KÜLDÉS
-    background_tasks.add_task(
-        send_email,
-        to=appointment_obj.customer_email,
-        subject="Terminbestätigung / Appointment Confirmation – Loyal Haarschnitt",
-        body=f"""
-    🇩🇪 Terminbestätigung – Loyal Haarschnitt
+    # Email csak akkor megy ki, ha all_service_names meg van adva.
+    # - Egyetlen service: 1 elemű lista → email megy
+    # - Több service: csak az ELSŐ foglalásnál van megadva → csak egyszer megy email
+    # - A 2., 3. stb. foglalásnál all_service_names=None → NEM megy email
+    if appointment_data.all_service_names is not None:
+        service_lines = "\n".join([
+            f"    • {name} – {dur} Min. – {price} EUR"
+            for name, dur, price in zip(
+                appointment_data.all_service_names,
+                appointment_data.all_service_durations or [],
+                appointment_data.all_service_prices or []
+            )
+        ])
+        total_duration = sum(appointment_data.all_service_durations or [])
+        total_price = sum(appointment_data.all_service_prices or [])
+        services_summary_de = (
+            f"  Services:\n{service_lines}\n"
+            f"  Gesamtdauer: {total_duration} Minuten\n"
+            f"  Gesamtpreis: {total_price} EUR"
+        )
+        services_summary_en = (
+            f"  Services:\n{service_lines}\n"
+            f"  Total duration: {total_duration} minutes\n"
+            f"  Total price: {total_price} EUR"
+        )
 
-    Liebe/r {appointment_obj.customer_name},
+        background_tasks.add_task(
+            send_email,
+            to=appointment_obj.customer_email,
+            subject="Terminbestätigung / Appointment Confirmation – Loyal Haarschnitt",
+            body=f"""
+🇩🇪 Terminbestätigung – Loyal Haarschnitt
 
-    vielen Dank für Ihre Terminbuchung bei Loyal Haarschnitt!
+Liebe/r {appointment_obj.customer_name},
 
-    Hier sind die Details Ihres Termins:
+vielen Dank für Ihre Terminbuchung bei Loyal Haarschnitt!
 
-    • Service: {appointment_obj.service_name}
-    • Stylist: {appointment_obj.barber_name}
-    • Datum: {appointment_obj.appointment_date}
-    • Uhrzeit: {appointment_obj.appointment_time.strftime("%H:%M")}
-    • Voraussichtliche Dauer: {appointment_obj.duration} Minuten
-    • Preis: {appointment_obj.price} EUR
+Hier sind die Details Ihres Termins:
 
-    Falls Sie Ihren Termin ändern oder stornieren möchten, kontaktieren Sie uns bitte:
-    Telefon: +49 15569 167244
+{services_summary_de}
+  • Stylist: {appointment_obj.barber_name}
+  • Datum: {appointment_obj.appointment_date}
+  • Uhrzeit: {appointment_obj.appointment_time.strftime("%H:%M")}
 
-    Wir freuen uns auf Ihren Besuch bei Loyal Haarschnitt!
+Falls Sie Ihren Termin ändern oder stornieren möchten, kontaktieren Sie uns bitte:
+Telefon: +49 1573 5342854
 
-    Mit freundlichen Grüßen,
-    {appointment_obj.barber_name} und das Loyal Haarschnitt Team
+Wir freuen uns auf Ihren Besuch bei Loyal Haarschnitt!
 
-    ------------------------------------------------------------
+Mit freundlichen Grüßen,
+{appointment_obj.barber_name} und das Loyal Haarschnitt Team
 
-    🇬🇧 Appointment Confirmation – Loyal Haarschnitt
+------------------------------------------------------------
 
-    Dear {appointment_obj.customer_name},
+🇬🇧 Appointment Confirmation – Loyal Haarschnitt
 
-    Thank you for booking an appointment at Loyal Haarschnitt!
+Dear {appointment_obj.customer_name},
 
-    Here are the details of your appointment:
+Thank you for booking an appointment at Loyal Haarschnitt!
 
-    • Service: {appointment_obj.service_name}
-    • Stylist: {appointment_obj.barber_name}
-    • Date: {appointment_obj.appointment_date}
-    • Time: {appointment_obj.appointment_time.strftime("%H:%M")}
-    • Estimated duration: {appointment_obj.duration} minutes
-    • Price: {appointment_obj.price} EUR
+Here are the details of your appointment:
 
-    If you need to modify or cancel your appointment, please contact us:
-    Phone: +49 15569 167244
+{services_summary_en}
+  • Stylist: {appointment_obj.barber_name}
+  • Date: {appointment_obj.appointment_date}
+  • Time: {appointment_obj.appointment_time.strftime("%H:%M")}
 
-    We look forward to welcoming you at Loyal Haarschnitt!
+If you need to modify or cancel your appointment, please contact us:
+Phone: +49 1573 5342854
 
-    Best regards,
-    {appointment_obj.barber_name} and the Loyal Haarschnitt Team
-    """
-    )
+We look forward to welcoming you at Loyal Haarschnitt!
+
+Best regards,
+{appointment_obj.barber_name} and the Loyal Haarschnitt Team
+"""
+        )
     # -----------------------------
 
 
