@@ -5,11 +5,9 @@ import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { Calendar } from '../components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '../components/ui/popover';
 import { Badge } from '../components/ui/badge';
-import { CalendarIcon, Clock, DollarSign, User, Mail, Phone, CheckCircle, Loader2, Info, ChevronDown, ChevronUp } from 'lucide-react';
+import { CalendarIcon, Clock, CheckCircle, Loader2, Info, X } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 import axios from 'axios';
@@ -20,36 +18,27 @@ const API = `${BACKEND_URL}/api`;
 const Booking = () => {
   const { t, i18n } = useTranslation();
   const location = useLocation();
-  const selectedService = location.state?.selectedService || null;
-
   const nextStepRef = useRef(null);
 
-  const [services, setServices] = useState([]);
   const [barbers, setBarbers] = useState([]);
+  const [services, setServices] = useState([]);
+  const [selectedServices, setSelectedServices] = useState([]);
   const [availableSlots, setAvailableSlots] = useState([]);
   const [loadingSlots, setLoadingSlots] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const [expandedServiceId, setExpandedServiceId] = useState(null);
-  
-  // Helper function to get localized field
+
   const getLocalizedField = (item, fieldName) => {
     const currentLang = i18n.language;
     const localizedFieldName = currentLang === 'de' ? `${fieldName}_de` : fieldName;
     return item[localizedFieldName] || item[fieldName] || '';
   };
-  
+
   const [bookingData, setBookingData] = useState({
-    serviceId: selectedService?.id || '',
-    serviceName: selectedService?.name || '',
-    serviceIds: selectedService?.id ? [selectedService.id] : [],
-    serviceNames: selectedService?.name ? [selectedService.name] : [],
-    barberServiceIds: [],
     barberId: '',
     barberName: '',
-    barberServiceId: '',
     appointmentDate: null,
     appointmentTime: '',
     customerName: '',
@@ -57,7 +46,8 @@ const Booking = () => {
     customerPhone: ''
   });
 
- 
+  const totalDuration = selectedServices.reduce((sum, s) => sum + (s.duration || 0), 0);
+  const totalPrice = selectedServices.reduce((sum, s) => sum + (s.price || 0), 0);
 
   useEffect(() => {
     fetchData();
@@ -66,17 +56,11 @@ const Booking = () => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      // Initialize data (barbers and services)
       await axios.post(`${API}/init-data`);
-      
-      // Fetch barbers first
       const barbersResponse = await axios.get(`${API}/barbers`);
       setBarbers(barbersResponse.data);
-      
-      // Don't fetch services yet - wait for barber selection
       setServices([]);
     } catch (err) {
-      setError('Failed to load booking data');
       console.error('Error fetching data:', err);
     } finally {
       setLoading(false);
@@ -94,78 +78,46 @@ const Booking = () => {
     }
   };
 
-  const fetchAvailableSlots = async (barberId, date, serviceId, serviceIds) => {
-    if (!barberId || !date || !serviceId) return;
-    
+  const fetchAvailableSlotsWithDuration = async (barberId, date, duration, services) => {
+    if (!barberId || !date || duration <= 0 || services.length === 0) return;
     try {
       setLoadingSlots(true);
-      const allIds = serviceIds && serviceIds.length > 0 ? serviceIds : [serviceId];
+      const firstServiceId = services[0]?.service_id;
       const response = await axios.get(`${API}/barbers/${barberId}/available-slots`, {
         params: {
           date: format(date, 'yyyy-MM-dd'),
-          service_id: serviceId,
-          service_ids: allIds.join(',')
+          service_id: firstServiceId,
+          override_duration: duration
         }
       });
       setAvailableSlots(response.data.slots || []);
     } catch (err) {
       console.error('Error fetching available slots:', err);
-      toast.error('Failed to load available time slots');
       setAvailableSlots([]);
     } finally {
       setLoadingSlots(false);
     }
   };
 
-  const handleServiceSelect = (barberServiceId) => {
-    const barberService = services.find(s => s.id === barberServiceId);
-    const newServiceId = barberService?.service_id || '';
-    const newServiceName = getLocalizedField(barberService, 'service_name');
+  const handleServiceToggle = (service) => {
+    setSelectedServices(prev => {
+      const alreadySelected = prev.some(s => s.id === service.id);
+      const updated = alreadySelected
+        ? prev.filter(s => s.id !== service.id)
+        : [...prev, service];
 
-    setBookingData(prev => {
-      // Toggle selection: add if not present, remove if already selected
-      const alreadySelected = prev.barberServiceIds.includes(barberServiceId);
-      const newBarberServiceIds = alreadySelected
-        ? prev.barberServiceIds.filter(id => id !== barberServiceId)
-        : [...prev.barberServiceIds, barberServiceId];
-
-      // Build service_ids and service_names arrays from selected barberServiceIds
-      const selectedServices = newBarberServiceIds.map(bid => services.find(s => s.id === bid)).filter(Boolean);
-      const newServiceIds = selectedServices.map(s => s.service_id);
-      const newServiceNames = selectedServices.map(s => getLocalizedField(s, 'service_name'));
-
-      // Primary service is the first selected
-      const primaryServiceId = newServiceIds[0] || '';
-      const primaryServiceName = newServiceNames[0] || '';
-      const primaryBarberServiceId = newBarberServiceIds[0] || '';
-
-      const newState = {
-        ...prev,
-        serviceId: primaryServiceId,
-        serviceName: primaryServiceName,
-        serviceIds: newServiceIds,
-        serviceNames: newServiceNames,
-        barberServiceId: primaryBarberServiceId,
-        barberServiceIds: newBarberServiceIds,
-        appointmentTime: '' // Reset time when service changes
-      };
-
-      // Fetch available slots if we have date and barber selected
-      if (prev.barberId && prev.appointmentDate && primaryServiceId) {
-        fetchAvailableSlots(prev.barberId, prev.appointmentDate, primaryServiceId, newServiceIds);
+      if (bookingData.barberId && bookingData.appointmentDate) {
+        const newDuration = updated.reduce((sum, s) => sum + (s.duration || 0), 0);
+        if (newDuration > 0) {
+          fetchAvailableSlotsWithDuration(bookingData.barberId, bookingData.appointmentDate, newDuration, updated);
+        } else {
+          setAvailableSlots([]);
+        }
       }
 
-      return newState;
+      setBookingData(prev => ({ ...prev, appointmentTime: '' }));
+      return updated;
     });
-
-    if (nextStepRef.current) {
-      setTimeout(() => {
-        nextStepRef.current.scrollIntoView({ 
-          behavior: 'smooth',
-          block: 'center'
-        });
-      }, 100);
-    }
   };
 
   const handleBarberSelect = (barberId) => {
@@ -174,15 +126,10 @@ const Booking = () => {
       ...prev,
       barberId: barberId,
       barberName: barber?.name || '',
-      serviceId: '', // Reset service selection when barber changes
-      serviceName: '',
-      serviceIds: [],
-      serviceNames: [],
-      barberServiceId: '',
-      barberServiceIds: []
+      appointmentTime: ''
     }));
-    
-    // Fetch services for this barber
+    setSelectedServices([]);
+    setAvailableSlots([]);
     fetchBarberServices(barberId);
   };
 
@@ -190,28 +137,21 @@ const Booking = () => {
     setBookingData(prev => ({
       ...prev,
       appointmentDate: date,
-      appointmentTime: '' // Reset time when date changes
+      appointmentTime: ''
     }));
-    
-    // Fetch available slots if we have barber and service selected
-    if (bookingData.barberId && bookingData.serviceId) {
-      fetchAvailableSlots(bookingData.barberId, date, bookingData.serviceId, bookingData.serviceIds);
+
+    if (bookingData.barberId && totalDuration > 0) {
+      fetchAvailableSlotsWithDuration(bookingData.barberId, date, totalDuration, selectedServices);
     }
   };
 
   const handleTimeSelect = (time) => {
-    setBookingData(prev => ({
-      ...prev,
-      appointmentTime: time
-    }));
+    setBookingData(prev => ({ ...prev, appointmentTime: time }));
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setBookingData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setBookingData(prev => ({ ...prev, [name]: value }));
   };
 
   const toggleServiceDescription = (serviceId) => {
@@ -221,48 +161,59 @@ const Booking = () => {
   const isStepComplete = (step) => {
     switch (step) {
       case 1:
-        return bookingData.barberId !== '' && bookingData.serviceIds.length > 0;
+        return bookingData.barberId !== '' && selectedServices.length > 0;
       case 2:
         return bookingData.appointmentDate && bookingData.appointmentTime !== '';
       case 3:
-        return bookingData.customerName !== '' && 
-               bookingData.customerEmail !== '' && 
+        return bookingData.customerName !== '' &&
+               bookingData.customerEmail !== '' &&
                bookingData.customerPhone !== '';
       default:
         return false;
     }
   };
 
-  const canProceedToNext = (step) => {
-    return isStepComplete(step);
-  };
-
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     setSubmitting(true);
 
     try {
-      const appointmentPayload = {
-        customer_name: bookingData.customerName,
-        customer_email: bookingData.customerEmail,
-        customer_phone: bookingData.customerPhone,
-        service_id: bookingData.serviceId,
-        service_name: bookingData.serviceName,
-        service_ids: bookingData.serviceIds,
-        service_names: bookingData.serviceNames,
-        barber_id: bookingData.barberId,
-        barber_name: bookingData.barberName,
-        barber_service_id: bookingData.barberServiceId,
-        appointment_date: format(bookingData.appointmentDate, 'yyyy-MM-dd'),
-        appointment_time: bookingData.appointmentTime + ':00'
-      };
+      let currentTime = bookingData.appointmentTime;
 
-      const response = await axios.post(`${API}/appointments`, appointmentPayload);
-      
-      if (response.data) {
-        toast.success('Appointment booked successfully! We\'ll contact you to confirm.');
-        setCurrentStep(4); // Success step
+      for (let i = 0; i < selectedServices.length; i++) {
+        const service = selectedServices[i];
+
+        const appointmentPayload = {
+          customer_name: bookingData.customerName,
+          customer_email: bookingData.customerEmail,
+          customer_phone: bookingData.customerPhone,
+          service_id: service.service_id,
+          service_name: getLocalizedField(service, 'service_name'),
+          barber_id: bookingData.barberId,
+          barber_name: bookingData.barberName,
+          barber_service_id: service.id,
+          appointment_date: format(bookingData.appointmentDate, 'yyyy-MM-dd'),
+          appointment_time: currentTime + ':00',
+          duration: service.duration,
+          // Csak az első foglalásnál: teljes lista az összesített emailhez
+          ...(i === 0 && {
+            all_service_names: selectedServices.map(s => getLocalizedField(s, 'service_name')),
+            all_service_durations: selectedServices.map(s => s.duration),
+            all_service_prices: selectedServices.map(s => s.price),
+          })
+        };
+
+        await axios.post(`${API}/appointments`, appointmentPayload);
+
+        const [h, m] = currentTime.split(':').map(Number);
+        const nextMinutes = h * 60 + m + service.duration;
+        const nextH = Math.floor(nextMinutes / 60);
+        const nextM = nextMinutes % 60;
+        currentTime = `${String(nextH).padStart(2, '0')}:${String(nextM).padStart(2, '0')}`;
       }
+
+      toast.success(t('booking.success.title'));
+      setCurrentStep(4);
     } catch (error) {
       console.error('Error booking appointment:', error);
       toast.error(t('booking.error'));
@@ -270,11 +221,6 @@ const Booking = () => {
       setSubmitting(false);
     }
   };
-
-  const selectedServiceDetails = services.find(s => s.id === bookingData.barberServiceId);
-  const selectedServicesDetails = bookingData.barberServiceIds.map(bid => services.find(s => s.id === bid)).filter(Boolean);
-  const totalSelectedDuration = selectedServicesDetails.reduce((sum, s) => sum + (s?.duration || 0), 0);
-  const totalSelectedPrice = selectedServicesDetails.reduce((sum, s) => sum + (s?.price || 0), 0);
 
   if (loading) {
     return (
@@ -291,8 +237,7 @@ const Booking = () => {
     <div className="min-h-screen bg-zinc-50 pt-16">
       <section className="section-padding">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          {/* Header */}
+
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-5xl font-bold font-heading text-zinc-900 mb-6">
               {t('booking.title')}
@@ -308,8 +253,8 @@ const Booking = () => {
               {[1, 2, 3].map((step) => (
                 <React.Fragment key={step}>
                   <div className={`flex items-center justify-center w-10 h-10 rounded-full font-semibold ${
-                    currentStep >= step 
-                      ? 'bg-yellow-600 text-white' 
+                    currentStep >= step
+                      ? 'bg-yellow-600 text-white'
                       : isStepComplete(step)
                         ? 'bg-green-600 text-white'
                         : 'bg-zinc-200 text-zinc-600'
@@ -321,16 +266,13 @@ const Booking = () => {
                     )}
                   </div>
                   {step < 3 && (
-                    <div className={`w-12 h-1 ${
-                      currentStep > step ? 'bg-yellow-600' : 'bg-zinc-200'
-                    }`} />
+                    <div className={`w-12 h-1 ${currentStep > step ? 'bg-yellow-600' : 'bg-zinc-200'}`} />
                   )}
                 </React.Fragment>
               ))}
             </div>
           </div>
 
-          {/* Step Content */}
           <Card className="shadow-lg">
             <CardHeader>
               <CardTitle className="text-2xl font-bold text-zinc-900">
@@ -342,10 +284,11 @@ const Booking = () => {
             </CardHeader>
             <CardContent className="space-y-6">
 
-              {/* Step 1: Barber & Service Selection */}
+              {/* ── Step 1 ── */}
               {currentStep === 1 && (
                 <div className="space-y-8" data-testid="service-selection-step">
-                  {/* Barber Selection */}
+
+                  {/* Barber selection */}
                   <div>
                     <h3 className="text-lg font-semibold text-zinc-900 mb-4">
                       {t('booking.selectBarber')}
@@ -363,14 +306,14 @@ const Booking = () => {
                           data-testid={`barber-option-${barber.id}`}
                         >
                           <div className="flex items-start space-x-3">
-                            <img 
-                              src={barber.image_url} 
+                            <img
+                              src={barber.image_url}
                               alt={barber.name}
                               className="w-12 h-12 rounded-full object-cover"
                             />
                             <div className="flex-1">
                               <h4 className="font-semibold text-zinc-900 mb-1">{barber.name}</h4>
-                              <p className="text-sm text-zinc-600 mb-2">{getLocalizedField(barber, 'description')}</p>
+                              <p className="text-sm text-zinc-600">{getLocalizedField(barber, 'description')}</p>
                             </div>
                           </div>
                         </div>
@@ -378,15 +321,52 @@ const Booking = () => {
                     </div>
                   </div>
 
-                  {/* Service Selection - Only show after barber is selected */}
+                  {/* Multi-service selection */}
                   {bookingData.barberId && (
                     <div>
-                      <h3 className="text-lg font-semibold text-zinc-900 mb-2">
-                        {t('booking.chooseService')} {bookingData.barberName}
-                      </h3>
-                      <p className="text-sm text-zinc-500 mb-4">
-                        Mehrere Services wählen möglich – Preise und Dauer werden addiert.
-                      </p>
+                      <div className="flex items-center justify-between mb-4">
+                        <h3 className="text-lg font-semibold text-zinc-900">
+                          {t('booking.chooseService')} {bookingData.barberName}
+                        </h3>
+                        <span className="text-sm text-zinc-400 italic">
+                          {i18n.language === 'de'
+                            ? 'Mehrere Services wählbar'
+                            : 'Select one or more services'}
+                        </span>
+                      </div>
+
+                      {/* Selected services cart */}
+                      {selectedServices.length > 0 && (
+                        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+                          <h4 className="font-semibold text-yellow-800 mb-3 text-sm">
+                            {i18n.language === 'de' ? 'Ausgewählte Services' : 'Selected Services'}
+                          </h4>
+                          <div className="space-y-2">
+                            {selectedServices.map((s) => (
+                              <div key={s.id} className="flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                  <button
+                                    onClick={() => handleServiceToggle(s)}
+                                    className="text-yellow-600 hover:text-red-500 transition-colors"
+                                  >
+                                    <X className="h-3.5 w-3.5" />
+                                  </button>
+                                  <span className="text-sm text-zinc-800">{getLocalizedField(s, 'service_name')}</span>
+                                </div>
+                                <div className="flex items-center gap-3 text-sm">
+                                  <span className="text-zinc-500">{s.duration} min</span>
+                                  <span className="font-medium text-green-700">{s.price} EUR</span>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                          <div className="border-t border-yellow-200 mt-3 pt-3 flex justify-between text-sm font-semibold text-yellow-900">
+                            <span>{i18n.language === 'de' ? 'Gesamt' : 'Total'}</span>
+                            <span>{totalPrice} EUR &nbsp;·&nbsp; {totalDuration} min</span>
+                          </div>
+                        </div>
+                      )}
+
                       {services.length === 0 ? (
                         <div className="text-center py-8 text-zinc-500">
                           <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
@@ -396,9 +376,8 @@ const Booking = () => {
                         <div className="space-y-8">
                           {['Core Services', 'Color Services', 'Perm', 'Highlights / Bleaching', 'Waxing', 'Eyebrows'].map((category) => {
                             const categoryServices = services.filter(s => s.category === category);
-                            
                             if (categoryServices.length === 0) return null;
-                            
+
                             return (
                               <div key={category}>
                                 <h4 className="text-md font-semibold text-zinc-700 mb-3 flex items-center">
@@ -407,68 +386,67 @@ const Booking = () => {
                                   </span>
                                 </h4>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                  {categoryServices.map((service) => (
-                                    <div
-                                      key={service.id}
-                                      className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
-                                        bookingData.barberServiceIds.includes(service.id)
-                                          ? 'border-yellow-600 bg-yellow-50'
-                                          : 'border-zinc-200 hover:border-zinc-300'
-                                      }`}
-                                      onClick={() => handleServiceSelect(service.id)}
-                                      data-testid={`service-option-${service.id}`}
-                                    >
-                                      <div className="flex items-start justify-between mb-2">
-                                        <div className="flex items-center gap-2 flex-1">
-                                          <div className={`w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 transition-colors ${
-                                            bookingData.barberServiceIds.includes(service.id)
-                                              ? 'bg-yellow-600 border-yellow-600'
-                                              : 'border-zinc-300'
-                                          }`}>
-                                            {bookingData.barberServiceIds.includes(service.id) && (
-                                              <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                                                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                                              </svg>
-                                            )}
+                                  {categoryServices.map((service) => {
+                                    const isSelected = selectedServices.some(s => s.id === service.id);
+                                    return (
+                                      <div
+                                        key={service.id}
+                                        className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                                          isSelected
+                                            ? 'border-yellow-600 bg-yellow-50'
+                                            : 'border-zinc-200 hover:border-zinc-300'
+                                        }`}
+                                        onClick={() => handleServiceToggle(service)}
+                                        data-testid={`service-option-${service.id}`}
+                                      >
+                                        <div className="flex items-start justify-between mb-2">
+                                          <div className="flex items-center gap-2 flex-1">
+                                            <div className={`w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 transition-all ${
+                                              isSelected ? 'border-yellow-600 bg-yellow-600' : 'border-zinc-300'
+                                            }`}>
+                                              {isSelected && (
+                                                <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                                                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                                </svg>
+                                              )}
+                                            </div>
+                                            <h4 className="font-semibold text-zinc-900">
+                                              {getLocalizedField(service, 'service_name')}
+                                            </h4>
                                           </div>
-                                          <h4 className="font-semibold text-zinc-900">
-                                            {getLocalizedField(service, 'service_name')}
-                                          </h4>
+                                          {getLocalizedField(service, 'service_description').trim() !== '' && (
+                                            <button
+                                              onClick={(e) => {
+                                                e.stopPropagation();
+                                                toggleServiceDescription(service.id);
+                                              }}
+                                              className="ml-2 p-1 hover:bg-zinc-100 rounded-full transition-colors"
+                                            >
+                                              <Info className="h-4 w-4 text-zinc-500" />
+                                            </button>
+                                          )}
                                         </div>
-                                        {getLocalizedField(service, 'service_description').trim() !== '' && (
-                                          <button
-                                            onClick={(e) => {
-                                              e.stopPropagation();
-                                              toggleServiceDescription(service.id);
-                                            }}
-                                            className="ml-2 p-1 hover:bg-zinc-100 rounded-full transition-colors"
-                                            aria-label="Toggle description"
-                                          >
-                                            <Info className="h-4 w-4 text-zinc-500" />
-                                          </button>
+
+                                        {expandedServiceId === service.id && getLocalizedField(service, 'service_description') && (
+                                          <p className="text-sm text-zinc-600 mb-3 pb-3 border-b border-zinc-200 ml-7">
+                                            {getLocalizedField(service, 'service_description')}
+                                          </p>
                                         )}
-                                      </div>
-                                      
-                                      {/* Collapsible Description */}
-                                      {expandedServiceId === service.id && getLocalizedField(service, 'service_description') && (
-                                        <p className="text-sm text-zinc-600 mb-3 pb-3 border-b border-zinc-200">
-                                          {getLocalizedField(service, 'service_description')}
-                                        </p>
-                                      )}
-                                      
-                                      <div className="flex justify-between items-center">
-                                        <div className="flex items-center space-x-3">
-                                          <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
-                                            <Clock className="h-3 w-3 mr-1" />
-                                            {service.duration} min
-                                          </Badge>
-                                          <div className="text-green-600 font-semibold text-sm">
-                                            {service.price} EUR
+
+                                        <div className="flex justify-between items-center ml-7">
+                                          <div className="flex items-center space-x-3">
+                                            <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
+                                              <Clock className="h-3 w-3 mr-1" />
+                                              {service.duration} min
+                                            </Badge>
+                                            <div className="text-green-600 font-semibold text-sm">
+                                              {service.price} EUR
+                                            </div>
                                           </div>
                                         </div>
                                       </div>
-                                    </div>
-                                  ))}
+                                    );
+                                  })}
                                 </div>
                               </div>
                             );
@@ -478,76 +456,47 @@ const Booking = () => {
                     </div>
                   )}
 
-                  {/* Selection Summary */}
-                  {bookingData.barberId && bookingData.barberServiceIds.length > 0 && (
-                    <div className="bg-green-50 p-4 rounded-lg">
-                      <h4 className="font-semibold text-green-800 mb-2">{t('booking.selectionSummary')}</h4>
-                      <div className="text-sm text-green-700 space-y-1">
-                        <p><strong>{t('booking.hairStylist')}:</strong> {bookingData.barberName}</p>
-                        <div>
-                          <strong>{t('booking.service')}:</strong>
-                          <ul className="mt-1 ml-4 list-disc">
-                            {bookingData.barberServiceIds.map(bid => {
-                              const svc = services.find(s => s.id === bid);
-                              if (!svc) return null;
-                              return (
-                                <li key={bid}>
-                                  {getLocalizedField(svc, 'service_name')} &ndash; {svc.duration} min &ndash; {svc.price} EUR
-                                </li>
-                              );
-                            })}
-                          </ul>
-                        </div>
-                        {bookingData.barberServiceIds.length > 1 && (() => {
-                          const selectedSvcs = bookingData.barberServiceIds.map(bid => services.find(s => s.id === bid)).filter(Boolean);
-                          const totalDur = selectedSvcs.reduce((sum, s) => sum + s.duration, 0);
-                          const totalPrice = selectedSvcs.reduce((sum, s) => sum + s.price, 0);
-                          return (
-                            <p className="mt-2 font-semibold border-t border-green-200 pt-2">
-                              Gesamt: {totalDur} min &ndash; {totalPrice.toFixed(2)} EUR
-                            </p>
-                          );
-                        })()}
-                      </div>
-                    </div>
+                  {bookingData.barberId && selectedServices.length === 0 && services.length > 0 && (
+                    <p className="text-sm text-amber-600 text-center">
+                      {i18n.language === 'de'
+                        ? 'Bitte wählen Sie mindestens einen Service aus.'
+                        : 'Please select at least one service to continue.'}
+                    </p>
                   )}
                 </div>
               )}
 
-              {/* Step 2: Date & Time Selection */}
+              {/* ── Step 2 ── */}
               {currentStep === 2 && (
                 <div className="space-y-6" data-testid="datetime-selection-step">
-                  {selectedServicesDetails.length > 0 && (
-                    <div className="bg-yellow-50 p-4 rounded-lg mb-6">
-                      <h3 className="font-semibold text-zinc-900 mb-3">{t('booking.appointmentSummary')}:</h3>
-                      <div className="space-y-2">
-                        {bookingData.barberName && (
-                          <p className="text-zinc-700"><strong>{t('booking.hairStylist')}:</strong> {bookingData.barberName}</p>
-                        )}
-                        {selectedServicesDetails.map(svc => (
-                          <div key={svc.id} className="flex items-center justify-between">
-                            <span className="text-zinc-700">{getLocalizedField(svc, 'service_name')}</span>
-                            <div className="flex items-center space-x-2">
-                              <Badge variant="secondary">{svc.duration} min</Badge>
-                              <span className="font-semibold text-green-600">{svc.price} EUR</span>
-                            </div>
+
+                  <div className="bg-yellow-50 p-4 rounded-lg mb-6">
+                    <h3 className="font-semibold text-zinc-900 mb-3">{t('booking.appointmentSummary')}:</h3>
+                    <div className="space-y-2">
+                      {selectedServices.map((s) => (
+                        <div key={s.id} className="flex items-center justify-between text-sm">
+                          <span className="text-zinc-700">{getLocalizedField(s, 'service_name')}</span>
+                          <div className="flex items-center gap-2">
+                            <Badge variant="secondary">{s.duration} min</Badge>
+                            <span className="font-semibold text-green-600">{s.price} EUR</span>
                           </div>
-                        ))}
-                        {selectedServicesDetails.length > 1 && (
-                          <div className="flex items-center justify-between border-t border-yellow-200 pt-2 mt-2">
-                            <span className="font-semibold text-zinc-800">Gesamt</span>
-                            <div className="flex items-center space-x-2">
-                              <Badge variant="secondary">{totalSelectedDuration} min</Badge>
-                              <span className="font-semibold text-green-600">{totalSelectedPrice.toFixed(2)} EUR</span>
-                            </div>
-                          </div>
-                        )}
-                      </div>
+                        </div>
+                      ))}
+                      {selectedServices.length > 1 && (
+                        <div className="border-t border-yellow-200 pt-2 mt-2 flex justify-between text-sm font-semibold text-zinc-800">
+                          <span>{i18n.language === 'de' ? 'Gesamt' : 'Total'}</span>
+                          <span>{totalPrice} EUR &nbsp;·&nbsp; {totalDuration} min</span>
+                        </div>
+                      )}
+                      {bookingData.barberName && (
+                        <p className="text-sm text-zinc-700 pt-1">
+                          <strong>{t('booking.hairStylist')}:</strong> {bookingData.barberName}
+                        </p>
+                      )}
                     </div>
-                  )}
+                  </div>
 
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    {/* Calendar */}
                     <div>
                       <Label className="text-lg font-semibold text-zinc-900 mb-4 block">
                         {t('booking.selectDate')}
@@ -558,13 +507,10 @@ const Booking = () => {
                           selected={bookingData.appointmentDate}
                           onSelect={handleDateSelect}
                           disabled={(date) => {
-                            // Get today at midnight for accurate comparison
                             const today = new Date();
                             today.setHours(0, 0, 0, 0);
                             const checkDate = new Date(date);
                             checkDate.setHours(0, 0, 0, 0);
-                            
-                            // Disable past dates (before today) and Sundays
                             return checkDate < today || date.getDay() === 0;
                           }}
                           className="rounded-md border bg-white relative z-10"
@@ -573,7 +519,6 @@ const Booking = () => {
                       </div>
                     </div>
 
-                    {/* Available Time Slots */}
                     <div>
                       <Label className="text-lg font-semibold text-zinc-900 mb-4 block">
                         {t('booking.availableSlots')}
@@ -604,7 +549,7 @@ const Booking = () => {
                               className={`text-sm ${
                                 bookingData.appointmentTime === slot.time
                                   ? 'bg-yellow-600 hover:bg-yellow-700 text-white'
-                                  : slot.available 
+                                  : slot.available
                                     ? 'border-zinc-300 hover:bg-zinc-50'
                                     : 'border-red-200 bg-red-50 text-red-400 cursor-not-allowed'
                               }`}
@@ -631,29 +576,29 @@ const Booking = () => {
                 </div>
               )}
 
-              {/* Step 3: Contact Information */}
+              {/* ── Step 3 ── */}
               {currentStep === 3 && (
                 <form onSubmit={handleSubmit} className="space-y-6" data-testid="contact-info-step">
+
                   <div className="bg-yellow-50 p-4 rounded-lg mb-6">
                     <h3 className="font-semibold text-zinc-900 mb-2">{t('booking.appointmentSummary')}:</h3>
                     <div className="space-y-1 text-sm text-zinc-700">
+                      {selectedServices.map((s, i) => (
+                        <p key={s.id}>
+                          {i === 0
+                            ? <><strong>{t('booking.service')}:</strong> {getLocalizedField(s, 'service_name')} ({s.duration} min, {s.price} EUR)</>
+                            : <>+ {getLocalizedField(s, 'service_name')} ({s.duration} min, {s.price} EUR)</>
+                          }
+                        </p>
+                      ))}
+                      {selectedServices.length > 1 && (
+                        <p className="font-semibold pt-1 border-t border-yellow-200 mt-1">
+                          {i18n.language === 'de' ? 'Gesamt' : 'Total'}: {totalPrice} EUR · {totalDuration} min
+                        </p>
+                      )}
                       <p><strong>{t('booking.hairStylist')}:</strong> {bookingData.barberName}</p>
-                      <div>
-                        <strong>{t('booking.service')}:</strong>
-                        {selectedServicesDetails.length === 1 ? (
-                          <span> {bookingData.serviceName}</span>
-                        ) : (
-                          <ul className="ml-4 mt-1 list-disc">
-                            {selectedServicesDetails.map(s => (
-                              <li key={s.id}>{getLocalizedField(s, 'service_name')} ({s.duration} min, {s.price} EUR)</li>
-                            ))}
-                          </ul>
-                        )}
-                      </div>
                       <p><strong>{t('booking.date')}:</strong> {bookingData.appointmentDate && format(bookingData.appointmentDate, 'EEEE, MMMM d, yyyy')}</p>
                       <p><strong>{t('booking.time')}:</strong> {bookingData.appointmentTime}</p>
-                      <p><strong>{t('booking.duration')}:</strong> {totalSelectedDuration} {t('booking.minutes')}</p>
-                      <p><strong>{t('booking.price')}:</strong> {totalSelectedPrice.toFixed(2)} EUR</p>
                     </div>
                   </div>
 
@@ -674,7 +619,6 @@ const Booking = () => {
                         data-testid="customer-name-input"
                       />
                     </div>
-
                     <div>
                       <Label htmlFor="customerPhone" className="text-zinc-700 font-medium">
                         {t('booking.phone')} *
@@ -718,7 +662,7 @@ const Booking = () => {
                 </form>
               )}
 
-              {/* Step 4: Success */}
+              {/* ── Step 4: Success ── */}
               {currentStep === 4 && (
                 <div className="text-center py-8" data-testid="booking-success">
                   <CheckCircle className="h-16 w-16 text-green-600 mx-auto mb-6" />
@@ -728,21 +672,17 @@ const Booking = () => {
                   <p className="text-zinc-600 mb-6">
                     {t('booking.success.message')}
                   </p>
-                  
+
                   <div className="bg-zinc-50 p-6 rounded-lg text-left max-w-md mx-auto mb-6">
                     <h3 className="font-semibold text-zinc-900 mb-3">{t('booking.success.details')}:</h3>
                     <div className="space-y-2 text-sm">
+                      {selectedServices.map((s, i) => (
+                        <p key={s.id}>
+                          <strong>{i === 0 ? t('booking.service') : '+'}</strong>{' '}
+                          {getLocalizedField(s, 'service_name')}
+                        </p>
+                      ))}
                       <p><strong>{t('booking.hairStylist')}:</strong> {bookingData.barberName}</p>
-                      <div>
-                        <strong>{t('booking.service')}:</strong>
-                        {bookingData.serviceNames && bookingData.serviceNames.length > 1 ? (
-                          <ul className="ml-4 mt-1 list-disc">
-                            {bookingData.serviceNames.map((name, i) => <li key={i}>{name}</li>)}
-                          </ul>
-                        ) : (
-                          <span> {bookingData.serviceName}</span>
-                        )}
-                      </div>
                       <p><strong>{t('booking.date')}:</strong> {bookingData.appointmentDate && format(bookingData.appointmentDate, 'EEEE, MMMM d, yyyy')}</p>
                       <p><strong>{t('booking.time')}:</strong> {bookingData.appointmentTime}</p>
                       <p><strong>{t('booking.success.customer')}:</strong> {bookingData.customerName}</p>
@@ -750,28 +690,20 @@ const Booking = () => {
                     </div>
                   </div>
 
-                  <Button 
+                  <Button
                     onClick={() => {
                       setCurrentStep(1);
+                      setSelectedServices([]);
                       setBookingData({
-                        serviceId: '',
-                        serviceName: '',
-                        serviceIds: [],
-                        serviceNames: [],
                         barberId: '',
                         barberName: '',
-                        barberServiceId: '',
-                        barberServiceIds: [],
                         appointmentDate: null,
                         appointmentTime: '',
                         customerName: '',
                         customerEmail: '',
                         customerPhone: ''
                       });
-                          
-                      setTimeout(() => {
-                        window.scrollTo({ top: 0, behavior: "smooth" });
-                      }, 0);
+                      setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
                     }}
                     className="bg-yellow-600 hover:bg-yellow-700 text-white"
                     data-testid="book-another-btn"
@@ -781,7 +713,7 @@ const Booking = () => {
                 </div>
               )}
 
-              {/* Navigation Buttons */}
+              {/* Navigation */}
               {currentStep < 4 && (
                 <div className="flex justify-between pt-6 border-t">
                   <Button
@@ -792,17 +724,15 @@ const Booking = () => {
                   >
                     {t('booking.previous')}
                   </Button>
-                  
+
                   {currentStep < 3 ? (
                     <Button
                       ref={nextStepRef}
                       onClick={() => {
-                          setCurrentStep(currentStep + 1);
-                          setTimeout(() => {
-                             window.scrollTo({ top: 0, behavior: "smooth" });
-                           }, 0);
+                        setCurrentStep(currentStep + 1);
+                        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
                       }}
-                      disabled={!canProceedToNext(currentStep)}
+                      disabled={!isStepComplete(currentStep)}
                       className="bg-yellow-600 hover:bg-yellow-700 text-white"
                       data-testid="next-step-btn"
                     >
@@ -812,12 +742,9 @@ const Booking = () => {
                     <Button
                       onClick={(e) => {
                         handleSubmit(e);
-
-                        setTimeout(() => {
-                          window.scrollTo({ top: 0, behavior: "smooth" });
-                        }, 0);
+                        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
                       }}
-                      disabled={!canProceedToNext(currentStep) || submitting}
+                      disabled={!isStepComplete(currentStep) || submitting}
                       className="bg-yellow-600 hover:bg-yellow-700 text-white"
                       data-testid="book-appointment-btn"
                     >
@@ -833,6 +760,7 @@ const Booking = () => {
                   )}
                 </div>
               )}
+
             </CardContent>
           </Card>
         </div>
