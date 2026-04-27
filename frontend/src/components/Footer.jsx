@@ -107,11 +107,21 @@ const Footer = () => {
               </li>
               <li className="flex items-center space-x-3">
                 <Phone className="h-4 w-4 text-yellow-400" />
-                <span className="text-zinc-300 text-sm">+49 15569 167244</span>
+                <a
+                  href="tel:+4915569167244"
+                  className="text-zinc-300 text-sm hover:text-yellow-400 transition-colors"
+                >
+                  +49 15569 167244
+                </a>
               </li>
               <li className="flex items-center space-x-3">
                 <Mail className="h-4 w-4 text-yellow-400" />
-                <span className="text-zinc-300 text-sm">info@loyalhaarschnitt.de</span>
+                <a
+                  href="mailto:info@loyalhaarschnitt.de"
+                  className="text-zinc-300 text-sm hover:text-yellow-400 transition-colors"
+                >
+                  info@loyalhaarschnitt.de
+                </a>
               </li>
               <li className="flex items-start space-x-3">
                 <Clock className="h-4 w-4 text-yellow-400 mt-1" />
