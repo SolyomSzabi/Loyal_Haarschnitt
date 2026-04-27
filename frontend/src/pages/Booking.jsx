@@ -44,6 +44,9 @@ const Booking = () => {
   const [bookingData, setBookingData] = useState({
     serviceId: selectedService?.id || '',
     serviceName: selectedService?.name || '',
+    serviceIds: selectedService?.id ? [selectedService.id] : [],
+    serviceNames: selectedService?.name ? [selectedService.name] : [],
+    barberServiceIds: [],
     barberId: '',
     barberName: '',
     barberServiceId: '',
@@ -91,15 +94,17 @@ const Booking = () => {
     }
   };
 
-  const fetchAvailableSlots = async (barberId, date, serviceId) => {
+  const fetchAvailableSlots = async (barberId, date, serviceId, serviceIds) => {
     if (!barberId || !date || !serviceId) return;
     
     try {
       setLoadingSlots(true);
+      const allIds = serviceIds && serviceIds.length > 0 ? serviceIds : [serviceId];
       const response = await axios.get(`${API}/barbers/${barberId}/available-slots`, {
         params: {
           date: format(date, 'yyyy-MM-dd'),
-          service_id: serviceId
+          service_id: serviceId,
+          service_ids: allIds.join(',')
         }
       });
       setAvailableSlots(response.data.slots || []);
@@ -115,19 +120,43 @@ const Booking = () => {
   const handleServiceSelect = (barberServiceId) => {
     const barberService = services.find(s => s.id === barberServiceId);
     const newServiceId = barberService?.service_id || '';
-    
-    setBookingData(prev => ({
-      ...prev,
-      serviceId: newServiceId,
-      serviceName: getLocalizedField(barberService, 'service_name'),
-      barberServiceId: barberServiceId,
-      appointmentTime: '' // Reset time when service changes
-    }));
-    
-    // Fetch available slots if we have date and barber selected
-    if (bookingData.barberId && bookingData.appointmentDate && newServiceId) {
-      fetchAvailableSlots(bookingData.barberId, bookingData.appointmentDate, newServiceId);
-    }
+    const newServiceName = getLocalizedField(barberService, 'service_name');
+
+    setBookingData(prev => {
+      // Toggle selection: add if not present, remove if already selected
+      const alreadySelected = prev.barberServiceIds.includes(barberServiceId);
+      const newBarberServiceIds = alreadySelected
+        ? prev.barberServiceIds.filter(id => id !== barberServiceId)
+        : [...prev.barberServiceIds, barberServiceId];
+
+      // Build service_ids and service_names arrays from selected barberServiceIds
+      const selectedServices = newBarberServiceIds.map(bid => services.find(s => s.id === bid)).filter(Boolean);
+      const newServiceIds = selectedServices.map(s => s.service_id);
+      const newServiceNames = selectedServices.map(s => getLocalizedField(s, 'service_name'));
+
+      // Primary service is the first selected
+      const primaryServiceId = newServiceIds[0] || '';
+      const primaryServiceName = newServiceNames[0] || '';
+      const primaryBarberServiceId = newBarberServiceIds[0] || '';
+
+      const newState = {
+        ...prev,
+        serviceId: primaryServiceId,
+        serviceName: primaryServiceName,
+        serviceIds: newServiceIds,
+        serviceNames: newServiceNames,
+        barberServiceId: primaryBarberServiceId,
+        barberServiceIds: newBarberServiceIds,
+        appointmentTime: '' // Reset time when service changes
+      };
+
+      // Fetch available slots if we have date and barber selected
+      if (prev.barberId && prev.appointmentDate && primaryServiceId) {
+        fetchAvailableSlots(prev.barberId, prev.appointmentDate, primaryServiceId, newServiceIds);
+      }
+
+      return newState;
+    });
 
     if (nextStepRef.current) {
       setTimeout(() => {
@@ -146,7 +175,11 @@ const Booking = () => {
       barberId: barberId,
       barberName: barber?.name || '',
       serviceId: '', // Reset service selection when barber changes
-      serviceName: ''
+      serviceName: '',
+      serviceIds: [],
+      serviceNames: [],
+      barberServiceId: '',
+      barberServiceIds: []
     }));
     
     // Fetch services for this barber
@@ -162,7 +195,7 @@ const Booking = () => {
     
     // Fetch available slots if we have barber and service selected
     if (bookingData.barberId && bookingData.serviceId) {
-      fetchAvailableSlots(bookingData.barberId, date, bookingData.serviceId);
+      fetchAvailableSlots(bookingData.barberId, date, bookingData.serviceId, bookingData.serviceIds);
     }
   };
 
@@ -188,7 +221,7 @@ const Booking = () => {
   const isStepComplete = (step) => {
     switch (step) {
       case 1:
-        return bookingData.barberId !== '' && bookingData.serviceId !== '';
+        return bookingData.barberId !== '' && bookingData.serviceIds.length > 0;
       case 2:
         return bookingData.appointmentDate && bookingData.appointmentTime !== '';
       case 3:
@@ -215,6 +248,8 @@ const Booking = () => {
         customer_phone: bookingData.customerPhone,
         service_id: bookingData.serviceId,
         service_name: bookingData.serviceName,
+        service_ids: bookingData.serviceIds,
+        service_names: bookingData.serviceNames,
         barber_id: bookingData.barberId,
         barber_name: bookingData.barberName,
         barber_service_id: bookingData.barberServiceId,
@@ -237,6 +272,9 @@ const Booking = () => {
   };
 
   const selectedServiceDetails = services.find(s => s.id === bookingData.barberServiceId);
+  const selectedServicesDetails = bookingData.barberServiceIds.map(bid => services.find(s => s.id === bid)).filter(Boolean);
+  const totalSelectedDuration = selectedServicesDetails.reduce((sum, s) => sum + (s?.duration || 0), 0);
+  const totalSelectedPrice = selectedServicesDetails.reduce((sum, s) => sum + (s?.price || 0), 0);
 
   if (loading) {
     return (
@@ -343,9 +381,12 @@ const Booking = () => {
                   {/* Service Selection - Only show after barber is selected */}
                   {bookingData.barberId && (
                     <div>
-                      <h3 className="text-lg font-semibold text-zinc-900 mb-4">
+                      <h3 className="text-lg font-semibold text-zinc-900 mb-2">
                         {t('booking.chooseService')} {bookingData.barberName}
                       </h3>
+                      <p className="text-sm text-zinc-500 mb-4">
+                        Mehrere Services wählen möglich – Preise und Dauer werden addiert.
+                      </p>
                       {services.length === 0 ? (
                         <div className="text-center py-8 text-zinc-500">
                           <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
@@ -370,7 +411,7 @@ const Booking = () => {
                                     <div
                                       key={service.id}
                                       className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
-                                        bookingData.barberServiceId === service.id
+                                        bookingData.barberServiceIds.includes(service.id)
                                           ? 'border-yellow-600 bg-yellow-50'
                                           : 'border-zinc-200 hover:border-zinc-300'
                                       }`}
@@ -378,9 +419,22 @@ const Booking = () => {
                                       data-testid={`service-option-${service.id}`}
                                     >
                                       <div className="flex items-start justify-between mb-2">
-                                        <h4 className="font-semibold text-zinc-900 flex-1">
-                                          {getLocalizedField(service, 'service_name')}
-                                        </h4>
+                                        <div className="flex items-center gap-2 flex-1">
+                                          <div className={`w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 transition-colors ${
+                                            bookingData.barberServiceIds.includes(service.id)
+                                              ? 'bg-yellow-600 border-yellow-600'
+                                              : 'border-zinc-300'
+                                          }`}>
+                                            {bookingData.barberServiceIds.includes(service.id) && (
+                                              <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                              </svg>
+                                            )}
+                                          </div>
+                                          <h4 className="font-semibold text-zinc-900">
+                                            {getLocalizedField(service, 'service_name')}
+                                          </h4>
+                                        </div>
                                         {getLocalizedField(service, 'service_description').trim() !== '' && (
                                           <button
                                             onClick={(e) => {
@@ -425,12 +479,35 @@ const Booking = () => {
                   )}
 
                   {/* Selection Summary */}
-                  {bookingData.barberId && bookingData.serviceId && (
+                  {bookingData.barberId && bookingData.barberServiceIds.length > 0 && (
                     <div className="bg-green-50 p-4 rounded-lg">
                       <h4 className="font-semibold text-green-800 mb-2">{t('booking.selectionSummary')}</h4>
-                      <div className="text-sm text-green-700">
-                        <p><strong>{t('booking.service')}:</strong> {bookingData.serviceName}</p>
+                      <div className="text-sm text-green-700 space-y-1">
                         <p><strong>{t('booking.hairStylist')}:</strong> {bookingData.barberName}</p>
+                        <div>
+                          <strong>{t('booking.service')}:</strong>
+                          <ul className="mt-1 ml-4 list-disc">
+                            {bookingData.barberServiceIds.map(bid => {
+                              const svc = services.find(s => s.id === bid);
+                              if (!svc) return null;
+                              return (
+                                <li key={bid}>
+                                  {getLocalizedField(svc, 'service_name')} &ndash; {svc.duration} min &ndash; {svc.price} EUR
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        </div>
+                        {bookingData.barberServiceIds.length > 1 && (() => {
+                          const selectedSvcs = bookingData.barberServiceIds.map(bid => services.find(s => s.id === bid)).filter(Boolean);
+                          const totalDur = selectedSvcs.reduce((sum, s) => sum + s.duration, 0);
+                          const totalPrice = selectedSvcs.reduce((sum, s) => sum + s.price, 0);
+                          return (
+                            <p className="mt-2 font-semibold border-t border-green-200 pt-2">
+                              Gesamt: {totalDur} min &ndash; {totalPrice.toFixed(2)} EUR
+                            </p>
+                          );
+                        })()}
                       </div>
                     </div>
                   )}
@@ -440,20 +517,29 @@ const Booking = () => {
               {/* Step 2: Date & Time Selection */}
               {currentStep === 2 && (
                 <div className="space-y-6" data-testid="datetime-selection-step">
-                  {selectedServiceDetails && (
+                  {selectedServicesDetails.length > 0 && (
                     <div className="bg-yellow-50 p-4 rounded-lg mb-6">
                       <h3 className="font-semibold text-zinc-900 mb-3">{t('booking.appointmentSummary')}:</h3>
                       <div className="space-y-2">
-                        <div className="flex items-center justify-between">
-                          <span className="text-zinc-700"><strong>{t('booking.service')}:</strong> {getLocalizedField(selectedServiceDetails, 'service_name')}</span>
-                          <div className="flex items-center space-x-2">
-                            <Badge variant="secondary">{selectedServiceDetails.duration} min</Badge>
-                            <span className="font-semibold text-green-600">{selectedServiceDetails.price} EUR</span>
-                          </div>
-                        </div>
                         {bookingData.barberName && (
-                          <div className="flex items-center">
-                            <span className="text-zinc-700"><strong>{t('booking.hairStylist')}:</strong> {bookingData.barberName}</span>
+                          <p className="text-zinc-700"><strong>{t('booking.hairStylist')}:</strong> {bookingData.barberName}</p>
+                        )}
+                        {selectedServicesDetails.map(svc => (
+                          <div key={svc.id} className="flex items-center justify-between">
+                            <span className="text-zinc-700">{getLocalizedField(svc, 'service_name')}</span>
+                            <div className="flex items-center space-x-2">
+                              <Badge variant="secondary">{svc.duration} min</Badge>
+                              <span className="font-semibold text-green-600">{svc.price} EUR</span>
+                            </div>
+                          </div>
+                        ))}
+                        {selectedServicesDetails.length > 1 && (
+                          <div className="flex items-center justify-between border-t border-yellow-200 pt-2 mt-2">
+                            <span className="font-semibold text-zinc-800">Gesamt</span>
+                            <div className="flex items-center space-x-2">
+                              <Badge variant="secondary">{totalSelectedDuration} min</Badge>
+                              <span className="font-semibold text-green-600">{totalSelectedPrice.toFixed(2)} EUR</span>
+                            </div>
                           </div>
                         )}
                       </div>
@@ -551,12 +637,23 @@ const Booking = () => {
                   <div className="bg-yellow-50 p-4 rounded-lg mb-6">
                     <h3 className="font-semibold text-zinc-900 mb-2">{t('booking.appointmentSummary')}:</h3>
                     <div className="space-y-1 text-sm text-zinc-700">
-                      <p><strong>{t('booking.service')}:</strong> {bookingData.serviceName}</p>
                       <p><strong>{t('booking.hairStylist')}:</strong> {bookingData.barberName}</p>
+                      <div>
+                        <strong>{t('booking.service')}:</strong>
+                        {selectedServicesDetails.length === 1 ? (
+                          <span> {bookingData.serviceName}</span>
+                        ) : (
+                          <ul className="ml-4 mt-1 list-disc">
+                            {selectedServicesDetails.map(s => (
+                              <li key={s.id}>{getLocalizedField(s, 'service_name')} ({s.duration} min, {s.price} EUR)</li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
                       <p><strong>{t('booking.date')}:</strong> {bookingData.appointmentDate && format(bookingData.appointmentDate, 'EEEE, MMMM d, yyyy')}</p>
                       <p><strong>{t('booking.time')}:</strong> {bookingData.appointmentTime}</p>
-                      <p><strong>{t('booking.duration')}:</strong> {selectedServiceDetails?.duration} {t('booking.minutes')}</p>
-                      <p><strong>{t('booking.price')}:</strong> {selectedServiceDetails?.price} EUR</p>
+                      <p><strong>{t('booking.duration')}:</strong> {totalSelectedDuration} {t('booking.minutes')}</p>
+                      <p><strong>{t('booking.price')}:</strong> {totalSelectedPrice.toFixed(2)} EUR</p>
                     </div>
                   </div>
 
@@ -635,8 +732,17 @@ const Booking = () => {
                   <div className="bg-zinc-50 p-6 rounded-lg text-left max-w-md mx-auto mb-6">
                     <h3 className="font-semibold text-zinc-900 mb-3">{t('booking.success.details')}:</h3>
                     <div className="space-y-2 text-sm">
-                      <p><strong>{t('booking.service')}:</strong> {bookingData.serviceName}</p>
                       <p><strong>{t('booking.hairStylist')}:</strong> {bookingData.barberName}</p>
+                      <div>
+                        <strong>{t('booking.service')}:</strong>
+                        {bookingData.serviceNames && bookingData.serviceNames.length > 1 ? (
+                          <ul className="ml-4 mt-1 list-disc">
+                            {bookingData.serviceNames.map((name, i) => <li key={i}>{name}</li>)}
+                          </ul>
+                        ) : (
+                          <span> {bookingData.serviceName}</span>
+                        )}
+                      </div>
                       <p><strong>{t('booking.date')}:</strong> {bookingData.appointmentDate && format(bookingData.appointmentDate, 'EEEE, MMMM d, yyyy')}</p>
                       <p><strong>{t('booking.time')}:</strong> {bookingData.appointmentTime}</p>
                       <p><strong>{t('booking.success.customer')}:</strong> {bookingData.customerName}</p>
@@ -650,9 +756,12 @@ const Booking = () => {
                       setBookingData({
                         serviceId: '',
                         serviceName: '',
+                        serviceIds: [],
+                        serviceNames: [],
                         barberId: '',
                         barberName: '',
                         barberServiceId: '',
+                        barberServiceIds: [],
                         appointmentDate: null,
                         appointmentTime: '',
                         customerName: '',
