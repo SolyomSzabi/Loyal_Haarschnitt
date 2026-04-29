@@ -27,20 +27,26 @@ import {
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
+const getBerlinNow = () => {
+  const now = new Date();
+  const berlinStr = now.toLocaleString("en-US", { timeZone: "Europe/Berlin" });
+  return new Date(berlinStr);
+};
+
 const AllAppointments = () => {
   const navigate = useNavigate();
   const { barberData } = useAuth();
   const [barbers, setBarbers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [currentTime, setCurrentTime] = useState(new Date());
+  const [currentTime, setCurrentTime] = useState(getBerlinNow());
   const [editingAppointment, setEditingAppointment] = useState(null);
   const [newDuration, setNewDuration] = useState('');
   const [updating, setUpdating] = useState(false);
   const [deletingAppointment, setDeletingAppointment] = useState(null);
   const [deleting, setDeleting] = useState(false);
   const [selectedDate, setSelectedDate] = useState(
-  new Date().toISOString().split("T")[0] // yyyy-mm-dd
+    getBerlinNow().toISOString().split("T")[0] // yyyy-mm-dd Berlin time
   );
   const [creatingAppointment, setCreatingAppointment] = useState(null);
   const [newAppointmentData, setNewAppointmentData] = useState({
@@ -72,7 +78,7 @@ const AllAppointments = () => {
     fetchServices(); // Add this line
 
     const timer = setInterval(() => {
-      setCurrentTime(new Date());
+      setCurrentTime(getBerlinNow());
     }, 60000);
 
     return () => clearInterval(timer);
@@ -151,12 +157,12 @@ const AllAppointments = () => {
 const formatSelectedDate = () => {
   const dateObj = new Date(selectedDate + "T00:00:00");
 
-  return dateObj.toLocaleDateString("ro-RO", {
+  return dateObj.toLocaleDateString("de-DE", {
     weekday: "long",
     year: "numeric",
     month: "long",
     day: "numeric",
-    timeZone: "Europe/Bucharest",
+    timeZone: "Europe/Berlin",
   }).replace(/^\w/, (c) => c.toUpperCase());
 };
 
