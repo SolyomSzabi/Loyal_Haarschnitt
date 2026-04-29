@@ -6,7 +6,7 @@ import { Dialog, DialogContent, DialogTrigger } from '../components/ui/dialog';
 import { Badge } from '../components/ui/badge';
 import gallery1 from "../assets/gallery1.jpeg";
 import gallery2 from "../assets/gallery2.jpeg";
-import gallery3 from "../assets/gallery3.jpg";
+import gallery3 from "../assets/hero2.jpeg";
 import gallery4 from "../assets/gallery4.jpg";
 
 
@@ -19,14 +19,21 @@ const Gallery = () => {
       id: 1,
       src: gallery1,
       titleKey: 'gallery.images.professional.title',
-      category: 'haircuts',
+      category: 'shop',
       descriptionKey: 'gallery.images.professional.description'
     },
     {
       id: 2,
       src: gallery2,
       titleKey: 'gallery.images.classic.title',
-      category: 'haircuts',
+      category: 'shop',
+      descriptionKey: 'gallery.images.classic.description'
+    },
+    {
+      id: 3,
+      src: gallery3,
+      titleKey: 'gallery.images.classic.title',
+      category: 'shop',
       descriptionKey: 'gallery.images.classic.description'
     }
   ];

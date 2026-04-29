@@ -233,6 +233,7 @@ const Home = () => {
             {[
               gallery1,
               gallery2,
+              heroImg,
             ].map((image, index) => (
               <div key={index} className="aspect-square overflow-hidden rounded-lg group cursor-pointer" data-testid={`gallery-image-${index}`}>
                 <img 
