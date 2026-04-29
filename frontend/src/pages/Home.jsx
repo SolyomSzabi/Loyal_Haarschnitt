@@ -5,9 +5,9 @@ import { Button } from '../components/ui/button';
 import { Card, CardContent } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
 import { Star, Clock, MapPin, Scissors, Award, Users } from 'lucide-react';
-import heroImg from "../assets/hero2.jpg";
-import gallery1 from "../assets/gallery1.jpg";
-import gallery2 from "../assets/gallery2.jpg";
+import heroImg from "../assets/hero2.jepg";
+import gallery1 from "../assets/gallery1.jpeg";
+import gallery2 from "../assets/gallery2.jpeg";
 import gallery3 from "../assets/gallery3.jpg";
 import gallery4 from "../assets/gallery4.jpg";
 
@@ -233,8 +233,6 @@ const Home = () => {
             {[
               gallery1,
               gallery2,
-              gallery3,
-              gallery4,
             ].map((image, index) => (
               <div key={index} className="aspect-square overflow-hidden rounded-lg group cursor-pointer" data-testid={`gallery-image-${index}`}>
                 <img 

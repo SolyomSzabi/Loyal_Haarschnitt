@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '../components/ui/button';
 import { Dialog, DialogContent, DialogTrigger } from '../components/ui/dialog';
 import { Badge } from '../components/ui/badge';
-import gallery1 from "../assets/gallery1.jpg";
-import gallery2 from "../assets/gallery2.jpg";
+import gallery1 from "../assets/gallery1.jpeg";
+import gallery2 from "../assets/gallery2.jpeg";
 import gallery3 from "../assets/gallery3.jpg";
 import gallery4 from "../assets/gallery4.jpg";
 
@@ -28,21 +28,7 @@ const Gallery = () => {
       titleKey: 'gallery.images.classic.title',
       category: 'haircuts',
       descriptionKey: 'gallery.images.classic.description'
-    },
-    {
-      id: 3,
-      src: gallery3,
-      titleKey: 'gallery.images.styled.title',
-      category: 'beard',
-      descriptionKey: 'gallery.images.styled.description'
-    },
-    {
-      id: 4,
-      src: gallery4,
-      titleKey: 'gallery.images.modern.title',
-      category: 'beard',
-      descriptionKey: 'gallery.images.modern.description'
-    },
+    }
   ];
 
   const categories = [

@@ -18,7 +18,7 @@ import aiosmtplib
 from email.message import EmailMessage
 
 # Romanian timezone
-GERMAN_TZ = pytz.timezone('Europe/Bucharest')
+GERMAN_TZ = pytz.timezone('Europe/Berlin')
 
 def get_german_now():
     """Get current datetime in German timezone"""
