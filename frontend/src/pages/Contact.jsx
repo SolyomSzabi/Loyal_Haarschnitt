@@ -11,7 +11,7 @@ const Contact = () => {
     {
       icon: <MapPin className="h-6 w-6 text-yellow-600" />,
       titleKey: 'contact.info.address',
-      details: ['Str. Ratinului, nr.959', 'Crasna, Sălaj, Romania'],
+      details: ['Moosburger Str. 12A', '85406 Zolling, Deutschland'],
       action: 'Get Directions',
       href: 'https://maps.app.goo.gl/WBzEgHZjskunGrJa7'
     },
