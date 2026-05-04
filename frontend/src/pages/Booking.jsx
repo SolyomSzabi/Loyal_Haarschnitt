@@ -7,13 +7,31 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Calendar } from '../components/ui/calendar';
 import { Badge } from '../components/ui/badge';
-import { CalendarIcon, Clock, CheckCircle, Loader2, Info, X } from 'lucide-react';
+import { CalendarIcon, Clock, CheckCircle, Loader2, Info, X, Award } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 import axios from 'axios';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
+
+const getBerlinNow = () => {
+  const now = new Date();
+  const berlinStr = now.toLocaleString('en-US', { timeZone: 'Europe/Berlin' });
+  return new Date(berlinStr);
+};
+
+const BARBER_PROFILES = {
+  'Sarok': {
+    title: 'Master Barber',
+    bio: [
+      'Trained in Munich, certified Master Craftsman and Business Economist in the skilled trades.',
+      "Specialized in precise, modern men's haircuts.",
+      'My focus: clean work, honest advice, and high-quality results.',
+    ],
+    certificate: '/images/master-certificate.jpeg',
+  }
+};
 
 const Booking = () => {
   const { t, i18n } = useTranslation();
@@ -29,6 +47,7 @@ const Booking = () => {
   const [submitting, setSubmitting] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const [expandedServiceId, setExpandedServiceId] = useState(null);
+  const [selectedBarberProfile, setSelectedBarberProfile] = useState(null);
 
   const getLocalizedField = (item, fieldName) => {
     const currentLang = i18n.language;
@@ -195,7 +214,6 @@ const Booking = () => {
           appointment_date: format(bookingData.appointmentDate, 'yyyy-MM-dd'),
           appointment_time: currentTime + ':00',
           duration: service.duration,
-          // Csak az első foglalásnál: teljes lista az összesített emailhez
           ...(i === 0 && {
             all_service_names: selectedServices.map(s => getLocalizedField(s, 'service_name')),
             all_service_durations: selectedServices.map(s => s.duration),
@@ -284,7 +302,7 @@ const Booking = () => {
             </CardHeader>
             <CardContent className="space-y-6">
 
-              {/* ── Step 1 ── */}
+              {/* Step 1 */}
               {currentStep === 1 && (
                 <div className="space-y-8" data-testid="service-selection-step">
 
@@ -312,7 +330,22 @@ const Booking = () => {
                               className="w-12 h-12 rounded-full object-cover"
                             />
                             <div className="flex-1">
-                              <h4 className="font-semibold text-zinc-900 mb-1">{barber.name}</h4>
+                              <div className="flex items-center gap-2 mb-1 flex-wrap">
+                                <h4 className="font-semibold text-zinc-900">{barber.name}</h4>
+                                {BARBER_PROFILES[barber.name] && (
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setSelectedBarberProfile({ ...barber, ...BARBER_PROFILES[barber.name] });
+                                    }}
+                                    className="flex items-center gap-1 text-xs text-yellow-700 bg-yellow-100 hover:bg-yellow-200 px-2 py-0.5 rounded-full transition-colors"
+                                    title="About me"
+                                  >
+                                    <Award className="h-3 w-3" />
+                                    <span>Master Barber</span>
+                                  </button>
+                                )}
+                              </div>
                               <p className="text-sm text-zinc-600">{getLocalizedField(barber, 'description')}</p>
                             </div>
                           </div>
@@ -335,7 +368,6 @@ const Booking = () => {
                         </span>
                       </div>
 
-                      {/* Selected services cart */}
                       {selectedServices.length > 0 && (
                         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
                           <h4 className="font-semibold text-yellow-800 mb-3 text-sm">
@@ -466,7 +498,7 @@ const Booking = () => {
                 </div>
               )}
 
-              {/* ── Step 2 ── */}
+              {/* Step 2 */}
               {currentStep === 2 && (
                 <div className="space-y-6" data-testid="datetime-selection-step">
 
@@ -507,7 +539,7 @@ const Booking = () => {
                           selected={bookingData.appointmentDate}
                           onSelect={handleDateSelect}
                           disabled={(date) => {
-                            const today = new Date();
+                            const today = getBerlinNow();
                             today.setHours(0, 0, 0, 0);
                             const checkDate = new Date(date);
                             checkDate.setHours(0, 0, 0, 0);
@@ -576,7 +608,7 @@ const Booking = () => {
                 </div>
               )}
 
-              {/* ── Step 3 ── */}
+              {/* Step 3 */}
               {currentStep === 3 && (
                 <form onSubmit={handleSubmit} className="space-y-6" data-testid="contact-info-step">
 
@@ -662,7 +694,7 @@ const Booking = () => {
                 </form>
               )}
 
-              {/* ── Step 4: Success ── */}
+              {/* Step 4: Success */}
               {currentStep === 4 && (
                 <div className="text-center py-8" data-testid="booking-success">
                   <CheckCircle className="h-16 w-16 text-green-600 mx-auto mb-6" />
@@ -765,6 +797,75 @@ const Booking = () => {
           </Card>
         </div>
       </section>
+
+      {/* Barber Profile Modal */}
+      {selectedBarberProfile && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
+          onClick={() => setSelectedBarberProfile(null)}
+        >
+          <div
+            className="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="bg-zinc-900 px-6 py-5 flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <img
+                  src={selectedBarberProfile.image_url}
+                  alt={selectedBarberProfile.name}
+                  className="w-14 h-14 rounded-full object-cover border-2 border-yellow-400"
+                />
+                <div>
+                  <h2 className="text-white font-bold text-xl">{selectedBarberProfile.name}</h2>
+                  <div className="flex items-center space-x-1 mt-0.5">
+                    <Award className="h-4 w-4 text-yellow-400" />
+                    <span className="text-yellow-400 text-sm font-medium">{selectedBarberProfile.title}</span>
+                  </div>
+                </div>
+              </div>
+              <button
+                onClick={() => setSelectedBarberProfile(null)}
+                className="text-zinc-400 hover:text-white transition-colors"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+
+            {/* Bio */}
+            <div className="px-6 py-5 space-y-3">
+              {selectedBarberProfile.bio.map((line, i) => (
+                <p key={i} className="text-zinc-700 text-sm leading-relaxed">{line}</p>
+              ))}
+            </div>
+
+            {/* Certificate */}
+            <div className="px-6 pb-6">
+              <div className="border border-zinc-200 rounded-xl overflow-hidden">
+                <div className="bg-zinc-50 px-4 py-2 border-b border-zinc-200 flex items-center space-x-2">
+                  <Award className="h-4 w-4 text-yellow-600" />
+                  <span className="text-sm font-semibold text-zinc-700">Meisterbrief</span>
+                </div>
+                <img
+                  src={selectedBarberProfile.certificate}
+                  alt="Meisterbrief"
+                  className="w-full object-contain max-h-72"
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                    e.target.nextSibling.style.display = 'flex';
+                  }}
+                />
+                <div
+                  style={{ display: 'none' }}
+                  className="items-center justify-center py-8 text-zinc-400 text-sm"
+                >
+                  Zertifikat wird bald hinzugefügt
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
