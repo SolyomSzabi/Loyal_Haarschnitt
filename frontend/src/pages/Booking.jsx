@@ -334,7 +334,7 @@ const Booking = () => {
                                           t('barberProfile.bio.line2'),
                                           t('barberProfile.bio.line3'),
                                         ],
-                                        certificate: '/images/master-certificate.jpg',
+                                        certificate: '/assets/master-certificate.jpeg',
                                       });
                                     }}
                                     className="flex items-center gap-1 text-xs text-yellow-700 bg-yellow-100 hover:bg-yellow-200 px-2 py-0.5 rounded-full transition-colors"
