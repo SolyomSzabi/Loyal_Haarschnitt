@@ -292,5 +292,15 @@
     "previous": "Zurück",
     "min": "Min",
     "currency": "EUR"
+  },
+  "barberProfile": {
+    "masterBarber": "Meisterfriseur",
+    "certificate": "Meisterbrief",
+    "certificateSoon": "Zertifikat wird bald hinzugefügt",
+    "bio": {
+      "line1": "Ausgebildet in München, zertifizierter Meister des Handwerks und Betriebswirt im Handwerk.",
+      "line2": "Spezialisiert auf präzise, moderne Herrenhaarschnitte.",
+      "line3": "Mein Fokus: saubere Arbeit, ehrliche Beratung und hochwertige Ergebnisse."
+    }
   }
 }

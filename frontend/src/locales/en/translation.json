@@ -292,5 +292,15 @@
     "previous": "Previous",
     "min": "min",
     "currency": "EUR"
+  },
+  "barberProfile": {
+    "masterBarber": "Master Barber",
+    "certificate": "Master Certificate",
+    "certificateSoon": "Certificate coming soon",
+    "bio": {
+      "line1": "Trained in Munich, certified Master Craftsman and Business Economist in the skilled trades.",
+      "line2": "Specialized in precise, modern men's haircuts.",
+      "line3": "My focus: clean work, honest advice, and high-quality results."
+    }
   }
 }

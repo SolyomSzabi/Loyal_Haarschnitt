@@ -21,17 +21,7 @@ const getBerlinNow = () => {
   return new Date(berlinStr);
 };
 
-const BARBER_PROFILES = {
-  'Sarok': {
-    title: 'Master Barber',
-    bio: [
-      'Trained in Munich, certified Master Craftsman and Business Economist in the skilled trades.',
-      "Specialized in precise, modern men's haircuts.",
-      'My focus: clean work, honest advice, and high-quality results.',
-    ],
-    certificate: '/assets/master-certificate.jpeg',
-  }
-};
+const BARBER_PROFILES = ['Sarok'];
 
 const Booking = () => {
   const { t, i18n } = useTranslation();
@@ -332,17 +322,26 @@ const Booking = () => {
                             <div className="flex-1">
                               <div className="flex items-center gap-2 mb-1 flex-wrap">
                                 <h4 className="font-semibold text-zinc-900">{barber.name}</h4>
-                                {BARBER_PROFILES[barber.name] && (
+                                {BARBER_PROFILES.includes(barber.name) && (
                                   <button
                                     onClick={(e) => {
                                       e.stopPropagation();
-                                      setSelectedBarberProfile({ ...barber, ...BARBER_PROFILES[barber.name] });
+                                      setSelectedBarberProfile({
+                                        ...barber,
+                                        title: t('barberProfile.masterBarber'),
+                                        bio: [
+                                          t('barberProfile.bio.line1'),
+                                          t('barberProfile.bio.line2'),
+                                          t('barberProfile.bio.line3'),
+                                        ],
+                                        certificate: '/images/master-certificate.jpg',
+                                      });
                                     }}
                                     className="flex items-center gap-1 text-xs text-yellow-700 bg-yellow-100 hover:bg-yellow-200 px-2 py-0.5 rounded-full transition-colors"
-                                    title="About me"
+                                    title={t('barberProfile.masterBarber')}
                                   >
                                     <Award className="h-3 w-3" />
-                                    <span>Master Barber</span>
+                                    <span>{t('barberProfile.masterBarber')}</span>
                                   </button>
                                 )}
                               </div>
@@ -844,7 +843,7 @@ const Booking = () => {
               <div className="border border-zinc-200 rounded-xl overflow-hidden">
                 <div className="bg-zinc-50 px-4 py-2 border-b border-zinc-200 flex items-center space-x-2">
                   <Award className="h-4 w-4 text-yellow-600" />
-                  <span className="text-sm font-semibold text-zinc-700">Meisterbrief</span>
+                  <span className="text-sm font-semibold text-zinc-700">{t('barberProfile.certificate')}</span>
                 </div>
                 <img
                   src={selectedBarberProfile.certificate}
@@ -859,7 +858,7 @@ const Booking = () => {
                   style={{ display: 'none' }}
                   className="items-center justify-center py-8 text-zinc-400 text-sm"
                 >
-                  Zertifikat wird bald hinzugefügt
+                  {t('barberProfile.certificateSoon')}
                 </div>
               </div>
             </div>
