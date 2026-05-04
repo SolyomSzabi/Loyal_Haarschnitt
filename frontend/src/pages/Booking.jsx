@@ -29,7 +29,7 @@ const BARBER_PROFILES = {
       "Specialized in precise, modern men's haircuts.",
       'My focus: clean work, honest advice, and high-quality results.',
     ],
-    certificate: '/images/master-certificate.jpeg',
+    certificate: '/assets/master-certificate.jpeg',
   }
 };
 
