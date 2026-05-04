@@ -39,7 +39,7 @@ const Footer = () => {
 
               {/* Instagram */}
               <a
-                href="https://www.instagram.com/p/DX6eDvWAvvP/?igsh=NGV6eHU5ODhtYmdq"
+                href="https://www.instagram.com/loyal.haarschnitt.zolling/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-zinc-800 rounded-full flex items-center justify-center hover:bg-yellow-600 transition-colors"
