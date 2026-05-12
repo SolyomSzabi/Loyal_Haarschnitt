@@ -535,6 +535,7 @@ const Booking = () => {
                       </Label>
                       <div className="calendar-container">
                         <Calendar
+                          weekStartsOn={1} 
                           mode="single"
                           selected={bookingData.appointmentDate}
                           onSelect={handleDateSelect}
