@@ -18,9 +18,9 @@ const Contact = () => {
     {
       icon: <Phone className="h-6 w-6 text-yellow-600" />,
       titleKey: 'contact.info.phone',
-      details: ['+49 1573 5342854'],
+      details: ['+49 15569 167244'],
       action: 'Call Now',
-      href: 'tel:+4915735342854'
+      href: 'tel:+4915569167244'
     },
     {
       icon: <Mail className="h-6 w-6 text-yellow-600" />,
