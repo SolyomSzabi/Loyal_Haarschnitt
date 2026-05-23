@@ -17,9 +17,23 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
 const getBerlinNow = () => {
-  const now = new Date();
-  const berlinStr = now.toLocaleString('en-US', { timeZone: 'Europe/Berlin' });
-  return new Date(berlinStr);
+  try {
+    const formatter = new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'Europe/Berlin',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    });
+    const parts = formatter.formatToParts(new Date());
+    const year  = parts.find(p => p.type === 'year').value;
+    const month = parts.find(p => p.type === 'month').value;
+    const day   = parts.find(p => p.type === 'day').value;
+    return new Date(`${year}-${month}-${day}T00:00:00`);
+  } catch {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    return d;
+  }
 };
 
 const BARBER_PROFILES = ['Sarok'];
@@ -535,7 +549,7 @@ const Booking = () => {
                       </Label>
                       <div className="calendar-container">
                         <Calendar
-                          weekStartsOn={1} 
+                          weekStartsOn={1}
                           mode="single"
                           selected={bookingData.appointmentDate}
                           onSelect={handleDateSelect}
