@@ -276,7 +276,9 @@
     "developer": {
       "madeBy": "Website created by",
       "websiteDesign": "Custom Website Design & Development"
-    }
+    },
+    "impressum": "Legal Notice",
+    "datenschutz": "Privacy Policy"
   },
   "common": {
     "loading": "Loading...",
@@ -301,6 +303,116 @@
       "line1": "Trained in Munich, certified Master Craftsman and Business Economist in the skilled trades.",
       "line2": "Specialized in precise, modern men's haircuts.",
       "line3": "My focus: clean work, honest advice, and high-quality results."
+    }
+  },
+  "impressum": {
+    "title": "Legal Notice (Impressum)",
+    "legalNote": "Information according to § 5 TMG (German Telemedia Act)",
+    "section1": {
+      "title": "Information according to § 5 TMG",
+      "owner": "Owner"
+    },
+    "section2": {
+      "title": "Contact"
+    },
+    "section3": {
+      "title": "Responsible for content according to § 55 para. 2 RStV",
+      "text": "Person responsible for content:"
+    },
+    "section4": {
+      "title": "Professional Regulations",
+      "berufsbezeichnung": "Professional title",
+      "berufsbezeichnungValue": "Hairdresser (granted in Germany)",
+      "zustaendigeKammer": "Competent chamber",
+      "zustaendigeKammerValue": "Handwerkskammer für München und Oberbayern",
+      "verliehen": "Applicable professional regulations",
+      "verliehenValue": "German Crafts Code (HwO), Vocational Training Regulation for Hairdressers"
+    },
+    "section5": {
+      "title": "EU Dispute Resolution",
+      "euText": "The European Commission provides a platform for online dispute resolution (ODR):",
+      "euLink": "OS Platform",
+      "noObligation": "We are not willing or obliged to participate in dispute resolution proceedings before a consumer arbitration board."
+    },
+    "section6": {
+      "title": "Liability for Content",
+      "text": "As a service provider, we are responsible for our own content on these pages in accordance with general law pursuant to § 7 para. 1 TMG. According to §§ 8 to 10 TMG, however, we as a service provider are not obliged to monitor transmitted or stored third-party information or to investigate circumstances that indicate illegal activity. Obligations to remove or block the use of information in accordance with general laws remain unaffected. However, liability in this regard is only possible from the point in time at which a concrete infringement of the law becomes known. If we become aware of any such violations, we will remove the relevant content immediately."
+    },
+    "section7": {
+      "title": "Liability for Links",
+      "text": "Our website contains links to external third-party websites over whose content we have no influence. Therefore, we cannot assume any liability for these external contents. The respective provider or operator of the linked pages is always responsible for the content of those pages. The linked pages were checked for possible legal violations at the time of linking. Illegal content was not apparent at the time of linking. If we become aware of any legal violations, we will remove such links immediately."
+    }
+  },
+  "datenschutz": {
+    "title": "Privacy Policy",
+    "lastUpdated": "Last updated",
+    "s1": {
+      "title": "1. Controller",
+      "text": "The controller within the meaning of the GDPR for the processing of personal data on this website is:",
+      "owner": "Owner"
+    },
+    "s2": {
+      "title": "2. Personal Data Collected",
+      "text": "When using this website, the following personal data may be processed:",
+      "item1": "Name and contact details (when booking an appointment or submitting a contact request)",
+      "item2": "Phone number (for appointment confirmations)",
+      "item3": "Technical data: IP address, browser type, access times (server logs)",
+      "item4": "Messages you send us via the contact form"
+    },
+    "s3": {
+      "title": "3. Appointment Booking",
+      "text": "For online appointment booking, we collect and process the following data:",
+      "item1": "First and last name",
+      "item2": "Phone number",
+      "item3": "Desired appointment, service, and barber",
+      "legal": "Legal basis: Art. 6 para. 1 lit. b GDPR (contract performance). Data is used solely for appointment management and deleted after the statutory retention period."
+    },
+    "s4": {
+      "title": "4. Contact Form",
+      "text": "When you send us a message via the contact form, the data you enter (name, phone number, message) is stored to process your enquiry.",
+      "legal": "Legal basis: Art. 6 para. 1 lit. f GDPR (legitimate interest in responding to enquiries)."
+    },
+    "s5": {
+      "title": "5. Data Disclosure",
+      "text": "Your personal data will not be passed on to third parties, sold or rented unless this is necessary for the performance of the contract (e.g. hosting provider) or we are legally obliged to do so. All service providers used are carefully selected and process data exclusively in accordance with our instructions (order processing pursuant to Art. 28 GDPR)."
+    },
+    "s6": {
+      "title": "6. Retention Period",
+      "text": "Personal data is only stored for as long as necessary for the respective purpose or as required by statutory retention obligations. Booking data is deleted after expiry of the tax retention period (10 years). Contact enquiries are deleted after full processing, at the latest after 3 years."
+    },
+    "s7": {
+      "title": "7. Your Rights (Data Subject Rights)",
+      "intro": "Under the GDPR, you have the following rights regarding your personal data:",
+      "r1": {
+        "name": "Right of access (Art. 15 GDPR)",
+        "desc": "You can request information about the data we process about you."
+      },
+      "r2": {
+        "name": "Right to rectification (Art. 16 GDPR)",
+        "desc": "You can request the correction of inaccurate data."
+      },
+      "r3": {
+        "name": "Right to erasure (Art. 17 GDPR)",
+        "desc": "You can request the deletion of your data, provided no statutory retention obligations apply."
+      },
+      "r4": {
+        "name": "Right to restriction (Art. 18 GDPR)",
+        "desc": "You can request the restriction of processing of your data."
+      },
+      "r5": {
+        "name": "Right to object (Art. 21 GDPR)",
+        "desc": "You can object to the processing of your data."
+      },
+      "contact": "To exercise your rights, please contact us at",
+      "supervisory": "You also have the right to lodge a complaint with the competent data protection supervisory authority"
+    },
+    "s8": {
+      "title": "8. Cookies",
+      "text": "This website uses technically necessary cookies to ensure the functionality of the website (e.g. language settings, session management). No tracking or advertising cookies are used. Consent is not required for technically necessary cookies (§ 25 para. 2 TDDDG)."
+    },
+    "s9": {
+      "title": "9. Changes to this Privacy Policy",
+      "text": "We reserve the right to update this privacy policy as necessary to reflect changes in legal requirements or changes to our services. The current version is available on this page. We recommend reviewing the privacy policy regularly."
     }
   }
 }

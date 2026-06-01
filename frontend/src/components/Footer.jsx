@@ -87,6 +87,16 @@ const Footer = () => {
                   {t('nav.contact')}
                 </Link>
               </li>
+              <li>
+                <Link to="/impressum" className="text-zinc-300 hover:text-yellow-400 transition-colors">
+                  {t('footer.impressum')}
+                </Link>
+              </li>
+              <li>
+                <Link to="/datenschutz" className="text-zinc-300 hover:text-yellow-400 transition-colors">
+                  {t('footer.datenschutz')}
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -141,6 +151,14 @@ const Footer = () => {
               {t('footer.copyright')}
             </p>
             <div className="flex items-center gap-4">
+              <Link to="/impressum" className="text-zinc-400 hover:text-yellow-400 text-sm transition-colors">
+                {t('footer.impressum')}
+              </Link>
+              <span className="text-zinc-700">|</span>
+              <Link to="/datenschutz" className="text-zinc-400 hover:text-yellow-400 text-sm transition-colors">
+                {t('footer.datenschutz')}
+              </Link>
+              <span className="text-zinc-700">|</span>
               <Link to="/barber-login" className="text-zinc-400 hover:text-yellow-400 text-sm transition-colors">
                 {t('footer.staffLogin')}
               </Link>

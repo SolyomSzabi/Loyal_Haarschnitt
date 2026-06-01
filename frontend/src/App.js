@@ -14,6 +14,8 @@ import Booking from "./pages/Booking";
 import BarberDashboard from "./pages/BarberDashboard";
 import BarberLogin from "./pages/BarberLogin";
 import AllAppointments from "./pages/AllAppointments";
+import Impressum from "./pages/Impressum";
+import Datenschutz from "./pages/Datenschutz";
 import { AuthProvider } from "./contexts/AuthContext";
 
 // Import components
@@ -39,6 +41,8 @@ function App() {
               <Route path="/barber-login" element={<BarberLogin />} />
               <Route path="/barber-dashboard" element={<BarberDashboard />} />
               <Route path="/all-appointments" element={<AllAppointments />} />
+              <Route path="/impressum" element={<Impressum />} />
+              <Route path="/datenschutz" element={<Datenschutz />} />
             </Routes>
           </main>
           <Footer />
