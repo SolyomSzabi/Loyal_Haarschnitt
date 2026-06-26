@@ -261,7 +261,9 @@
       "time": "Uhrzeit",
       "duration": "Dauer",
       "price": "Preis"
-    }
+    },
+    "widerrufshinweis": "Hinweis zum Widerrufsrecht: Bei Online-Terminbuchungen für Dienstleistungen (§ 356 Abs. 4 BGB) erlischt das Widerrufsrecht, sobald der Friseur mit der Ausführung der Dienstleistung begonnen hat und Sie ausdrücklich zugestimmt haben, dass der Friseur vor Ablauf der Widerrufsfrist mit der Ausführung beginnt. Mit dem Absenden Ihrer Buchung erklären Sie Ihre ausdrückliche Zustimmung hierzu.",
+    "widerrufsCheckbox": "Ich stimme ausdrücklich zu, dass mit der Ausführung der Dienstleistung vor Ablauf der 14-tägigen Widerrufsfrist begonnen werden kann, und nehme zur Kenntnis, dass mein Widerrufsrecht hiermit erlischt."
   },
   "footer": {
     "description": "Erleben Sie erstklassige Friseurdienstleistungen bei Loyal Haarschnitt. Unsere erfahrenen Friseure kombinieren traditionelle Techniken mit modernem Stil, um Ihnen den perfekten Schnitt zu geben.",
@@ -307,9 +309,9 @@
   },
   "impressum": {
     "title": "Impressum",
-    "legalNote": "Angaben gemäß § 5 TMG",
+    "legalNote": "Angaben gemäß § 5 DDG",
     "section1": {
-      "title": "Angaben gemäß § 5 TMG",
+      "title": "Angaben gemäß § 5 DDG",
       "owner": "Inhaber"
     },
     "section2": {
@@ -336,7 +338,7 @@
     },
     "section6": {
       "title": "Haftung für Inhalte",
-      "text": "Als Diensteanbieter sind wir gemäß § 7 Abs.1 TMG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen. Verpflichtungen zur Entfernung oder Sperrung der Nutzung von Informationen nach den allgemeinen Gesetzen bleiben hiervon unberührt. Eine diesbezügliche Haftung ist jedoch erst ab dem Zeitpunkt der Kenntnis einer konkreten Rechtsverletzung möglich. Bei Bekanntwerden von entsprechenden Rechtsverletzungen werden wir diese Inhalte umgehend entfernen."
+      "text": "Als Diensteanbieter sind wir gemäß § 7 Abs. 1 DDG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 DDG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen. Verpflichtungen zur Entfernung oder Sperrung der Nutzung von Informationen nach den allgemeinen Gesetzen bleiben hiervon unberührt. Eine diesbezügliche Haftung ist jedoch erst ab dem Zeitpunkt der Kenntnis einer konkreten Rechtsverletzung möglich. Bei Bekanntwerden von entsprechenden Rechtsverletzungen werden wir diese Inhalte umgehend entfernen."
     },
     "section7": {
       "title": "Haftung für Links",
@@ -356,7 +358,7 @@
       "text": "Bei der Nutzung dieser Website werden folgende personenbezogene Daten verarbeitet:",
       "item1": "Name und Kontaktdaten (bei Terminbuchung oder Kontaktanfrage)",
       "item2": "Telefonnummer (für Terminbestätigungen)",
-      "item3": "Technische Daten: IP-Adresse, Browser-Typ, Zugriffszeiten (Server-Logs)",
+      "item3": "Technische Daten: IP-Adresse, Browser-Typ, Zugriffszeiten (Server-Logs gemäß § 25 TDDDG)",
       "item4": "Nachrichten, die Sie uns über das Kontaktformular senden"
     },
     "s3": {
@@ -404,11 +406,15 @@
         "desc": "Sie können der Verarbeitung Ihrer Daten widersprechen."
       },
       "contact": "Zur Ausübung Ihrer Rechte wenden Sie sich bitte an",
-      "supervisory": "Sie haben außerdem das Recht, sich bei der zuständigen Datenschutz-Aufsichtsbehörde zu beschweren"
+      "supervisory": "Sie haben außerdem das Recht, sich bei der zuständigen Datenschutz-Aufsichtsbehörde zu beschweren",
+      "r6": {
+        "name": "Datenübertragbarkeit (Art. 20 DSGVO)",
+        "desc": "Sie können verlangen, dass wir Ihnen Ihre personenbezogenen Daten in einem strukturierten, gängigen und maschinenlesbaren Format bereitstellen."
+      }
     },
     "s8": {
       "title": "8. Cookies",
-      "text": "Diese Website verwendet technisch notwendige Cookies, um die Funktionalität der Website sicherzustellen (z. B. Spracheinstellungen, Sitzungsverwaltung). Es werden keine Tracking- oder Werbe-Cookies eingesetzt. Eine Einwilligung ist für technisch notwendige Cookies nicht erforderlich (§ 25 Abs. 2 TDDDG)."
+      "text": "Diese Website verwendet ausschließlich technisch notwendige Cookies, um die Funktionalität der Website sicherzustellen (z. B. Spracheinstellungen, Sitzungsverwaltung). Es werden keine Tracking- oder Werbe-Cookies eingesetzt. Eine Einwilligung ist für technisch notwendige Cookies nicht erforderlich (§ 25 Abs. 2 TDDDG). Für die Verwaltung eingesetzter Drittanbieter-Dienste und etwaiger optionaler Cookies gelten die Anforderungen des TDDDG in der jeweils gültigen Fassung."
     },
     "s9": {
       "title": "9. Änderungen dieser Datenschutzerklärung",

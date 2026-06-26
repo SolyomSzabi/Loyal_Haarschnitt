@@ -53,6 +53,7 @@ const Booking = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [expandedServiceId, setExpandedServiceId] = useState(null);
   const [selectedBarberProfile, setSelectedBarberProfile] = useState(null);
+  const [widerrufsAgreed, setWiderrufsAgreed] = useState(false);
 
   const getLocalizedField = (item, fieldName) => {
     const currentLang = i18n.language;
@@ -191,7 +192,8 @@ const Booking = () => {
       case 3:
         return bookingData.customerName !== '' &&
                bookingData.customerEmail !== '' &&
-               bookingData.customerPhone !== '';
+               bookingData.customerPhone !== '' &&
+               widerrufsAgreed;
       default:
         return false;
     }
@@ -705,6 +707,24 @@ const Booking = () => {
                     <p className="text-sm text-zinc-600">
                       <strong>{t('booking.note')}:</strong> {t('booking.noteText')}
                     </p>
+                  </div>
+
+                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                    <p className="text-sm text-amber-800 mb-3">
+                      {t('booking.widerrufshinweis')}
+                    </p>
+                    <label className="flex items-start gap-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={widerrufsAgreed}
+                        onChange={(e) => setWiderrufsAgreed(e.target.checked)}
+                        className="mt-0.5 h-4 w-4 rounded border-amber-400 accent-yellow-600 shrink-0"
+                        data-testid="widerruf-checkbox"
+                      />
+                      <span className="text-sm text-amber-900 font-medium">
+                        {t('booking.widerrufsCheckbox')}
+                      </span>
+                    </label>
                   </div>
                 </form>
               )}

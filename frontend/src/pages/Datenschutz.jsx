@@ -32,7 +32,7 @@ const Datenschutz = () => {
           </div>
           <div className="w-16 h-1 bg-yellow-600 rounded-full ml-14"></div>
           <p className="mt-4 text-zinc-500 text-sm ml-14">
-            {t('datenschutz.lastUpdated')}: Mai 2025
+            {t('datenschutz.lastUpdated')}: Juni 2026
           </p>
         </div>
 
@@ -97,6 +97,7 @@ const Datenschutz = () => {
               <li><strong>{t('datenschutz.s7.r3.name')}:</strong> {t('datenschutz.s7.r3.desc')}</li>
               <li><strong>{t('datenschutz.s7.r4.name')}:</strong> {t('datenschutz.s7.r4.desc')}</li>
               <li><strong>{t('datenschutz.s7.r5.name')}:</strong> {t('datenschutz.s7.r5.desc')}</li>
+              <li><strong>{t('datenschutz.s7.r6.name')}:</strong> {t('datenschutz.s7.r6.desc')}</li>
             </ul>
             <p>{t('datenschutz.s7.contact')}: <a href="mailto:info@loyalhaarschnitt.de" className="text-yellow-600 hover:underline">info@loyalhaarschnitt.de</a></p>
             <p>{t('datenschutz.s7.supervisory')}: <a href="https://www.lda.bayern.de" target="_blank" rel="noopener noreferrer" className="text-yellow-600 hover:underline">Bayerisches Landesamt für Datenschutzaufsicht (BayLDA)</a></p>

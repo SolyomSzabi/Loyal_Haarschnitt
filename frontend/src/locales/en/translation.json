@@ -261,7 +261,9 @@
       "time": "Time",
       "duration": "Duration",
       "price": "Price"
-    }
+    },
+    "widerrufshinweis": "Note on the right of withdrawal: For online bookings of services (§ 356 para. 4 BGB), the right of withdrawal expires once the hairdresser has begun performing the service and you have explicitly agreed that the hairdresser may begin before the withdrawal period expires. By submitting your booking, you expressly consent to this.",
+    "widerrufsCheckbox": "I expressly agree that performance of the service may begin before the 14-day withdrawal period expires, and I acknowledge that my right of withdrawal will be extinguished as a result."
   },
   "footer": {
     "description": "Experience the finest in hairstyling services at Loyal Haarschnitt. Our skilled hairdressers combine traditional techniques with modern style to give you the perfect cut.",
@@ -307,9 +309,9 @@
   },
   "impressum": {
     "title": "Legal Notice (Impressum)",
-    "legalNote": "Information according to § 5 TMG (German Telemedia Act)",
+    "legalNote": "Information according to § 5 DDG (German Digital Services Act)",
     "section1": {
-      "title": "Information according to § 5 TMG",
+      "title": "Information according to § 5 DDG",
       "owner": "Owner"
     },
     "section2": {
@@ -336,7 +338,7 @@
     },
     "section6": {
       "title": "Liability for Content",
-      "text": "As a service provider, we are responsible for our own content on these pages in accordance with general law pursuant to § 7 para. 1 TMG. According to §§ 8 to 10 TMG, however, we as a service provider are not obliged to monitor transmitted or stored third-party information or to investigate circumstances that indicate illegal activity. Obligations to remove or block the use of information in accordance with general laws remain unaffected. However, liability in this regard is only possible from the point in time at which a concrete infringement of the law becomes known. If we become aware of any such violations, we will remove the relevant content immediately."
+      "text": "As a service provider, we are responsible for our own content on these pages in accordance with general law pursuant to § 7 para. 1 DDG. According to §§ 8 to 10 DDG, however, we as a service provider are not obliged to monitor transmitted or stored third-party information or to investigate circumstances that indicate illegal activity. Obligations to remove or block the use of information in accordance with general laws remain unaffected. However, liability in this regard is only possible from the point in time at which a concrete infringement of the law becomes known. If we become aware of any such violations, we will remove the relevant content immediately."
     },
     "section7": {
       "title": "Liability for Links",
@@ -356,7 +358,7 @@
       "text": "When using this website, the following personal data may be processed:",
       "item1": "Name and contact details (when booking an appointment or submitting a contact request)",
       "item2": "Phone number (for appointment confirmations)",
-      "item3": "Technical data: IP address, browser type, access times (server logs)",
+      "item3": "Technical data: IP address, browser type, access times (server logs pursuant to § 25 TDDDG)",
       "item4": "Messages you send us via the contact form"
     },
     "s3": {
@@ -404,11 +406,15 @@
         "desc": "You can object to the processing of your data."
       },
       "contact": "To exercise your rights, please contact us at",
-      "supervisory": "You also have the right to lodge a complaint with the competent data protection supervisory authority"
+      "supervisory": "You also have the right to lodge a complaint with the competent data protection supervisory authority",
+      "r6": {
+        "name": "Right to data portability (Art. 20 GDPR)",
+        "desc": "You can request that we provide your personal data in a structured, commonly used and machine-readable format."
+      }
     },
     "s8": {
       "title": "8. Cookies",
-      "text": "This website uses technically necessary cookies to ensure the functionality of the website (e.g. language settings, session management). No tracking or advertising cookies are used. Consent is not required for technically necessary cookies (§ 25 para. 2 TDDDG)."
+      "text": "This website uses only technically necessary cookies to ensure the functionality of the website (e.g. language settings, session management). No tracking or advertising cookies are used. Consent is not required for technically necessary cookies (§ 25 para. 2 TDDDG). Any optional cookies or third-party services used are subject to the requirements of the TDDDG as applicable."
     },
     "s9": {
       "title": "9. Changes to this Privacy Policy",
