@@ -259,7 +259,7 @@ const Booking = () => {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-50 pt-16">
+    <div className="min-h-screen bg-zinc-50 pt-16" translate="no">
       <section className="section-padding">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
 
@@ -603,8 +603,9 @@ const Booking = () => {
                                     : 'border-red-200 bg-red-50 text-red-400 cursor-not-allowed'
                               }`}
                               data-testid={`time-slot-${slot.time}`}
+                              translate="no"
                             >
-                              {slot.time}
+                              <span translate="no">{slot.time}</span>
                               {!slot.available && (
                                 <span className="block text-xs mt-1">{t('booking.unavailable')}</span>
                               )}
@@ -618,7 +619,8 @@ const Booking = () => {
                   {bookingData.appointmentDate && bookingData.appointmentTime && (
                     <div className="bg-green-50 p-4 rounded-lg mt-6">
                       <p className="text-green-800">
-                        <strong>{t('booking.selected')}:</strong> {format(bookingData.appointmentDate, 'EEEE, MMMM d, yyyy')} at {bookingData.appointmentTime}
+                        <strong>{t('booking.selected')}:</strong>{' '}
+                        <span translate="no">{format(bookingData.appointmentDate, 'EEEE, MMMM d, yyyy')} at {bookingData.appointmentTime}</span>
                       </p>
                     </div>
                   )}

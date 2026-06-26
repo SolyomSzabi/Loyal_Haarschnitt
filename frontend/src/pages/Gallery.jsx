@@ -6,7 +6,7 @@ import { Dialog, DialogContent, DialogTrigger } from '../components/ui/dialog';
 import { Badge } from '../components/ui/badge';
 import gallery1 from "../assets/gallery1.jpeg";
 import gallery2 from "../assets/gallery2.jpeg";
-import gallery3 from "../assets/hero2.jpeg";
+import gallery3 from "../assets/gallery3.jpeg";
 import gallery_new1 from "../assets/gallery_new1.jpeg";
 import gallery_new2 from "../assets/gallery_new2.jpeg";
 import gallery_new3 from "../assets/gallery_new3.jpeg";
