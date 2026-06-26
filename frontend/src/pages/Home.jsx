@@ -8,7 +8,7 @@ import { Star, Clock, MapPin, Scissors, Award, Users } from 'lucide-react';
 import heroImg from "../assets/gallery3.jpeg";
 import gallery1 from "../assets/gallery1.jpeg";
 import gallery2 from "../assets/gallery2.jpeg";
-import gallery_new1 from "../assets/gallery_new1.jpg";
+import gallery_new1 from "../assets/gallery_new1.jpeg";
 
 const Home = () => {
   const { t } = useTranslation();
