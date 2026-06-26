@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Menu, X, Scissors } from 'lucide-react';
 import LanguageSwitcher from './LanguageSwitcher';
-import logo from "@/assets/logo.jpg";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
