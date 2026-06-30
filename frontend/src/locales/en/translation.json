@@ -24,13 +24,13 @@
       "items": {
         "mensHaircut": {
           "name": "Men's Haircut",
-          "price": "19 EUR",
+          "price": "24 EUR",
           "duration": "30 min",
           "description": "Individual men's haircut tailored to face shape, hair texture, and personal style. Includes clean styling. Focused service – precise, professional, no add-ons."
         },
         "mensHaircutPro": {
           "name": "Gentleman Package",
-          "price": "39 EUR",
+          "price": "44 EUR",
           "duration": "45 min",
           "description": "Haircut + Wash + Beard + Eyebrows + Waxing. Complete grooming experience in one appointment."
         },
