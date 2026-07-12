@@ -60,7 +60,7 @@ const AllAppointments = () => {
   const [services, setServices] = useState([]);
 
 
-    // Create 15-minute time slots from 9 AM to 7 PM
+    // Create 15-minute time slots from 09:00 to 19:00
   const businessHours = Array.from({ length: 10 }, (_, i) => 9 + i); // Still keep hours for display
   const timeSlots = [];
   for (let hour = 9; hour < 19; hour++) {
@@ -149,9 +149,7 @@ const AllAppointments = () => {
     if (!timeString) return '';
     const [hours, minutes] = timeString.split(':');
     const hour = parseInt(hours);
-    const ampm = hour >= 12 ? 'PM' : 'AM';
-    const displayHour = hour % 12 || 12;
-    return `${displayHour}:${minutes} ${ampm}`;
+    return `${String(hour).padStart(2, '0')}:${minutes}`;
   };
 
 const formatSelectedDate = () => {

@@ -32,7 +32,7 @@
           "name": "Gentleman Paket",
           "price": "44 EUR",
           "duration": "45 Min",
-          "description": "Waschen + Haarschnitt + Bart + Augenbrauen + Waxing (Ohren & Nase ) + Tiefenreinigende Nasenmaske. Das komplette Pflegeerlebnis in einem Termin."
+          "description": "Waschen + Haarschnitt + Bart + Augenbrauen + Waxing (Ohren, Nase & Konturen) + Tiefenreinigende Nasenmaske. Das komplette Pflegeerlebnis in einem Termin."
         },
         "beardTrim": {
           "name": "Beard Trim / Classic Shave",
@@ -318,15 +318,21 @@
       "title": "Kontakt"
     },
     "section3": {
-      "title": "Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV",
+      "title": "Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV",
       "text": "Verantwortliche Person für den Inhalt:"
     },
+    "steuernummer": "Steuernummer",
+    "steuernummerValue": "115/200/21932",
     "section4": {
       "title": "Berufsrechtliche Regelungen",
       "berufsbezeichnung": "Berufsbezeichnung",
       "berufsbezeichnungValue": "Friseur/in (verliehen in Deutschland)",
       "zustaendigeKammer": "Zuständige Kammer",
       "zustaendigeKammerValue": "Handwerkskammer für München und Oberbayern",
+      "betriebsNr": "Betriebs-Nr.",
+      "betriebsNrValue": "7244462",
+      "eingetragenSeit": "Eingetragen seit",
+      "eingetragenSeitValue": "01.04.2026",
       "verliehen": "Berufsrechtliche Regelungen",
       "verliehenValue": "Handwerksordnung (HwO), Berufsausbildungsordnung Friseur"
     },

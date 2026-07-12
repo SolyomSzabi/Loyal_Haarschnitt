@@ -14,7 +14,7 @@
       "bookNow": "Book Now",
       "viewServices": "View Services",
       "location": "Moosburger Str. 12A, 85406 Zolling, Germany",
-      "hours": "Open 10AM - 7PM",
+      "hours": "Open 10:00 - 19:00",
       "rating": "5/5 Rating"
     },
     "services": {
@@ -270,8 +270,8 @@
     "quickLinks": "Quick Links",
     "contactInfo": "Contact Info",
     "hours": {
-      "weekdays": "Mon-Fri: 10AM - 7PM",
-      "saturday": "Sat: 9AM - 4PM"
+      "weekdays": "Mon-Fri: 10:00 - 19:00",
+      "saturday": "Sat: 09:00 - 16:00"
     },
     "copyright": "© 2026 Loyal Haarschnitt. All rights reserved.",
     "staffLogin": "Staff Login",
@@ -318,15 +318,21 @@
       "title": "Contact"
     },
     "section3": {
-      "title": "Responsible for content according to § 55 para. 2 RStV",
+      "title": "Responsible for content according to § 18 para. 2 MStV",
       "text": "Person responsible for content:"
     },
+    "steuernummer": "Tax number",
+    "steuernummerValue": "115/200/21932",
     "section4": {
       "title": "Professional Regulations",
       "berufsbezeichnung": "Professional title",
       "berufsbezeichnungValue": "Hairdresser (granted in Germany)",
       "zustaendigeKammer": "Competent chamber",
       "zustaendigeKammerValue": "Handwerkskammer für München und Oberbayern",
+      "betriebsNr": "Business number (Betriebs-Nr.)",
+      "betriebsNrValue": "7244462",
+      "eingetragenSeit": "Registered since",
+      "eingetragenSeitValue": "01.04.2026",
       "verliehen": "Applicable professional regulations",
       "verliehenValue": "German Crafts Code (HwO), Vocational Training Regulation for Hairdressers"
     },

@@ -10,10 +10,7 @@ import gallery3 from "../assets/gallery3.jpeg";
 import gallery_new1 from "../assets/gallery_new1.jpeg";
 import gallery_new2 from "../assets/gallery_new2.jpeg";
 import gallery_new3 from "../assets/gallery_new3.jpeg";
-import gallery_new4 from "../assets/gallery_new4.jpeg";
 import gallery_new5 from "../assets/gallery_new5.jpeg";
-import gallery_new6 from "../assets/gallery_new6.jpeg";
-import gallery_new7 from "../assets/gallery_new7.jpeg";
 import gallery_new8 from "../assets/gallery_new8.jpeg";
 import gallery_new9 from "../assets/gallery_new9.jpeg";
 import gallery_new10 from "../assets/gallery_new10.jpeg";
@@ -33,10 +30,7 @@ const Gallery = () => {
     { id: 4, src: gallery_new1, titleKey: 'gallery.images.professional.title', category: 'haircuts', descriptionKey: 'gallery.images.professional.description' },
     { id: 5, src: gallery_new2, titleKey: 'gallery.images.classic.title', category: 'haircuts', descriptionKey: 'gallery.images.classic.description' },
     { id: 6, src: gallery_new3, titleKey: 'gallery.images.professional.title', category: 'haircuts', descriptionKey: 'gallery.images.professional.description' },
-    { id: 7, src: gallery_new4, titleKey: 'gallery.images.classic.title', category: 'haircuts', descriptionKey: 'gallery.images.classic.description' },
     { id: 8, src: gallery_new5, titleKey: 'gallery.images.professional.title', category: 'haircuts', descriptionKey: 'gallery.images.professional.description' },
-    { id: 9, src: gallery_new6, titleKey: 'gallery.images.classic.title', category: 'haircuts', descriptionKey: 'gallery.images.classic.description' },
-    { id: 10, src: gallery_new7, titleKey: 'gallery.images.professional.title', category: 'haircuts', descriptionKey: 'gallery.images.professional.description' },
     { id: 11, src: gallery_new8, titleKey: 'gallery.images.classic.title', category: 'haircuts', descriptionKey: 'gallery.images.classic.description' },
     { id: 12, src: gallery_new9, titleKey: 'gallery.images.professional.title', category: 'haircuts', descriptionKey: 'gallery.images.professional.description' },
     { id: 13, src: gallery_new10, titleKey: 'gallery.images.classic.title', category: 'haircuts', descriptionKey: 'gallery.images.classic.description' },

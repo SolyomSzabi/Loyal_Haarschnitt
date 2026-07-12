@@ -18,7 +18,7 @@ const Contact = () => {
     {
       icon: <Phone className="h-6 w-6 text-yellow-600" />,
       titleKey: 'contact.info.phone',
-      details: ['+49 15569 167244'],
+      details: ['+49 155 691 672 44'],
       action: 'Call Now',
       href: 'tel:+4915569167244'
     },
@@ -32,8 +32,8 @@ const Contact = () => {
   ];
 
   const businessHours = [
-    { dayKey: 'contact.schedule.weekdays', hours: '10:00 AM - 7:00 PM' },
-    { dayKey: 'contact.schedule.saturday', hours: '9:00 AM - 4:00 PM' },
+    { dayKey: 'contact.schedule.weekdays', hours: '10:00 - 19:00' },
+    { dayKey: 'contact.schedule.saturday', hours: '09:00 - 16:00' },
   ];
 
   return (
@@ -74,9 +74,9 @@ const Contact = () => {
                     rel={info.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                     className="block"
                   >
-                  <Card className="p-6 border-0 shadow-lg hover:shadow-xl transition-shadow hover:ring-2 hover:ring-yellow-400 cursor-pointer" data-testid={`contact-info-${index}`}>
-                    <CardContent className="p-0">
-                      <div className="flex items-start space-x-4">
+                  <Card className="h-full min-h-[168px] p-6 border-0 shadow-lg hover:shadow-xl transition-shadow hover:ring-2 hover:ring-yellow-400 cursor-pointer flex flex-col justify-center" data-testid={`contact-info-${index}`}>
+                    <CardContent className="p-0 h-full flex items-center">
+                      <div className="flex items-center space-x-4 w-full">
                         <div className="bg-yellow-100 rounded-full p-3 flex-shrink-0">
                           {info.icon}
                         </div>

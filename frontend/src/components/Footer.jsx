@@ -121,7 +121,7 @@ const Footer = () => {
                   href="tel:+4915569167244"
                   className="text-zinc-300 text-sm hover:text-yellow-400 transition-colors"
                 >
-                  +49 15569 167244
+                  +49 155 691 672 44
                 </a>
               </li>
               <li className="flex items-center space-x-3">

@@ -823,7 +823,7 @@ Hier sind die Details Ihres Termins:
   • Uhrzeit: {appointment_obj.appointment_time.strftime("%H:%M")}
 
 Falls Sie Ihren Termin ändern oder stornieren möchten, kontaktieren Sie uns bitte:
-Telefon: +49 15569 167244
+Telefon: +49 155 691 672 44
 
 Wir freuen uns auf Ihren Besuch bei Loyal Haarschnitt!
 
@@ -846,7 +846,7 @@ Here are the details of your appointment:
   • Time: {appointment_obj.appointment_time.strftime("%H:%M")}
 
 If you need to modify or cancel your appointment, please contact us:
-Phone: +49 15569 167244
+Phone: +49 155 691 672 44
 
 We look forward to welcoming you at Loyal Haarschnitt!
 
