@@ -31,7 +31,7 @@ const Impressum = () => {
                 <User className="h-5 w-5 text-yellow-600 mt-0.5 shrink-0" />
                 <div>
                   <p className="font-semibold text-zinc-900">Loyal Haarschnitt</p>
-                  <p>{t('impressum.section1.owner')}: Sarok Mustafa Ahmed Omer</p>
+                  <p>{t('impressum.section1.owner')}: Sarok Ahmed Omar</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
@@ -42,6 +42,7 @@ const Impressum = () => {
                   <p>Deutschland</p>
                 </div>
               </div>
+              <p className="pl-8">{t('impressum.steuernummer')}: {t('impressum.steuernummerValue')}</p>
             </div>
           </div>
 
@@ -55,7 +56,7 @@ const Impressum = () => {
               <div className="flex items-center gap-3">
                 <Phone className="h-5 w-5 text-yellow-600 shrink-0" />
                 <a href="tel:+4915569167244" className="hover:text-yellow-600 transition-colors">
-                  +49 155 69167244
+                  +49 155 691 672 44
                 </a>
               </div>
               <div className="flex items-center gap-3">
@@ -81,7 +82,7 @@ const Impressum = () => {
             </h2>
             <p className="text-zinc-700">{t('impressum.section3.text')}</p>
             <div className="mt-3 text-zinc-700">
-              <p className="font-semibold">Sarok Mustafa Ahmed Omer</p>
+              <p className="font-semibold">Sarok Ahmed Omar</p>
               <p>Moosburger Str. 12A</p>
               <p>85406 Zolling</p>
             </div>
@@ -96,6 +97,8 @@ const Impressum = () => {
             <div className="text-zinc-700 space-y-2">
               <p>{t('impressum.section4.berufsbezeichnung')}: {t('impressum.section4.berufsbezeichnungValue')}</p>
               <p>{t('impressum.section4.zustaendigeKammer')}: {t('impressum.section4.zustaendigeKammerValue')}</p>
+              <p>{t('impressum.section4.betriebsNr')}: {t('impressum.section4.betriebsNrValue')}</p>
+              <p>{t('impressum.section4.eingetragenSeit')}: {t('impressum.section4.eingetragenSeitValue')}</p>
               <p>{t('impressum.section4.verliehen')}: {t('impressum.section4.verliehenValue')}</p>
             </div>
           </div>

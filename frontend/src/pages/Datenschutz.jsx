@@ -43,9 +43,9 @@ const Datenschutz = () => {
             <p>{t('datenschutz.s1.text')}</p>
             <div className="bg-zinc-50 rounded-lg p-4 text-sm">
               <p className="font-semibold text-zinc-900">Loyal Haarschnitt</p>
-              <p>{t('datenschutz.s1.owner')}: Sarok Mustafa Ahmed Omer</p>
+              <p>{t('datenschutz.s1.owner')}: Sarok Ahmed Omar</p>
               <p>Moosburger Str. 12A, 85406 Zolling</p>
-              <p>Tel.: +49 155 69167244</p>
+              <p>Tel.: +49 155 691 672 44</p>
               <p>E-Mail: info@loyalhaarschnitt.de</p>
             </div>
           </Section>
