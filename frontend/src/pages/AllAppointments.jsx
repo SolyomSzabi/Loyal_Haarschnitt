@@ -257,15 +257,24 @@ const AllAppointments = () => {
   };
 
 const formatSelectedDate = () => {
-  const dateObj = new Date(selectedDate + "T00:00:00");
+  // Parse the plain YYYY-MM-DD calendar date directly and format it in UTC,
+  // so the displayed date never shifts based on the visitor's own system
+  // timezone (e.g. Romania/Hungary being 1h ahead of Germany at times).
+  const [year, month, day] = selectedDate.split('-').map(Number);
+  const dateObj = new Date(Date.UTC(year, month - 1, day));
 
   return dateObj.toLocaleDateString("de-DE", {
     weekday: "long",
     year: "numeric",
     month: "long",
     day: "numeric",
-    timeZone: "Europe/Berlin",
+    timeZone: "UTC",
   }).replace(/^\w/, (c) => c.toUpperCase());
+};
+
+const isSelectedDateToday = () => {
+  const todayStr = getBerlinNow().toISOString().split("T")[0];
+  return selectedDate === todayStr;
 };
 
 
@@ -753,7 +762,9 @@ const handleCreateAppointment = async () => {
                   19:00 – 20:00
                 </label>
                 <span className="text-xs text-zinc-500">
-                  Activate to open these slots for online booking today only.
+                  {isSelectedDateToday()
+                    ? 'Activate to open these slots for online booking today.'
+                    : `Activate to open these slots for online booking on ${formatSelectedDate()}.`}
                 </span>
               </div>
             )}
@@ -761,7 +772,7 @@ const handleCreateAppointment = async () => {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold font-heading text-zinc-900 mb-1">
-                Today's Schedule - All Staff
+                {isSelectedDateToday() ? "Today's Schedule" : "Schedule"} - All Staff
               </h1>
               <div className="flex items-center space-x-2 text-sm text-zinc-600">
                 <Calendar className="h-4 w-4" />
