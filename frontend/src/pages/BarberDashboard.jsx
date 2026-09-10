@@ -201,13 +201,8 @@ const BarberDashboard = () => {
   const handleSaveDuration = async (appointmentId, originalDuration) => {
     const newDuration = newDurations[appointmentId];
     
-    if (!newDuration || newDuration < 15) {
-      toast.error('Duration must be at least 15 minutes');
-      return;
-    }
-
-    if (newDuration > originalDuration) {
-      toast.error('You can only reduce the duration, not increase it');
+    if (!newDuration || newDuration < 5) {
+      toast.error('Duration must be at least 5 minutes');
       return;
     }
 
@@ -374,9 +369,8 @@ const BarberDashboard = () => {
               <div className="flex items-center space-x-2">
                 <Input
                   type="number"
-                  min="15"
-                  max={appointment.duration}
-                  step="15"
+                  min="5"
+                  step="5"
                   value={newDurations[appointment.id] || appointment.duration}
                   onChange={(e) => handleDurationChange(appointment.id, e.target.value)}
                   className="w-20 h-8 text-sm"

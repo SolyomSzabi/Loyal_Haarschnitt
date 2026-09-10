@@ -23,6 +23,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
@@ -58,12 +59,20 @@ const AllAppointments = () => {
   });
   const [creating, setCreating] = useState(false);
   const [services, setServices] = useState([]);
+  const [draggedAppointment, setDraggedAppointment] = useState(null);
+  const [movingAppointment, setMovingAppointment] = useState(false);
+  const [specialHours, setSpecialHours] = useState({ extend_morning: false, extend_evening: false });
+  const [savingSpecialHours, setSavingSpecialHours] = useState(false);
 
 
-    // Create 15-minute time slots from 09:00 to 19:00
-  const businessHours = Array.from({ length: 10 }, (_, i) => 9 + i); // Still keep hours for display
+    // Admin calendar grid spans 08:00-20:00 so extra opening hours (08-10 / 19-20) are
+  // always visible and clickable/droppable for the owner/staff, even when not activated
+  // for public booking that day.
+  const GRID_START_HOUR = 8;
+  const GRID_END_HOUR = 20; // exclusive
+  const businessHours = Array.from({ length: GRID_END_HOUR - GRID_START_HOUR }, (_, i) => GRID_START_HOUR + i);
   const timeSlots = [];
-  for (let hour = 9; hour < 19; hour++) {
+  for (let hour = GRID_START_HOUR; hour < GRID_END_HOUR; hour++) {
     for (let minute = 0; minute < 60; minute += 15) {
       timeSlots.push({ hour, minute });
     }
@@ -87,8 +96,103 @@ const AllAppointments = () => {
   useEffect(() => {
   if (barberData) {
     fetchAllAppointments(selectedDate);
+    fetchSpecialHours(selectedDate);
   }
 }, [selectedDate]);
+
+  const fetchSpecialHours = async (date) => {
+    try {
+      const response = await axios.get(`${API}/special-hours/${date}`);
+      setSpecialHours({
+        extend_morning: !!response.data.extend_morning,
+        extend_evening: !!response.data.extend_evening
+      });
+    } catch (err) {
+      console.error('Error fetching special hours:', err);
+      setSpecialHours({ extend_morning: false, extend_evening: false });
+    }
+  };
+
+  const isWeekday = (dateStr) => {
+    const day = new Date(dateStr + 'T00:00:00').getDay(); // 0 = Sunday, 6 = Saturday
+    return day >= 1 && day <= 5;
+  };
+
+  const handleToggleSpecialHours = async (field) => {
+    const updated = { ...specialHours, [field]: !specialHours[field] };
+    try {
+      setSavingSpecialHours(true);
+      const token = localStorage.getItem('barber_token');
+      await axios.put(
+        `${API}/special-hours/${selectedDate}`,
+        updated,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setSpecialHours(updated);
+      toast.success(
+        updated[field]
+          ? 'Extra hours activated for this day'
+          : 'Extra hours deactivated for this day'
+      );
+    } catch (error) {
+      console.error('Error updating special hours:', error);
+      toast.error(error.response?.data?.detail || 'Failed to update extra hours');
+    } finally {
+      setSavingSpecialHours(false);
+    }
+  };
+
+  const handleDragStart = (appointment) => (e) => {
+    e.stopPropagation();
+    setDraggedAppointment(appointment);
+    e.dataTransfer.effectAllowed = 'move';
+    // Firefox requires data to be set for drag to work
+    e.dataTransfer.setData('text/plain', appointment.id);
+  };
+
+  const handleDragEnd = () => {
+    setDraggedAppointment(null);
+  };
+
+  const handleSlotDragOver = (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  };
+
+  const handleSlotDrop = (barberId, hour, minute) => async (e) => {
+    e.preventDefault();
+    if (!draggedAppointment) return;
+
+    const newTime = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}:00`;
+    const currentTime = draggedAppointment.appointment_time || draggedAppointment.time;
+
+    if (draggedAppointment.barber_id === barberId && currentTime === newTime) {
+      setDraggedAppointment(null);
+      return;
+    }
+
+    try {
+      setMovingAppointment(true);
+      const token = localStorage.getItem('barber_token');
+      await axios.patch(
+        `${API}/appointments/${draggedAppointment.id}/reschedule`,
+        {
+          barber_id: barberId,
+          appointment_date: selectedDate,
+          appointment_time: newTime
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      toast.success('Appointment moved');
+      await fetchAllAppointments();
+    } catch (error) {
+      console.error('Error moving appointment:', error);
+      toast.error(error.response?.data?.detail || 'Failed to move appointment');
+    } finally {
+      setMovingAppointment(false);
+      setDraggedAppointment(null);
+    }
+  };
 
   const fetchAllAppointments = async (date = selectedDate) => {
     try {
@@ -173,10 +277,10 @@ const formatSelectedDate = () => {
     const hours = currentTime.getHours();
     const minutes = currentTime.getMinutes();
     
-    if (hours < 9 || hours >= 19) return null; // Outside business hours
+    if (hours < GRID_START_HOUR || hours >= GRID_END_HOUR) return null; // Outside grid range
     
-    const totalMinutes = (hours - 9) * 60 + minutes;
-    const totalBusinessMinutes = 10 * 60; // 10 hours
+    const totalMinutes = (hours - GRID_START_HOUR) * 60 + minutes;
+    const totalBusinessMinutes = (GRID_END_HOUR - GRID_START_HOUR) * 60;
     const percentage = (totalMinutes / totalBusinessMinutes) * 100;
     
     return percentage;
@@ -191,9 +295,10 @@ const formatSelectedDate = () => {
 
   const getAppointmentPosition = (appointmentTime, duration) => {
     const [hours, minutes] = appointmentTime.split(':').map(Number);
-    const startMinutes = (hours - 9) * 60 + minutes;
-    const top = (startMinutes / (10 * 60)) * 100; // Percentage from top
-    const height = (duration / (10 * 60)) * 100; // Height as percentage
+    const totalBusinessMinutes = (GRID_END_HOUR - GRID_START_HOUR) * 60;
+    const startMinutes = (hours - GRID_START_HOUR) * 60 + minutes;
+    const top = (startMinutes / totalBusinessMinutes) * 100; // Percentage from top
+    const height = (duration / totalBusinessMinutes) * 100; // Height as percentage
     
     return { 
       top: `${top}%`, 
@@ -216,13 +321,8 @@ const formatSelectedDate = () => {
     
     const durationValue = parseInt(newDuration);
     
-    if (!durationValue || durationValue < 15) {
-      toast.error('Duration must be at least 15 minutes');
-      return;
-    }
-
-    if (durationValue > editingAppointment.duration) {
-      toast.error('You can only reduce the duration, not increase it');
+    if (!durationValue || durationValue < 5) {
+      toast.error('Duration must be at least 5 minutes');
       return;
     }
 
@@ -415,7 +515,7 @@ const handleCreateAppointment = async () => {
       // Recalculate with fresh data
       const [startHour, startMinute] = creatingAppointment.time.split(':').map(Number);
       const startMinutes = startHour * 60 + startMinute;
-      const endOfDayMinutes = 19 * 60;
+      const endOfDayMinutes = GRID_END_HOUR * 60;
       
       let availableDuration = endOfDayMinutes - startMinutes; // Start with end of day
       
@@ -630,6 +730,33 @@ const handleCreateAppointment = async () => {
                 Load
               </Button>
             </div>
+
+            {isWeekday(selectedDate) && (
+              <div className="mt-3 flex flex-wrap items-center gap-4 bg-yellow-50 border border-yellow-200 rounded-lg px-3 py-2">
+                <span className="text-xs font-semibold text-zinc-700 uppercase tracking-wide">
+                  Extra hours for {formatSelectedDate()}:
+                </span>
+                <label className="flex items-center gap-2 text-sm text-zinc-800 cursor-pointer">
+                  <Switch
+                    checked={specialHours.extend_morning}
+                    onCheckedChange={() => handleToggleSpecialHours('extend_morning')}
+                    disabled={savingSpecialHours}
+                  />
+                  08:00 – 10:00
+                </label>
+                <label className="flex items-center gap-2 text-sm text-zinc-800 cursor-pointer">
+                  <Switch
+                    checked={specialHours.extend_evening}
+                    onCheckedChange={() => handleToggleSpecialHours('extend_evening')}
+                    disabled={savingSpecialHours}
+                  />
+                  19:00 – 20:00
+                </label>
+                <span className="text-xs text-zinc-500">
+                  Activate to open these slots for online booking today only.
+                </span>
+              </div>
+            )}
           
           <div className="flex items-center justify-between">
             <div>
@@ -674,7 +801,7 @@ const handleCreateAppointment = async () => {
             </div>
             <div className="flex items-center space-x-2 text-sm text-zinc-600">
               <Plus className="h-4 w-4" />
-              <span>Click any time slot to add appointment</span>
+              <span>Click a time slot to add an appointment, or drag an appointment to move it</span>
             </div>
           </div>
 
@@ -733,6 +860,8 @@ const handleCreateAppointment = async () => {
                           height: `${100 / timeSlots.length}%`
                         }}
                         onClick={(e) => handleTimeSlotClick(barber.id, slot.hour, slot.minute, e)}
+                        onDragOver={handleSlotDragOver}
+                        onDrop={handleSlotDrop(barber.id, slot.hour, slot.minute)}
                         title={`Click to add appointment at ${slot.hour}:${slot.minute.toString().padStart(2, '0')}`}
                       >
                         {/* Show time label on hover for 15-min slots that aren't on the hour */}
@@ -767,13 +896,16 @@ const handleCreateAppointment = async () => {
                       return (
                         <div
                           key={appointment.id}
-                          className={`absolute w-full px-0.5 z-10`}
+                          draggable={appointment.status !== 'cancelled' && appointment.status !== 'completed'}
+                          onDragStart={handleDragStart(appointment)}
+                          onDragEnd={handleDragEnd}
+                          className={`absolute w-full px-0.5 z-10 ${appointment.status !== 'cancelled' && appointment.status !== 'completed' ? 'cursor-move' : ''} ${draggedAppointment?.id === appointment.id ? 'opacity-40' : ''}`}
                           style={{
                             top: position.top,
                             height: position.height,
                             minHeight: '48px'
                           }}
-                          title={`${formatTime(appointment.appointment_time || appointment.time)} - ${appointment.customer_name} - ${appointment.service_name} (${duration} min) - ${appointment.price} RON - ${appointment.customer_phone}`}
+                          title={`${formatTime(appointment.appointment_time || appointment.time)} - ${appointment.customer_name} - ${appointment.service_name} (${duration} min) - ${appointment.price} RON - ${appointment.customer_phone} — drag to move`}
                         >
                           <div
                             className={`h-full rounded p-1 shadow-md border-l-4 border ${
@@ -1003,7 +1135,7 @@ const handleCreateAppointment = async () => {
           <DialogHeader className="space-y-2 pb-4 border-b border-zinc-200">
             <DialogTitle className="text-xl font-bold text-zinc-900">Edit Appointment Duration</DialogTitle>
             <DialogDescription className="text-sm text-zinc-600">
-              Modify the duration for this appointment. You can only reduce the duration, not increase it.
+              Modify the duration for this appointment. As admin/staff you can set any length you need.
             </DialogDescription>
           </DialogHeader>
           
@@ -1027,9 +1159,8 @@ const handleCreateAppointment = async () => {
                   <Input
                     id="duration"
                     type="number"
-                    min="15"
-                    max={editingAppointment.duration}
-                    step="15"
+                    min="5"
+                    step="5"
                     value={newDuration}
                     onChange={(e) => setNewDuration(e.target.value)}
                     className="flex-1 text-lg text-zinc-900 font-bold bg-white border-2 border-zinc-300 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200"
@@ -1040,7 +1171,7 @@ const handleCreateAppointment = async () => {
                 </div>
                 <div className="bg-blue-50 p-3 rounded border border-blue-200">
                   <p className="text-xs text-blue-900 font-medium">
-                    📌 Minimum: 15 minutes | Maximum: {editingAppointment.duration} minutes
+                    📌 As admin/staff, set any duration you need — no minimum or maximum. Customer online bookings are unaffected.
                   </p>
                 </div>
               </div>
