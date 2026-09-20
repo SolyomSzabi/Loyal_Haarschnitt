@@ -63,12 +63,26 @@ const BarberDashboard = () => {
   });
   const [deletingAppointment, setDeletingAppointment] = useState(null);
   const [deleting, setDeleting] = useState(false);
+  const [viewingBarberId, setViewingBarberId] = useState(null);
+  const [barbersList, setBarbersList] = useState([]);
 
   useEffect(() => {
-    if (isAuthenticated && barberData) {
+    if (barberData) {
+      setViewingBarberId(barberData.id);
+    }
+  }, [barberData]);
+
+  useEffect(() => {
+    if (barberData?.isAdmin) {
+      axios.get(`${API}/barbers`).then((res) => setBarbersList(res.data)).catch(() => {});
+    }
+  }, [barberData]);
+
+  useEffect(() => {
+    if (isAuthenticated && barberData && viewingBarberId) {
       fetchData();
     }
-  }, [isAuthenticated, barberData]);
+  }, [isAuthenticated, barberData, viewingBarberId]);
 
   // Redirect if not authenticated
   useEffect(() => {
@@ -100,7 +114,7 @@ const BarberDashboard = () => {
     try {
       const response = await axios.get(`${API}/appointments/today`);
       // Filter for current barber's appointments
-      const myAppointments = response.data.filter(apt => apt.barber_id === barberData.id);
+      const myAppointments = response.data.filter(apt => apt.barber_id === viewingBarberId);
       setTodayAppointments(myAppointments);
     } catch (error) {
       console.error('Error fetching today appointments:', error);
@@ -109,7 +123,7 @@ const BarberDashboard = () => {
 
   const fetchBarberAppointments = async () => {
     try {
-      const url = `${API}/barbers/${barberData.id}/appointments`;
+      const url = `${API}/barbers/${viewingBarberId}/appointments`;
       const response = await axios.get(url, getAuthHeaders());
       setAppointments(response.data);
     } catch (error) {
@@ -125,7 +139,7 @@ const BarberDashboard = () => {
 
   const fetchBarberBreaks = async () => {
     try {
-      const response = await axios.get(`${API}/barbers/${barberData.id}/breaks`, getAuthHeaders());
+      const response = await axios.get(`${API}/barbers/${viewingBarberId}/breaks`, getAuthHeaders());
       setBreaks(response.data);
     } catch (error) {
       console.error('Error fetching barber breaks:', error);
@@ -157,7 +171,7 @@ const BarberDashboard = () => {
     try {
       await axios.post(`${API}/breaks`, {
         ...breakForm,
-        barber_id: barberData.id
+        barber_id: viewingBarberId
       }, getAuthHeaders());
       
       toast.success('Break added successfully');
@@ -517,6 +531,25 @@ const BarberDashboard = () => {
               <p className="text-xl text-zinc-600">
                 Manage your appointments and schedule
               </p>
+              {barberData.isAdmin && barbersList.length > 1 && (
+                <div className="mt-4 flex items-center gap-3">
+                  <Label htmlFor="viewing-barber" className="text-sm font-semibold text-zinc-700">
+                    Viewing schedule for:
+                  </Label>
+                  <Select value={viewingBarberId || ''} onValueChange={setViewingBarberId}>
+                    <SelectTrigger id="viewing-barber" className="w-48 bg-white">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {barbersList.map((b) => (
+                        <SelectItem key={b.id} value={b.id}>
+                          {b.name}{b.id === barberData.id ? ' (you)' : ''}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
             </div>
             <div className="flex space-x-3">
               <Button 

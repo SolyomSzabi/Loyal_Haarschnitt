@@ -118,6 +118,15 @@ const AllAppointments = () => {
     return day >= 1 && day <= 5;
   };
 
+  // Owner/admin can manage everything; regular staff can only manage their own appointments
+  const canManageAppointment = (appointment) => {
+    return barberData?.isAdmin || appointment.barber_id === barberData?.id;
+  };
+
+  const canManageColumn = (barberId) => {
+    return barberData?.isAdmin || barberId === barberData?.id;
+  };
+
   const handleToggleSpecialHours = async (field) => {
     const updated = { ...specialHours, [field]: !specialHours[field] };
     try {
@@ -143,6 +152,10 @@ const AllAppointments = () => {
   };
 
   const handleDragStart = (appointment) => (e) => {
+    if (!canManageAppointment(appointment)) {
+      e.preventDefault();
+      return;
+    }
     e.stopPropagation();
     setDraggedAppointment(appointment);
     e.dataTransfer.effectAllowed = 'move';
@@ -162,6 +175,12 @@ const AllAppointments = () => {
   const handleSlotDrop = (barberId, hour, minute) => async (e) => {
     e.preventDefault();
     if (!draggedAppointment) return;
+
+    if (!canManageColumn(barberId)) {
+      toast.error('You can only move appointments within your own schedule');
+      setDraggedAppointment(null);
+      return;
+    }
 
     const newTime = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}:00`;
     const currentTime = draggedAppointment.appointment_time || draggedAppointment.time;
@@ -904,19 +923,21 @@ const handleCreateAppointment = async () => {
                       
                       const duration = appointment.duration || 45;
 
+                      const isDraggable = appointment.status !== 'cancelled' && appointment.status !== 'completed' && canManageAppointment(appointment);
+
                       return (
                         <div
                           key={appointment.id}
-                          draggable={appointment.status !== 'cancelled' && appointment.status !== 'completed'}
+                          draggable={isDraggable}
                           onDragStart={handleDragStart(appointment)}
                           onDragEnd={handleDragEnd}
-                          className={`absolute w-full px-0.5 z-10 ${appointment.status !== 'cancelled' && appointment.status !== 'completed' ? 'cursor-move' : ''} ${draggedAppointment?.id === appointment.id ? 'opacity-40' : ''}`}
+                          className={`absolute w-full px-0.5 z-10 ${isDraggable ? 'cursor-move' : ''} ${draggedAppointment?.id === appointment.id ? 'opacity-40' : ''}`}
                           style={{
                             top: position.top,
                             height: position.height,
                             minHeight: '48px'
                           }}
-                          title={`${formatTime(appointment.appointment_time || appointment.time)} - ${appointment.customer_name} - ${appointment.service_name} (${duration} min) - ${appointment.price} RON - ${appointment.customer_phone} — drag to move`}
+                          title={`${formatTime(appointment.appointment_time || appointment.time)} - ${appointment.customer_name} - ${appointment.service_name} (${duration} min) - ${appointment.price} RON - ${appointment.customer_phone}${isDraggable ? ' — drag to move' : ''}`}
                         >
                           <div
                             className={`h-full rounded p-1 shadow-md border-l-4 border ${
@@ -949,17 +970,27 @@ const handleCreateAppointment = async () => {
                               <div className="flex flex-col items-end gap-0.5 flex-shrink-0">
                                 {/* Duration badge with edit button */}
                                 <div 
-                                  className="bg-white px-1 py-0.5 rounded border border-zinc-300 font-bold text-zinc-700 text-[8px] leading-none flex items-center gap-0.5 cursor-pointer hover:bg-zinc-100 transition-colors"
+                                  className={`bg-white px-1 py-0.5 rounded border border-zinc-300 font-bold text-zinc-700 text-[8px] leading-none flex items-center gap-0.5 transition-colors ${
+                                    appointment.status === 'confirmed' && canManageAppointment(appointment)
+                                      ? 'cursor-pointer hover:bg-zinc-100'
+                                      : ''
+                                  }`}
                                   onClick={(e) => {
                                     e.stopPropagation();
-                                    if (appointment.status === 'confirmed') {
+                                    if (appointment.status === 'confirmed' && canManageAppointment(appointment)) {
                                       handleEditDuration(appointment);
                                     }
                                   }}
-                                  title={appointment.status === 'confirmed' ? 'Click to edit duration' : 'Duration editing only available for confirmed appointments'}
+                                  title={
+                                    !canManageAppointment(appointment)
+                                      ? 'You can only edit your own appointments'
+                                      : appointment.status === 'confirmed'
+                                        ? 'Click to edit duration'
+                                        : 'Duration editing only available for confirmed appointments'
+                                  }
                                 >
                                   {duration}m
-                                  {appointment.status === 'confirmed' && (
+                                  {appointment.status === 'confirmed' && canManageAppointment(appointment) && (
                                     <Edit2 className="w-2 h-2 text-zinc-500" />
                                   )}
                                 </div>
@@ -969,17 +1000,19 @@ const handleCreateAppointment = async () => {
                                   {appointment.price || '?'} RON
                                 </div>
 
-                                                                {/* Delete button */}
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleDeleteClick(appointment);
-                                  }}
-                                  className="bg-red-100 hover:bg-red-200 px-1 py-0.5 rounded border border-red-300 transition-colors flex items-center gap-0.5"
-                                  title="Delete appointment"
-                                >
-                                  <Trash2 className="w-2.5 h-2.5 text-red-600" />
-                                </button>
+                                {/* Delete button - only for the appointment's own staff or admin */}
+                                {canManageAppointment(appointment) && (
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleDeleteClick(appointment);
+                                    }}
+                                    className="bg-red-100 hover:bg-red-200 px-1 py-0.5 rounded border border-red-300 transition-colors flex items-center gap-0.5"
+                                    title="Delete appointment"
+                                  >
+                                    <Trash2 className="w-2.5 h-2.5 text-red-600" />
+                                  </button>
+                                )}
                               </div>
                             </div>
                           </div>
