@@ -16,6 +16,7 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi import Depends, HTTPException, status, BackgroundTasks
 import aiosmtplib
 from email.message import EmailMessage
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 # Romanian timezone
 GERMAN_TZ = pytz.timezone('Europe/Berlin')
@@ -279,6 +280,7 @@ class Appointment(BaseModel):
     duration: Optional[int] = None  # Duration in minutes (optional for backward compatibility)
     price: Optional[float] = None  # Price in RON (optional for backward compatibility)
     status: str = "pending"  # pending, confirmed, completed, cancelled
+    reminder_sent: bool = False  # Whether the 6h-before reminder email has been sent
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 class AppointmentCreate(BaseModel):
@@ -296,6 +298,23 @@ class AppointmentCreate(BaseModel):
     all_service_names: Optional[List[str]] = None
     all_service_durations: Optional[List[int]] = None
     all_service_prices: Optional[List[float]] = None
+
+class AppointmentReschedule(BaseModel):
+    barber_id: Optional[str] = None
+    appointment_date: Optional[date] = None
+    appointment_time: Optional[time] = None
+
+class SpecialHours(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    special_date: date
+    extend_morning: bool = False  # opens 08:00-10:00 (Mon-Fri only)
+    extend_evening: bool = False  # opens 19:00-20:00 (Mon-Fri only)
+
+class SpecialHoursUpdate(BaseModel):
+    extend_morning: bool = False
+    extend_evening: bool = False
 
 class ContactMessage(BaseModel):
     model_config = ConfigDict(extra="ignore")
@@ -576,6 +595,14 @@ async def get_available_slots(barber_id: str, date: str, service_id: str):
         # Hétfő – Péntek: 9:00 – 19:00
         business_start = time(10, 0)
         business_end = time(19, 0)
+
+        # Check if the owner activated extra hours for this specific date
+        special_hours = await db.special_hours.find_one({"special_date": date}, {"_id": 0})
+        if special_hours:
+            if special_hours.get("extend_morning"):
+                business_start = time(8, 0)
+            if special_hours.get("extend_evening"):
+                business_end = time(20, 0)
     elif weekday == 5:
         # Szombat: 9:00 – 13:00
         business_start = time(9, 0)
@@ -621,6 +648,38 @@ async def get_available_slots(barber_id: str, date: str, service_id: str):
         "service_duration": duration,
         "slots": slots
     }
+
+# Special / extra opening hours (admin-activated, per specific date, Mon-Fri only)
+@api_router.get("/special-hours/{target_date}")
+async def get_special_hours(target_date: str):
+    """Return whether extra hours (08:00-10:00 / 19:00-20:00) are activated for a given date"""
+    special_hours = await db.special_hours.find_one({"special_date": target_date}, {"_id": 0})
+    if not special_hours:
+        return {"special_date": target_date, "extend_morning": False, "extend_evening": False}
+    return special_hours
+
+@api_router.put("/special-hours/{target_date}")
+async def set_special_hours(target_date: str, update: SpecialHoursUpdate, current_barber: dict = Depends(get_current_barber)):
+    """Admin/staff toggles the extra opening hours for a specific date"""
+    # Extra hours only make sense Monday-Friday
+    date_obj = datetime.fromisoformat(target_date).date()
+    if date_obj.weekday() not in [0, 1, 2, 3, 4]:
+        raise HTTPException(status_code=400, detail="Extra hours can only be activated for Monday-Friday")
+
+    doc = {
+        "special_date": target_date,
+        "extend_morning": update.extend_morning,
+        "extend_evening": update.extend_evening,
+    }
+
+    existing = await db.special_hours.find_one({"special_date": target_date}, {"_id": 0})
+    if existing:
+        await db.special_hours.update_one({"special_date": target_date}, {"$set": doc})
+    else:
+        doc["id"] = str(uuid.uuid4())
+        await db.special_hours.insert_one(doc)
+
+    return doc
 
 # Appointments endpoints
 @api_router.get("/appointments", response_model=List[Appointment])
@@ -730,6 +789,99 @@ async def send_email(to: str, subject: str, body: str):
         print("Email sending failed:", e)
         raise
 
+
+REMINDER_HOURS_BEFORE = 6
+
+async def send_appointment_reminders():
+    """Background job: sends a friendly reminder email ~6h before each still-active
+    appointment. Runs periodically; only ever sends once per appointment (reminder_sent
+    flag), and only for appointments that are still 'confirmed' (cancelled ones are
+    skipped automatically because they no longer match the query)."""
+    try:
+        german_now = get_german_now()
+        today_str = get_german_today().isoformat()
+        tomorrow_str = (get_german_today() + timedelta(days=1)).isoformat()
+
+        # Only appointments happening today or tomorrow can possibly be inside the next 6h
+        candidates = await db.appointments.find({
+            "status": "confirmed",
+            "reminder_sent": {"$ne": True},
+            "appointment_date": {"$in": [today_str, tomorrow_str]}
+        }, {"_id": 0}).to_list(1000)
+
+        for appt in candidates:
+            try:
+                appt_date = datetime.fromisoformat(appt["appointment_date"]).date()
+                appt_time = datetime.strptime(appt["appointment_time"][:5], '%H:%M').time()
+                appt_datetime = GERMAN_TZ.localize(datetime.combine(appt_date, appt_time))
+
+                reminder_due_at = appt_datetime - timedelta(hours=REMINDER_HOURS_BEFORE)
+
+                # Send once we've reached (or just passed) the 6h-before mark, as long as
+                # the appointment itself hasn't happened yet.
+                if reminder_due_at <= german_now < appt_datetime:
+                    subject = "Terminerinnerung / Appointment Reminder – Loyal Haarschnitt"
+                    body = f"""
+🇩🇪 Terminerinnerung – Loyal Haarschnitt
+
+Liebe/r {appt['customer_name']},
+
+dies ist eine freundliche Erinnerung an Ihren bevorstehenden Termin bei Loyal Haarschnitt in {REMINDER_HOURS_BEFORE} Stunden.
+
+Ihre Termindetails:
+  • Service: {appt['service_name']}
+  • Stylist: {appt['barber_name']}
+  • Datum: {appt_date.strftime('%d.%m.%Y')}
+  • Uhrzeit: {appt_time.strftime('%H:%M')}
+
+Wir haben diese Zeit ganz besonders für Sie reserviert und freuen uns darauf, Sie bei uns im Salon willkommen zu heißen.
+
+Bis gleich!
+
+Mit freundlichen Grüßen,
+{appt['barber_name']} und das Loyal Haarschnitt Team
+
+------------------------------------------------------------
+
+🇬🇧 Appointment Reminder – Loyal Haarschnitt
+
+Hi {appt['customer_name']},
+
+This is a friendly reminder that your appointment at Loyal Haarschnitt is in {REMINDER_HOURS_BEFORE} hours.
+
+Your appointment details:
+  • Service: {appt['service_name']}
+  • Stylist: {appt['barber_name']}
+  • Date: {appt_date.strftime('%d.%m.%Y')}
+  • Time: {appt_time.strftime('%H:%M')}
+
+We have reserved this time especially for you and look forward to welcoming you to our salon.
+
+See you soon!
+
+Kind regards,
+{appt['barber_name']} & the Loyal Haarschnitt Team
+"""
+                    await send_email(to=appt["customer_email"], subject=subject, body=body)
+
+                    await db.appointments.update_one(
+                        {"id": appt["id"]},
+                        {"$set": {"reminder_sent": True}}
+                    )
+            except Exception as inner_e:
+                print(f"Failed to process reminder for appointment {appt.get('id')}: {inner_e}")
+    except Exception as e:
+        print("Reminder job failed:", e)
+
+
+reminder_scheduler = AsyncIOScheduler(timezone=GERMAN_TZ)
+reminder_scheduler.add_job(send_appointment_reminders, "interval", minutes=5, id="appointment_reminders")
+
+
+@app.on_event("startup")
+async def start_reminder_scheduler():
+    if not reminder_scheduler.running:
+        reminder_scheduler.start()
 
 
 @api_router.post("/appointments", response_model=Appointment)
@@ -904,8 +1056,11 @@ async def update_appointment_status_body(appointment_id: str, status_update: Sta
 
 @api_router.patch("/appointments/{appointment_id}/duration")
 async def update_appointment_duration(appointment_id: str, duration_update: dict, current_barber: dict = Depends(get_current_barber)):
-    """Update appointment duration - only the assigned barber can reduce their appointment time"""
-    
+    """Update appointment duration - admin/staff (the assigned barber) can freely change it,
+    with no fixed minimum or maximum. This endpoint is only reachable by authenticated
+    barbers/admins; the public customer booking flow never calls it, so customer-facing
+    booking durations stay exactly as defined by the service."""
+
     # Verify appointment exists and belongs to this barber
     appointment = await db.appointments.find_one({"id": appointment_id}, {"_id": 0})
     if not appointment:
@@ -915,12 +1070,9 @@ async def update_appointment_duration(appointment_id: str, duration_update: dict
         raise HTTPException(status_code=403, detail="Can only modify your own appointments")
     
     new_duration = duration_update.get("duration")
-    if not new_duration or new_duration < 15:
-        raise HTTPException(status_code=400, detail="Duration must be at least 15 minutes")
-    
-    # Don't allow increasing duration, only reducing
-    if new_duration > appointment["duration"]:
-        raise HTTPException(status_code=400, detail="Can only reduce duration, not increase")
+    # Just a basic sanity floor so nobody accidentally zeroes out an appointment
+    if not new_duration or new_duration < 5:
+        raise HTTPException(status_code=400, detail="Duration must be at least 5 minutes")
     
     result = await db.appointments.update_one(
         {"id": appointment_id},
@@ -935,6 +1087,62 @@ async def update_appointment_duration(appointment_id: str, duration_update: dict
         "duration": new_duration,
         "appointment_id": appointment_id
     }
+
+@api_router.patch("/appointments/{appointment_id}/reschedule")
+async def reschedule_appointment(appointment_id: str, reschedule: AppointmentReschedule, current_barber: dict = Depends(get_current_barber)):
+    """Move an appointment to a new time/day/barber (used by the admin calendar drag & drop).
+    Any authenticated barber/admin may move any appointment, consistent with how deleting
+    and viewing 'all appointments' already work in this app."""
+
+    appointment = await db.appointments.find_one({"id": appointment_id}, {"_id": 0})
+    if not appointment:
+        raise HTTPException(status_code=404, detail="Appointment not found")
+
+    new_barber_id = reschedule.barber_id or appointment["barber_id"]
+    new_date = reschedule.appointment_date.isoformat() if reschedule.appointment_date else appointment["appointment_date"]
+    new_time_str = reschedule.appointment_time.strftime('%H:%M') if reschedule.appointment_time else appointment["appointment_time"][:5]
+    duration = appointment.get("duration") or 45
+
+    # Make sure the new slot doesn't collide with something else (ignore this appointment itself)
+    existing_appointments = await db.appointments.find({
+        "barber_id": new_barber_id,
+        "appointment_date": new_date,
+        "status": {"$in": ["confirmed", "pending"]},
+        "id": {"$ne": appointment_id}
+    }, {"_id": 0}).to_list(1000)
+
+    new_start = datetime.strptime(new_time_str, '%H:%M').time()
+    new_start_dt = datetime.combine(datetime.fromisoformat(new_date).date(), new_start)
+    new_end_dt = new_start_dt + timedelta(minutes=duration)
+
+    for other in existing_appointments:
+        other_start = datetime.strptime(other["appointment_time"][:5], '%H:%M').time()
+        other_duration = other.get("duration", 45)
+        other_start_dt = datetime.combine(datetime.fromisoformat(new_date).date(), other_start)
+        other_end_dt = other_start_dt + timedelta(minutes=other_duration)
+
+        if new_start_dt < other_end_dt and new_end_dt > other_start_dt:
+            raise HTTPException(
+                status_code=400,
+                detail=f"That slot conflicts with {other.get('customer_name', 'another appointment')}"
+            )
+
+    new_barber = await db.barbers.find_one({"id": new_barber_id}, {"_id": 0})
+    if not new_barber:
+        raise HTTPException(status_code=404, detail="Barber not found")
+
+    update_fields = {
+        "barber_id": new_barber_id,
+        "barber_name": new_barber["name"],
+        "appointment_date": new_date,
+        "appointment_time": f"{new_time_str}:00",
+    }
+
+    result = await db.appointments.update_one({"id": appointment_id}, {"$set": update_fields})
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Appointment not found")
+
+    return {"message": "Appointment moved successfully", "appointment_id": appointment_id, **update_fields}
 
 @api_router.delete("/appointments/{appointment_id}")
 async def delete_appointment(appointment_id: str, current_barber: dict = Depends(get_current_barber)):
@@ -1259,4 +1467,6 @@ logger = logging.getLogger(__name__)
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
+    if reminder_scheduler.running:
+        reminder_scheduler.shutdown(wait=False)
     client.close()
