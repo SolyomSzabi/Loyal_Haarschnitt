@@ -118,6 +118,16 @@ const AllAppointments = () => {
     return day >= 1 && day <= 5;
   };
 
+  // Extra hours can be toggled Monday-Saturday (Sunday is fully closed)
+  const isExtraHoursEligible = (dateStr) => {
+    const day = new Date(dateStr + 'T00:00:00').getDay(); // 0 = Sunday, 6 = Saturday
+    return day >= 1 && day <= 6;
+  };
+
+  const isSaturday = (dateStr) => {
+    return new Date(dateStr + 'T00:00:00').getDay() === 6;
+  };
+
   // Owner/admin can manage everything; regular staff can only manage their own appointments
   const canManageAppointment = (appointment) => {
     return barberData?.isAdmin || appointment.barber_id === barberData?.id;
@@ -734,7 +744,7 @@ const handleCreateAppointment = async () => {
               <span>Back</span>
             </Button>
             <Button
-              onClick={fetchAllAppointments}
+              onClick={() => fetchAllAppointments()}
               variant="outline"
               size="sm"
             >
@@ -759,7 +769,7 @@ const handleCreateAppointment = async () => {
               </Button>
             </div>
 
-            {isWeekday(selectedDate) && (
+            {isExtraHoursEligible(selectedDate) && (
               <div className="mt-3 flex flex-wrap items-center gap-4 bg-yellow-50 border border-yellow-200 rounded-lg px-3 py-2">
                 <span className="text-xs font-semibold text-zinc-700 uppercase tracking-wide">
                   Extra hours for {formatSelectedDate()}:
@@ -770,7 +780,7 @@ const handleCreateAppointment = async () => {
                     onCheckedChange={() => handleToggleSpecialHours('extend_morning')}
                     disabled={savingSpecialHours}
                   />
-                  08:00 – 10:00
+                  {isSaturday(selectedDate) ? '08:00 – 09:00' : '08:00 – 10:00'}
                 </label>
                 <label className="flex items-center gap-2 text-sm text-zinc-800 cursor-pointer">
                   <Switch
@@ -778,7 +788,7 @@ const handleCreateAppointment = async () => {
                     onCheckedChange={() => handleToggleSpecialHours('extend_evening')}
                     disabled={savingSpecialHours}
                   />
-                  19:00 – 20:00
+                  {isSaturday(selectedDate) ? '16:00 – 17:00' : '19:00 – 20:00'}
                 </label>
                 <span className="text-xs text-zinc-500">
                   {isSelectedDateToday()
