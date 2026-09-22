@@ -161,6 +161,7 @@ class Barber(BaseModel):
     specialties: List[str]
     image_url: Optional[str] = None
     is_available: bool = True
+    is_admin: bool = False  # Owner/admin barbers can view & manage every staff member's appointments
 
 class BarberCreate(BaseModel):
     name: str
@@ -245,6 +246,7 @@ class Token(BaseModel):
     token_type: str
     barber_id: str
     barber_name: str
+    is_admin: bool = False
 
 class BarberBreak(BaseModel):
     model_config = ConfigDict(extra="ignore")
@@ -357,7 +359,8 @@ async def login_barber(barber_login: BarberLogin):
         "access_token": access_token,
         "token_type": "bearer",
         "barber_id": barber_auth["barber_id"],
-        "barber_name": barber["name"]
+        "barber_name": barber["name"],
+        "is_admin": barber.get("is_admin", False)
     }
 
 @api_router.post("/auth/create", response_model=BarberAuth)
@@ -490,8 +493,8 @@ async def get_barber_breaks(barber_id: str, date_from: Optional[str] = None, dat
 
 @api_router.post("/breaks", response_model=BarberBreak)
 async def create_barber_break(break_data: BarberBreakCreate, current_barber: dict = Depends(get_current_barber)):
-    # Verify barber can only create breaks for themselves
-    if break_data.barber_id != current_barber["id"]:
+    # Owner/admin barbers can create breaks for any staff member; regular staff only for themselves
+    if break_data.barber_id != current_barber["id"] and not current_barber.get("is_admin"):
         raise HTTPException(status_code=403, detail="Can only create breaks for yourself")
     
     break_dict = break_data.model_dump()
@@ -510,7 +513,7 @@ async def delete_barber_break(break_id: str, current_barber: dict = Depends(get_
     if not break_item:
         raise HTTPException(status_code=404, detail="Break not found")
     
-    if break_item["barber_id"] != current_barber["id"]:
+    if break_item["barber_id"] != current_barber["id"] and not current_barber.get("is_admin"):
         raise HTTPException(status_code=403, detail="Can only delete your own breaks")
     
     result = await db.barber_breaks.delete_one({"id": break_id})
@@ -1066,7 +1069,7 @@ async def update_appointment_duration(appointment_id: str, duration_update: dict
     if not appointment:
         raise HTTPException(status_code=404, detail="Appointment not found")
     
-    if appointment["barber_id"] != current_barber["id"]:
+    if appointment["barber_id"] != current_barber["id"] and not current_barber.get("is_admin"):
         raise HTTPException(status_code=403, detail="Can only modify your own appointments")
     
     new_duration = duration_update.get("duration")
@@ -1091,14 +1094,22 @@ async def update_appointment_duration(appointment_id: str, duration_update: dict
 @api_router.patch("/appointments/{appointment_id}/reschedule")
 async def reschedule_appointment(appointment_id: str, reschedule: AppointmentReschedule, current_barber: dict = Depends(get_current_barber)):
     """Move an appointment to a new time/day/barber (used by the admin calendar drag & drop).
-    Any authenticated barber/admin may move any appointment, consistent with how deleting
-    and viewing 'all appointments' already work in this app."""
+    Owner/admin barbers may move any appointment. Regular staff may only move their own
+    appointments, and may not reassign them to a different staff member."""
 
     appointment = await db.appointments.find_one({"id": appointment_id}, {"_id": 0})
     if not appointment:
         raise HTTPException(status_code=404, detail="Appointment not found")
 
     new_barber_id = reschedule.barber_id or appointment["barber_id"]
+    is_admin = current_barber.get("is_admin", False)
+
+    if not is_admin:
+        if appointment["barber_id"] != current_barber["id"]:
+            raise HTTPException(status_code=403, detail="Can only move your own appointments")
+        if new_barber_id != current_barber["id"]:
+            raise HTTPException(status_code=403, detail="Can only move appointments within your own schedule")
+
     new_date = reschedule.appointment_date.isoformat() if reschedule.appointment_date else appointment["appointment_date"]
     new_time_str = reschedule.appointment_time.strftime('%H:%M') if reschedule.appointment_time else appointment["appointment_time"][:5]
     duration = appointment.get("duration") or 45
@@ -1146,12 +1157,15 @@ async def reschedule_appointment(appointment_id: str, reschedule: AppointmentRes
 
 @api_router.delete("/appointments/{appointment_id}")
 async def delete_appointment(appointment_id: str, current_barber: dict = Depends(get_current_barber)):
-    """Delete an appointment - authenticated barbers only"""
+    """Delete an appointment - owner/admin can delete any appointment; regular staff can only delete their own"""
     
     # Verify appointment exists
     appointment = await db.appointments.find_one({"id": appointment_id}, {"_id": 0})
     if not appointment:
         raise HTTPException(status_code=404, detail="Appointment not found")
+
+    if appointment["barber_id"] != current_barber["id"] and not current_barber.get("is_admin"):
+        raise HTTPException(status_code=403, detail="Can only delete your own appointments")
     
     # Delete the appointment
     result = await db.appointments.delete_one({"id": appointment_id})
