@@ -311,8 +311,8 @@ class SpecialHours(BaseModel):
 
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     special_date: date
-    extend_morning: bool = False  # opens 08:00-10:00 (Mon-Fri only)
-    extend_evening: bool = False  # opens 19:00-20:00 (Mon-Fri only)
+    extend_morning: bool = False  # Mon-Fri: opens 08:00-10:00; Saturday: opens 08:00-09:00
+    extend_evening: bool = False  # Mon-Fri: opens 19:00-20:00; Saturday: opens 16:00-17:00
 
 class SpecialHoursUpdate(BaseModel):
     extend_morning: bool = False
@@ -607,9 +607,17 @@ async def get_available_slots(barber_id: str, date: str, service_id: str):
             if special_hours.get("extend_evening"):
                 business_end = time(20, 0)
     elif weekday == 5:
-        # Szombat: 9:00 – 13:00
+        # Szombat: 9:00 – 16:00
         business_start = time(9, 0)
         business_end = time(16, 0)
+
+        # Check if the owner activated extra hours for this specific Saturday
+        special_hours = await db.special_hours.find_one({"special_date": date}, {"_id": 0})
+        if special_hours:
+            if special_hours.get("extend_morning"):
+                business_start = time(8, 0)
+            if special_hours.get("extend_evening"):
+                business_end = time(17, 0)
     else:
         # Vasárnap: zárva → nincs időpont
         return {
@@ -652,10 +660,11 @@ async def get_available_slots(barber_id: str, date: str, service_id: str):
         "slots": slots
     }
 
-# Special / extra opening hours (admin-activated, per specific date, Mon-Fri only)
+# Special / extra opening hours (admin-activated, per specific date, Mon-Sat only)
 @api_router.get("/special-hours/{target_date}")
 async def get_special_hours(target_date: str):
-    """Return whether extra hours (08:00-10:00 / 19:00-20:00) are activated for a given date"""
+    """Return whether extra hours are activated for a given date.
+    Mon-Fri: 08:00-10:00 / 19:00-20:00. Saturday: 08:00-09:00 / 16:00-17:00."""
     special_hours = await db.special_hours.find_one({"special_date": target_date}, {"_id": 0})
     if not special_hours:
         return {"special_date": target_date, "extend_morning": False, "extend_evening": False}
@@ -664,10 +673,10 @@ async def get_special_hours(target_date: str):
 @api_router.put("/special-hours/{target_date}")
 async def set_special_hours(target_date: str, update: SpecialHoursUpdate, current_barber: dict = Depends(get_current_barber)):
     """Admin/staff toggles the extra opening hours for a specific date"""
-    # Extra hours only make sense Monday-Friday
+    # Extra hours only make sense Monday-Saturday (Sunday is fully closed)
     date_obj = datetime.fromisoformat(target_date).date()
-    if date_obj.weekday() not in [0, 1, 2, 3, 4]:
-        raise HTTPException(status_code=400, detail="Extra hours can only be activated for Monday-Friday")
+    if date_obj.weekday() not in [0, 1, 2, 3, 4, 5]:
+        raise HTTPException(status_code=400, detail="Extra hours can only be activated for Monday-Saturday")
 
     doc = {
         "special_date": target_date,
