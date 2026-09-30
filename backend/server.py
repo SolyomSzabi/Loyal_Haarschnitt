@@ -312,7 +312,7 @@ class SpecialHours(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     special_date: date
     extend_morning: bool = False  # Mon-Fri: opens 08:00-10:00; Saturday: opens 08:00-09:00
-    extend_evening: bool = False  # Mon-Fri: opens 19:00-20:00; Saturday: opens 16:00-17:00
+    extend_evening: bool = False  # Mon-Fri: opens 19:00-20:00; Saturday: opens 16:00-18:00
 
 class SpecialHoursUpdate(BaseModel):
     extend_morning: bool = False
@@ -617,7 +617,7 @@ async def get_available_slots(barber_id: str, date: str, service_id: str):
             if special_hours.get("extend_morning"):
                 business_start = time(8, 0)
             if special_hours.get("extend_evening"):
-                business_end = time(17, 0)
+                business_end = time(18, 0)
     else:
         # Vasárnap: zárva → nincs időpont
         return {
@@ -664,7 +664,7 @@ async def get_available_slots(barber_id: str, date: str, service_id: str):
 @api_router.get("/special-hours/{target_date}")
 async def get_special_hours(target_date: str):
     """Return whether extra hours are activated for a given date.
-    Mon-Fri: 08:00-10:00 / 19:00-20:00. Saturday: 08:00-09:00 / 16:00-17:00."""
+    Mon-Fri: 08:00-10:00 / 19:00-20:00. Saturday: 08:00-09:00 / 16:00-18:00."""
     special_hours = await db.special_hours.find_one({"special_date": target_date}, {"_id": 0})
     if not special_hours:
         return {"special_date": target_date, "extend_morning": False, "extend_evening": False}
@@ -948,23 +948,19 @@ async def create_appointment(appointment_data: AppointmentCreate, background_tas
     # - A 2., 3. stb. foglalásnál all_service_names=None → NEM megy email
     if appointment_data.all_service_names is not None:
         service_lines = "\n".join([
-            f"    • {name} – {dur} Min. – {price} EUR"
-            for name, dur, price in zip(
+            f"    • {name} – {price} EUR"
+            for name, price in zip(
                 appointment_data.all_service_names,
-                appointment_data.all_service_durations or [],
                 appointment_data.all_service_prices or []
             )
         ])
-        total_duration = sum(appointment_data.all_service_durations or [])
         total_price = sum(appointment_data.all_service_prices or [])
         services_summary_de = (
             f"  Services:\n{service_lines}\n"
-            f"  Gesamtdauer: {total_duration} Minuten\n"
             f"  Gesamtpreis: {total_price} EUR"
         )
         services_summary_en = (
             f"  Services:\n{service_lines}\n"
-            f"  Total duration: {total_duration} minutes\n"
             f"  Total price: {total_price} EUR"
         )
 

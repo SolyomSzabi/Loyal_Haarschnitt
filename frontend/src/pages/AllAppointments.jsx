@@ -788,7 +788,7 @@ const handleCreateAppointment = async () => {
                     onCheckedChange={() => handleToggleSpecialHours('extend_evening')}
                     disabled={savingSpecialHours}
                   />
-                  {isSaturday(selectedDate) ? '16:00 – 17:00' : '19:00 – 20:00'}
+                  {isSaturday(selectedDate) ? '16:00 – 18:00' : '19:00 – 20:00'}
                 </label>
                 <span className="text-xs text-zinc-500">
                   {isSelectedDateToday()
